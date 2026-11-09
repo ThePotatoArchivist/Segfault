@@ -1,0 +1,12 @@
+{
+  "type": "segfault:memory",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "segfault:memory",
+      "features": false,
+      "lakes": false,
+      "layers": []
+    }
+  }
+}
