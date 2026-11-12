@@ -53,6 +53,7 @@ public interface SegfaultModDimensionTypes {
                         .set(EnvironmentAttributes.BED_RULE, new BedRule(BedRule.Rule.NEVER, BedRule.Rule.NEVER, false, false, Optional.of(Component.translatable("block.minecraft.bed.no_sleep"))))
                         .set(EnvironmentAttributes.STRAW_BED_RULE, BedRule.DESTROY_ON_LEAVE)
                         .set(EnvironmentAttributes.PIGLINS_ZOMBIFY, false)
+                        .set(SegfaultModEnvironment.CAN_HAVE_WEATHER, false)
                         .build(),
                 timelines.getOrThrow(SegfaultModTimelineTags.IN_MEMORY),
                 Optional.empty()
