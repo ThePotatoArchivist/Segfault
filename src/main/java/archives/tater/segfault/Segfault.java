@@ -1,5 +1,8 @@
 package archives.tater.segfault;
 
+import archives.tater.segfault.registry.SegfaultModBlocks;
+import archives.tater.segfault.registry.SegfaultModItems;
+
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.Identifier;
@@ -20,7 +23,8 @@ public class Segfault implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-
+		SegfaultModBlocks.init();
+		SegfaultModItems.init();
 	}
 
 	public static Identifier id(String path) {

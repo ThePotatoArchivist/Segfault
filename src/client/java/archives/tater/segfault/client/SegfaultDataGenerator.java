@@ -2,6 +2,7 @@ package archives.tater.segfault.client;
 
 import archives.tater.segfault.client.datagen.BootstrapRegistryProvider;
 import archives.tater.segfault.client.datagen.ModDimensionProvider;
+import archives.tater.segfault.client.datagen.ModModelProvider;
 import archives.tater.segfault.client.datagen.ModTimelineTagsProvider;
 import archives.tater.segfault.registry.SegfaultModBiomes;
 import archives.tater.segfault.registry.SegfaultModDimensionTypes;
@@ -24,11 +25,14 @@ public class SegfaultDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		var pack = fabricDataGenerator.createPack();
+
 		pack.addProvider(ModTimelineTagsProvider::new);
 		pack.addProvider(ModDimensionProvider::new);
 		pack.addProvider(BootstrapRegistryProvider.createFactory(List.of(
 				Registries.DIMENSION_TYPE,
 				Registries.BIOME
 		)));
+
+		pack.addProvider(ModModelProvider::new);
 	}
 }

@@ -1,0 +1,4 @@
+// 26.3	-999999999-01-01T00:00:00	Segfault/Model Definitions
+4015350ef6c9b01223cabd299fe22e8ea2496e12 assets/segfault/blockstates/allocator.json
+8b4869f88dc55e516dc09c1b435bf10c6a0843b9 assets/segfault/items/allocator.json
+21cfc64ef9ff86f1c36348cc16e7140ead0b1776 assets/segfault/models/block/allocator.json
