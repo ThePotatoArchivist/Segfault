@@ -1,0 +1,5 @@
+{
+  "block.segfault.allocator": "Allocator",
+  "item.segfault.pointer": "Pointer",
+  "item.segfault.pointer.value": "→ (%s, %s)"
+}

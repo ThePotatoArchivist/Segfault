@@ -14,6 +14,8 @@ public interface SegfaultModItems {
 
     Item ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, SegfaultModBlocks.ALLOCATOR);
 
+    Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties());
+
     private static Item register(BlockItemId id, Block block) {
         return register(id, block, new Item.Properties());
     }
@@ -24,6 +26,10 @@ public interface SegfaultModItems {
 
     private static Item register(BlockItemId id, Function<Item.Properties, Item> item, Item.Properties properties) {
         return register(id.item(), item, properties);
+    }
+
+    private static Item register(ResourceKey<Item> key, Item.Properties properties) {
+        return register(key, Item::new, properties);
     }
 
     private static Item register(ResourceKey<Item> key, Function<Item.Properties, Item> item, Item.Properties properties) {

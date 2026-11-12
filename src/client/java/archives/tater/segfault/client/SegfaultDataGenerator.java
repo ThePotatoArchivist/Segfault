@@ -34,5 +34,6 @@ public class SegfaultDataGenerator implements DataGeneratorEntrypoint {
 		)));
 
 		pack.addProvider(ModModelProvider::new);
+		pack.addProvider(ModLanguageProvider::new);
 	}
 }
