@@ -13,6 +13,9 @@ import net.minecraft.world.level.material.MapColor;
 import java.util.function.Function;
 
 public interface SegfaultModBlocks {
+
+    Block ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, Block::new, memoryMachineProperties());
+
     private static Block register(BlockItemId id, Function<BlockBehaviour.Properties, Block> block, BlockBehaviour.Properties properties) {
         return register(id.block(), block, properties);
     }
@@ -21,12 +24,13 @@ public interface SegfaultModBlocks {
         return Registry.register(BuiltInRegistries.BLOCK, key, block.apply(properties.setId(key)));
     }
 
-    Block ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, Block::new, BlockBehaviour.Properties.of()
-            .mapColor(MapColor.STONE)
-            .instrument(NoteBlockInstrument.BASEDRUM)
-            .strength(3.5F)
-            .sound(SoundType.IRON)
-    );
+    private static BlockBehaviour.Properties memoryMachineProperties() {
+        return BlockBehaviour.Properties.of()
+                .mapColor(MapColor.STONE)
+                .instrument(NoteBlockInstrument.BASEDRUM)
+                .strength(3.5F)
+                .sound(SoundType.IRON);
+    }
 
     static void init() {
 

@@ -7,6 +7,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.timeline.Timeline;
 
 public interface SegfaultModTimelineTags {
+
     TagKey<Timeline> IN_MEMORY = create("in_data");
 
     private static TagKey<Timeline> create(String path) {

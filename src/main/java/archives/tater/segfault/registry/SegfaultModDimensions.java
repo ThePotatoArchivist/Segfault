@@ -13,7 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SegfaultModDimensions {
-    ResourceKey<LevelStem> MEMORY = ResourceKey.create(Registries.LEVEL_STEM, Segfault.id("memory"));
+
+    ResourceKey<LevelStem> MEMORY = create("memory");
+
+    private static ResourceKey<LevelStem> create(String path) {
+        return ResourceKey.create(Registries.LEVEL_STEM, Segfault.id(path));
+    }
 
     static void bootstrap(BootstrapContext<LevelStem> context) {
         context.register(MEMORY, new LevelStem(

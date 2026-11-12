@@ -11,6 +11,9 @@ import net.minecraft.world.level.block.Block;
 import java.util.function.Function;
 
 public interface SegfaultModItems {
+
+    Item ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, SegfaultModBlocks.ALLOCATOR);
+
     private static Item register(BlockItemId id, Block block) {
         return register(id, block, new Item.Properties());
     }
@@ -26,8 +29,6 @@ public interface SegfaultModItems {
     private static Item register(ResourceKey<Item> key, Function<Item.Properties, Item> item, Item.Properties properties) {
         return Registry.register(BuiltInRegistries.ITEM, key, item.apply(properties.setId(key)));
     }
-
-    Item ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, SegfaultModBlocks.ALLOCATOR);
 
     static void init() {
 

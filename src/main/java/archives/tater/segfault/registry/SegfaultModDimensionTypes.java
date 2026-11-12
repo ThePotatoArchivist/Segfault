@@ -19,11 +19,12 @@ import java.util.Optional;
 import static net.minecraft.util.ARGB.vector3fFromRGB24;
 
 public interface SegfaultModDimensionTypes {
+
+    ResourceKey<DimensionType> MEMORY = create("memory");
+
     private static ResourceKey<DimensionType> create(String path) {
         return ResourceKey.create(Registries.DIMENSION_TYPE, Segfault.id(path));
     }
-
-    ResourceKey<DimensionType> MEMORY = create("memory");
 
     static void bootstrap(BootstrapContext<DimensionType> context) {
         var blocks = context.lookup(Registries.BLOCK);

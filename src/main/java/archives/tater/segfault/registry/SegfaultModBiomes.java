@@ -14,11 +14,12 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import static net.minecraft.util.ARGB.vector3fFromRGB24;
 
 public interface SegfaultModBiomes {
+
+    ResourceKey<Biome> MEMORY = create("memory");
+
     private static ResourceKey<Biome> create(String path) {
         return ResourceKey.create(Registries.BIOME, Segfault.id(path));
     }
-
-    ResourceKey<Biome> MEMORY = create("memory");
 
     static void bootstrap(BootstrapContext<Biome> context) {
         context.register(MEMORY, OverworldBiomes.baseBiome(0.5f, 0.5f)
