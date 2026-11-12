@@ -5,7 +5,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 
 import java.util.function.Function;
 
@@ -18,7 +21,12 @@ public interface SegfaultModBlocks {
         return Registry.register(BuiltInRegistries.BLOCK, key, block.apply(properties.setId(key)));
     }
 
-    Block ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, Block::new, BlockBehaviour.Properties.of());
+    Block ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, Block::new, BlockBehaviour.Properties.of()
+            .mapColor(MapColor.STONE)
+            .instrument(NoteBlockInstrument.BASEDRUM)
+            .strength(3.5F)
+            .sound(SoundType.IRON)
+    );
 
     static void init() {
 
