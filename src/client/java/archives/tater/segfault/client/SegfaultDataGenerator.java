@@ -27,6 +27,7 @@ public class SegfaultDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(ModBlockLootProvider::new);
 		pack.addProvider(ModTimelineTagsProvider::new);
 		pack.addProvider(ModDimensionProvider::new);
+		pack.addProvider(ModDimensionTypeTagsProvider::new);
 		pack.addProvider(BootstrapRegistryProvider.createFactory(List.of(
 				Registries.DIMENSION_TYPE,
 				Registries.BIOME
