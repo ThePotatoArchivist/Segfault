@@ -15,6 +15,7 @@ import java.util.function.Function;
 public interface SegfaultModItems {
 
     Item ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, SegfaultModBlocks.ALLOCATOR);
+    Item DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, SegfaultModBlocks.DEREFERENCER);
 
     Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties()
             .component(SegfaultModComponents.POINTER, PointerValue.NULL)

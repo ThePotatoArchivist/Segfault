@@ -1,6 +1,8 @@
 {
   "block.segfault.allocator": "Allocator",
-  "container.segfault.allocate": "Allocate",
+  "block.segfault.dereferencer": "Dereferencer",
+  "container.segfault.allocate": "Allocator",
+  "container.segfault.dereference": "Dereferencer",
   "item.segfault.pointer": "Pointer",
   "item.segfault.pointer.null": "→ NULL",
   "item.segfault.pointer.value": "→ (%s, %s, %s)"

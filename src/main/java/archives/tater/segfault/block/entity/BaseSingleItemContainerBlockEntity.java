@@ -47,7 +47,8 @@ public abstract class BaseSingleItemContainerBlockEntity extends BlockEntity imp
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.storeNullable("CustomName", ComponentSerialization.CODEC, name);
-        output.storeNullable("item", ItemStack.CODEC, item);
+        if (!item.isEmpty())
+            output.store("item", ItemStack.CODEC, item);
     }
 
     @Override

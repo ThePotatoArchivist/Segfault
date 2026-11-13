@@ -1,2 +1,3 @@
 // 26.3	-999999999-01-01T00:00:00	Segfault/Block Loot Tables
 4eddc9bd286c769f9970f16206d20e47f7edf658 data/segfault/loot_table/blocks/allocator.json
+f524c8197b6b5e35f369e36d458273bde9da22d5 data/segfault/loot_table/blocks/dereferencer.json

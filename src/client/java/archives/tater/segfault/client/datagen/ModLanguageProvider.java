@@ -1,6 +1,7 @@
 package archives.tater.segfault.client.datagen;
 
 import archives.tater.segfault.block.entity.AllocatorBlockEntity;
+import archives.tater.segfault.block.entity.DereferencerBlockEntity;
 import archives.tater.segfault.registry.SegfaultModBlocks;
 import archives.tater.segfault.registry.SegfaultModItems;
 
@@ -21,12 +22,14 @@ public class ModLanguageProvider extends FabricLanguageProvider {
     @Override
     public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
         translationBuilder.add(SegfaultModBlocks.ALLOCATOR, "Allocator");
+        translationBuilder.add(SegfaultModBlocks.DEREFERENCER, "Dereferencer");
 
         translationBuilder.add(SegfaultModItems.POINTER, "Pointer");
 
         translationBuilder.add("item.segfault.pointer.value", "→ (%s, %s, %s)");
         translationBuilder.add("item.segfault.pointer.null", "→ NULL");
-        translationBuilder.add(getKey(AllocatorBlockEntity.DEFAULT_NAME), "Allocate");
+        translationBuilder.add(getKey(AllocatorBlockEntity.DEFAULT_NAME), "Allocator");
+        translationBuilder.add(getKey(DereferencerBlockEntity.DEFAULT_NAME), "Dereferencer");
     }
 
     private static String getKey(Component translatable) {

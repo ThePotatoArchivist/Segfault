@@ -19,7 +19,8 @@ public class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider registries) {
         builder(SegfaultModBlockTags.MEMORY_MACHINES)
-                .add(SegfaultModBlockItemIds.ALLOCATOR);
+                .add(SegfaultModBlockItemIds.ALLOCATOR)
+                .add(SegfaultModBlockItemIds.DEREFERENCER);
 
         builder(BlockTags.MINEABLE_WITH_PICKAXE).addTag(SegfaultModBlockTags.MEMORY_MACHINES);
         builder(BlockTags.NEEDS_IRON_TOOL).addTag(SegfaultModBlockTags.MEMORY_MACHINES);
