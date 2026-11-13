@@ -1,5 +1,6 @@
 package archives.tater.segfault.block.entity;
 
+import archives.tater.segfault.component.PointerValue;
 import archives.tater.segfault.menu.AllocatorMenu;
 import archives.tater.segfault.registry.SegfaultModBlockEntities;
 import archives.tater.segfault.registry.SegfaultModComponents;
@@ -13,6 +14,7 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -32,6 +34,18 @@ public class AllocatorBlockEntity extends BaseContainerBlockEntity implements Wo
 
     public AllocatorBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(SegfaultModBlockEntities.ALLOCATOR, worldPosition, blockState);
+    }
+
+    public ItemStack getInput() {
+        return getItem(SLOT_INPUT);
+    }
+
+    public ItemStack getResult() {
+        return getItem(SLOT_RESULT);
+    }
+
+    public void setResult(ItemStack stack) {
+        setItem(SLOT_RESULT, stack);
     }
 
     @Override
@@ -92,5 +106,16 @@ public class AllocatorBlockEntity extends BaseContainerBlockEntity implements Wo
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         ContainerHelper.saveAllItems(output, items);
+    }
+
+    public void tryAllocate() {
+        if (!getResult().isEmpty()) return;
+
+        var input = getInput().split(1);
+        if (input.isEmpty()) return;
+
+        var result = input.split(1);
+        result.set(SegfaultModComponents.POINTER, new PointerValue(new ChunkPos(8, 8)));
+        setResult(result);
     }
 }
