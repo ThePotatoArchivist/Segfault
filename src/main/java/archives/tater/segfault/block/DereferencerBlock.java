@@ -1,21 +1,20 @@
 package archives.tater.segfault.block;
 
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
+import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.registry.SegfaultModAttachments;
 import archives.tater.segfault.registry.SegfaultModComponents;
-import archives.tater.segfault.registry.SegfaultModDimensions;
 
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.portal.TeleportTransition;
-import net.minecraft.world.phys.Vec3;
 
 import org.jspecify.annotations.Nullable;
 
@@ -36,15 +35,9 @@ public class DereferencerBlock extends PoweredContainerEntityBlock implements Po
 
     @Override
     public @Nullable TeleportTransition getPortalDestination(ServerLevel currentLevel, Entity entity, BlockPos portalEntryPos) {
-        var memory = currentLevel.getServer().getLevel(SegfaultModDimensions.MEMORY);
-        if (memory == null) return null;
+        if (entity.hasAttached(SegfaultModAttachments.EXITED_MEMORY) || !(currentLevel.getBlockEntity(portalEntryPos) instanceof DereferencerBlockEntity dereferencer)) return null;
 
-        if (!(currentLevel.getBlockEntity(portalEntryPos) instanceof DereferencerBlockEntity dereferencer)) return null;
-
-        var pointer = dereferencer.getTheItem().get(SegfaultModComponents.POINTER);
-        if (pointer == null) return null;
-
-        return new TeleportTransition(memory, Vec3.atBottomCenterOf(pointer.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, TeleportTransition.DO_NOTHING);
+        return PointerValue.getDestination(currentLevel, dereferencer.getTheItem().get(SegfaultModComponents.POINTER), entity);
     }
 
     @Override
