@@ -1,5 +1,6 @@
 package archives.tater.segfault.client;
 
+import archives.tater.segfault.client.screen.AllocatorScreen;
 import archives.tater.segfault.client.screen.SingleSlotScreen;
 import archives.tater.segfault.registry.SegfaultModComponents;
 import archives.tater.segfault.registry.SegfaultModMenus;
@@ -15,5 +16,6 @@ public class SegfaultClient implements ClientModInitializer {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 		ItemComponentTooltipProviderRegistry.addFirst(SegfaultModComponents.POINTER);
 		MenuScreens.register(SegfaultModMenus.SINGLE_SLOT, SingleSlotScreen::new);
+		MenuScreens.register(SegfaultModMenus.ALLOCATOR, AllocatorScreen::new);
 	}
 }
