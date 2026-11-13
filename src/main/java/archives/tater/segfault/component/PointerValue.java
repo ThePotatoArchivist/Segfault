@@ -51,7 +51,7 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
     public static @Nullable TeleportTransition getDestination(ServerLevel level, @Nullable PointerValue pointer, Entity entity) {
         if (pointer == null) {
             var entryPos = entity.removeAttached(SegfaultModAttachments.ENTRY_POS);
-            if (entryPos == null) return null;
+            if (entryPos == null || level.dimension() != SegfaultModDimensions.MEMORY) return null;
 
             var newLevel = level.getServer().getLevel(entryPos.dimension());
             if (newLevel == null) return null;
