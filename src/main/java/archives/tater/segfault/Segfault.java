@@ -28,6 +28,7 @@ public class Segfault implements ModInitializer {
 		SegfaultModBlocks.init();
 		SegfaultModBlockEntities.init();
 		SegfaultModItems.init();
+		SegfaultModCreativeTabs.init();
 	}
 
 	public static Identifier id(String path) {

@@ -9,5 +9,6 @@
   "item.segfault.pointer.null": "NULL",
   "item.segfault.pointer.target": "→ %s",
   "item.segfault.pointer.value": "(%s, %s, %s)",
-  "item.segfault.portable_dereferencer": "Portable Dereferencer"
+  "item.segfault.portable_dereferencer": "Portable Dereferencer",
+  "itemGroup.segfault.segfault": "Segfault"
 }

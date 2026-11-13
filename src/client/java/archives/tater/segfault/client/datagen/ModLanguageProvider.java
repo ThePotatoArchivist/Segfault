@@ -4,6 +4,7 @@ import archives.tater.segfault.block.entity.AllocatorBlockEntity;
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
 import archives.tater.segfault.block.entity.DestructorBlockEntity;
 import archives.tater.segfault.registry.SegfaultModBlocks;
+import archives.tater.segfault.registry.SegfaultModCreativeTabs;
 import archives.tater.segfault.registry.SegfaultModItems;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -28,6 +29,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
 
         translationBuilder.add(SegfaultModItems.POINTER, "Pointer");
         translationBuilder.add(SegfaultModItems.PORTABLE_DEREFERENCER, "Portable Dereferencer");
+
+        translationBuilder.add(getKey(SegfaultModCreativeTabs.SEGFAULT.getDisplayName()), "Segfault");
 
         translationBuilder.add("item.segfault.pointer.value", "(%s, %s, %s)");
         translationBuilder.add("item.segfault.pointer.null", "NULL");
