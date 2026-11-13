@@ -31,11 +31,6 @@ public class DestructorMenu extends AbstractContainerMenu {
             public boolean mayPlace(ItemStack itemStack) {
                 return itemStack.has(SegfaultModComponents.POINTER);
             }
-
-            @Override
-            public int getMaxStackSize() {
-                return 1;
-            }
         });
         addSlot(new Slot(destructor, DestructorBlockEntity.SLOT_RESULT, 107, 20) {
             @Override

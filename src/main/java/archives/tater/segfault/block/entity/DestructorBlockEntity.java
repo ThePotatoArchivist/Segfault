@@ -62,11 +62,6 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
     }
 
     @Override
-    public int getMaxStackSize(ItemStack itemStack) {
-        return 1;
-    }
-
-    @Override
     public int[] getSlotsForFace(Direction direction) {
         return direction == Direction.DOWN
                 ? SLOTS_FOR_DOWN
