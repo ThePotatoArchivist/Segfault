@@ -49,15 +49,7 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
     }
 
     public static @Nullable TeleportTransition getDestination(ServerLevel level, @Nullable PointerValue pointer, Entity entity) {
-        if (pointer == null) {
-            var entryPos = entity.removeAttached(SegfaultModAttachments.ENTRY_POS);
-            if (entryPos == null || level.dimension() != SegfaultModDimensions.MEMORY) return null;
-
-            var newLevel = level.getServer().getLevel(entryPos.dimension());
-            if (newLevel == null) return null;
-
-            return new TeleportTransition(newLevel, Vec3.atBottomCenterOf(entryPos.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, SET_EXITED);
-        }
+        if (pointer == null) return getExitDestination(level, entity);
 
         var memory = level.getServer().getLevel(SegfaultModDimensions.MEMORY);
         if (memory == null) return null;
@@ -65,6 +57,16 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
         if (entity.level().dimension() != SegfaultModDimensions.MEMORY)
             entity.setAttached(SegfaultModAttachments.ENTRY_POS, GlobalPos.of(entity.level().dimension(), entity.blockPosition()));
         return new TeleportTransition(memory, Vec3.atBottomCenterOf(pointer.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, TeleportTransition.DO_NOTHING);
+    }
+
+    public static @Nullable TeleportTransition getExitDestination(ServerLevel level, Entity entity) {
+        var entryPos = entity.removeAttached(SegfaultModAttachments.ENTRY_POS);
+        if (entryPos == null || level.dimension() != SegfaultModDimensions.MEMORY) return null;
+
+        var newLevel = level.getServer().getLevel(entryPos.dimension());
+        if (newLevel == null) return null;
+
+        return new TeleportTransition(newLevel, Vec3.atBottomCenterOf(entryPos.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, SET_EXITED);
     }
 
     private static void setExited(final Entity entity) {
