@@ -1,5 +1,7 @@
 package archives.tater.segfault.registry;
 
+import archives.tater.segfault.block.AllocatorBlock;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.references.BlockItemId;
@@ -14,7 +16,7 @@ import java.util.function.Function;
 
 public interface SegfaultModBlocks {
 
-    Block ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, Block::new, memoryMachineProperties());
+    Block ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, AllocatorBlock::new, memoryMachineProperties());
 
     private static Block register(BlockItemId id, Function<BlockBehaviour.Properties, Block> block, BlockBehaviour.Properties properties) {
         return register(id.block(), block, properties);

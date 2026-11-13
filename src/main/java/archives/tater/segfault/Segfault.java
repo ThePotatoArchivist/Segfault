@@ -1,8 +1,6 @@
 package archives.tater.segfault;
 
-import archives.tater.segfault.registry.SegfaultModBlocks;
-import archives.tater.segfault.registry.SegfaultModComponents;
-import archives.tater.segfault.registry.SegfaultModItems;
+import archives.tater.segfault.registry.*;
 
 import net.fabricmc.api.ModInitializer;
 
@@ -25,7 +23,9 @@ public class Segfault implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		SegfaultModComponents.init();
+		SegfaultModMenus.init();
 		SegfaultModBlocks.init();
+		SegfaultModBlockEntities.init();
 		SegfaultModItems.init();
 	}
 
