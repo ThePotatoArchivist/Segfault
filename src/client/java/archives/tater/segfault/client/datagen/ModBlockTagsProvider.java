@@ -20,7 +20,8 @@ public class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
     protected void addTags(HolderLookup.Provider registries) {
         builder(SegfaultModBlockTags.MEMORY_MACHINES)
                 .add(SegfaultModBlockItemIds.ALLOCATOR)
-                .add(SegfaultModBlockItemIds.DEREFERENCER);
+                .add(SegfaultModBlockItemIds.DEREFERENCER)
+                .add(SegfaultModBlockItemIds.DESTRUCTOR);
 
         builder(SegfaultModBlockTags.PERSISTS_EXITED_STATE)
                 .add(SegfaultModBlockItemIds.DEREFERENCER);

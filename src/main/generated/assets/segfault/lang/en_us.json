@@ -1,8 +1,10 @@
 {
   "block.segfault.allocator": "Allocator",
   "block.segfault.dereferencer": "Dereferencer",
-  "container.segfault.allocate": "Allocator",
-  "container.segfault.dereference": "Dereferencer",
+  "block.segfault.destructor": "Destructor",
+  "container.segfault.allocator": "Allocator",
+  "container.segfault.dereferencer": "Dereferencer",
+  "container.segfault.destructor": "Destructor",
   "item.segfault.pointer": "Pointer",
   "item.segfault.pointer.null": "NULL",
   "item.segfault.pointer.target": "→ %s",

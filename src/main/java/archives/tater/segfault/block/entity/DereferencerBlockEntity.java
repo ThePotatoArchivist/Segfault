@@ -16,7 +16,7 @@ import org.jspecify.annotations.Nullable;
 
 public class DereferencerBlockEntity extends BaseSingleItemContainerBlockEntity {
 
-    public static final Component DEFAULT_NAME = Component.translatable("container.segfault.dereference");
+    public static final Component DEFAULT_NAME = Component.translatable("container.segfault.dereferencer");
 
     public DereferencerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(SegfaultModBlockEntities.DEREFERENCER, worldPosition, blockState);

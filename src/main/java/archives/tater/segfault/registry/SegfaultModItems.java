@@ -20,6 +20,7 @@ public interface SegfaultModItems {
 
     Item ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, SegfaultModBlocks.ALLOCATOR);
     Item DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, SegfaultModBlocks.DEREFERENCER);
+    Item DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, SegfaultModBlocks.DESTRUCTOR);
 
     Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties()
             .component(SegfaultModComponents.POINTER, PointerValue.NULL)

@@ -22,7 +22,7 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
     private static final int[] SLOTS_FOR_UP_SIDES = {SLOT_INPUT};
     private static final int[] SLOTS_FOR_DOWN = {SLOT_RESULT};
 
-    public static final Component DEFAULT_NAME = Component.translatable("container.segfault.allocate");
+    public static final Component DEFAULT_NAME = Component.translatable("container.segfault.allocator");
 
     public AllocatorBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(SegfaultModBlockEntities.ALLOCATOR, worldPosition, blockState);
@@ -83,8 +83,11 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
         var input = getInput().split(1);
         if (input.isEmpty()) return;
 
-        var result = input.split(1);
-        result.set(SegfaultModComponents.POINTER, new PointerValue(new BlockPos(8, 0, 8)));
-        setResult(result);
+        input.set(SegfaultModComponents.POINTER, allocate());
+        setResult(input);
+    }
+
+    private PointerValue allocate() {
+        return new PointerValue(new BlockPos(8, 0, 8));
     }
 }
