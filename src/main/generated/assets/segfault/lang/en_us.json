@@ -3,5 +3,5 @@
   "container.segfault.allocate": "Allocate",
   "item.segfault.pointer": "Pointer",
   "item.segfault.pointer.null": "→ NULL",
-  "item.segfault.pointer.value": "→ (%s, %s)"
+  "item.segfault.pointer.value": "→ (%s, %s, %s)"
 }
