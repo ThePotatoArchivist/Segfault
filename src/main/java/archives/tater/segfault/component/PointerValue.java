@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public record PointerValue(ChunkPos pos, int offsetX, int offsetZ) implements TooltipProvider {
+    public static final PointerValue NULL = new PointerValue(new ChunkPos(0, 0), 0, 0);
 
     public static final Codec<PointerValue> FULL_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ChunkPos.CODEC.fieldOf("pos").forGetter(PointerValue::pos),
@@ -42,13 +43,27 @@ public record PointerValue(ChunkPos pos, int offsetX, int offsetZ) implements To
         this(pos, 0, 0);
     }
 
+    public int x() {
+        return pos.getBlockX(offsetX);
+    }
+
+    public int z() {
+        return pos.getBlockZ(offsetZ);
+    }
+
     public boolean hasOffset() {
         return offsetX != 0 || offsetZ != 0;
     }
 
+    public boolean isNull() {
+        return pos.x() == 0 && pos.z() == 0;
+    }
+
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> consumer, TooltipFlag flag, DataComponentGetter components) {
-        consumer.accept(Component.translatable("item.segfault.pointer.value", pos.getBlockX(offsetX), pos.getBlockZ(offsetZ))
-                .withStyle(ChatFormatting.GOLD));
+        consumer.accept((isNull()
+                ? Component.translatable("item.segfault.pointer.null")
+                : Component.translatable("item.segfault.pointer.value", x(), z())
+        ).withStyle(ChatFormatting.GOLD));
     }
 }

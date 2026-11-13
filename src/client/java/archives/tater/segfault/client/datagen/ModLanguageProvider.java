@@ -25,6 +25,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(SegfaultModItems.POINTER, "Pointer");
 
         translationBuilder.add("item.segfault.pointer.value", "→ (%s, %s)");
+        translationBuilder.add("item.segfault.pointer.null", "→ NULL");
         translationBuilder.add(getKey(AllocatorBlockEntity.DEFAULT_NAME), "Allocate");
     }
 

@@ -1,5 +1,7 @@
 package archives.tater.segfault.registry;
 
+import archives.tater.segfault.component.PointerValue;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.references.BlockItemId;
@@ -14,7 +16,9 @@ public interface SegfaultModItems {
 
     Item ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, SegfaultModBlocks.ALLOCATOR);
 
-    Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties());
+    Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties()
+            .component(SegfaultModComponents.POINTER, PointerValue.NULL)
+    );
 
     private static Item register(BlockItemId id, Block block) {
         return register(id, block, new Item.Properties());
