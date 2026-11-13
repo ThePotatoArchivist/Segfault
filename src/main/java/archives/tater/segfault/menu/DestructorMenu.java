@@ -1,6 +1,6 @@
 package archives.tater.segfault.menu;
 
-import archives.tater.segfault.block.entity.AllocatorBlockEntity;
+import archives.tater.segfault.block.entity.DestructorBlockEntity;
 import archives.tater.segfault.registry.SegfaultModComponents;
 import archives.tater.segfault.registry.SegfaultModMenus;
 
@@ -20,13 +20,13 @@ public class DestructorMenu extends AbstractContainerMenu {
         this(containerId, inventory, new SimpleContainer(CONTAINER_SIZE));
     }
 
-    public DestructorMenu(int containerId, Inventory inventory, Container allocator) {
+    public DestructorMenu(int containerId, Inventory inventory, Container destructor) {
         super(SegfaultModMenus.DESTRUCTOR, containerId);
-        this.allocator = allocator;
-        checkContainerSize(allocator, CONTAINER_SIZE);
-        allocator.startOpen(inventory.player);
+        this.allocator = destructor;
+        checkContainerSize(destructor, CONTAINER_SIZE);
+        destructor.startOpen(inventory.player);
 
-        addSlot(new Slot(allocator, AllocatorBlockEntity.SLOT_INPUT, 53, 20) {
+        addSlot(new Slot(destructor, DestructorBlockEntity.SLOT_INPUT, 53, 20) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
                 return itemStack.has(SegfaultModComponents.POINTER);
@@ -37,7 +37,7 @@ public class DestructorMenu extends AbstractContainerMenu {
                 return 1;
             }
         });
-        addSlot(new Slot(allocator, AllocatorBlockEntity.SLOT_RESULT, 107, 20) {
+        addSlot(new Slot(destructor, DestructorBlockEntity.SLOT_RESULT, 107, 20) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
                 return false;

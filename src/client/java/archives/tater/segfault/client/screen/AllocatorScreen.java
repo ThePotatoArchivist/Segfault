@@ -14,7 +14,7 @@ public class AllocatorScreen extends AbstractContainerScreen<AllocatorMenu> {
     private static final Identifier CONTAINER_LOCATION = Segfault.id("textures/gui/container/allocator.png");
 
     public AllocatorScreen(AllocatorMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, 176, 133);
+        super(menu, inventory, title, 176, 155);
         inventoryLabelY = imageHeight - 94;
     }
 

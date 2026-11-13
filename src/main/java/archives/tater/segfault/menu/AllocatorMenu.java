@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class AllocatorMenu extends AbstractContainerMenu {
-    private static final int CONTAINER_SIZE = 2;
+    private static final int CONTAINER_SIZE = 3;
     private final Container allocator;
 
     public AllocatorMenu(int containerId, Inventory inventory) {
@@ -32,6 +32,12 @@ public class AllocatorMenu extends AbstractContainerMenu {
                 return itemStack.has(SegfaultModComponents.POINTER);
             }
         });
+        addSlot(new Slot(allocator, AllocatorBlockEntity.SLOT_TEMPLATE, 80, 42) {
+            @Override
+            public boolean mayPlace(ItemStack itemStack) {
+                return itemStack.has(SegfaultModComponents.STRUCT_TEMPLATE);
+            }
+        });
         addSlot(new Slot(allocator, AllocatorBlockEntity.SLOT_RESULT, 107, 20) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
@@ -39,7 +45,7 @@ public class AllocatorMenu extends AbstractContainerMenu {
             }
         });
 
-        addStandardInventorySlots(inventory, 8, 51);
+        addStandardInventorySlots(inventory, 8, 73);
     }
 
     @Override
@@ -53,7 +59,7 @@ public class AllocatorMenu extends AbstractContainerMenu {
         if (slotIndex < allocator.getContainerSize()) {
             if (!moveItemStackTo(stack, allocator.getContainerSize(), slots.size(), true))
                 return ItemStack.EMPTY;
-        } else if (!moveItemStackTo(stack, 0, 1, false))
+        } else if (!moveItemStackTo(stack, 0, 2, false))
             return ItemStack.EMPTY;
 
         if (stack.isEmpty())

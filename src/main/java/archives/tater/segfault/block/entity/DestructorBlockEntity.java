@@ -8,6 +8,7 @@ import archives.tater.segfault.registry.SegfaultModComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -82,13 +83,13 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
         return true;
     }
 
-    public void tryDestruct() {
+    public void tryDestruct(ServerLevel serverLevel) {
         var input = getInput().copyWithCount(1);
         if (input.isEmpty()) return;
 
         var pointer = input.set(SegfaultModComponents.POINTER, PointerValue.NULL);
         if (pointer == null) return;
-        destruct(pointer);
+        destruct(serverLevel, pointer);
 
         var result = getResult();
 
@@ -103,7 +104,7 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
         setChanged();
     }
 
-    private void destruct(PointerValue pointer) {
+    public static void destruct(ServerLevel serverLevel, PointerValue pointer) {
 
     }
 }

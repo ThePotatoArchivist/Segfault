@@ -1,6 +1,7 @@
 package archives.tater.segfault.block.entity;
 
 import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.component.StructTemplate;
 import archives.tater.segfault.menu.AllocatorMenu;
 import archives.tater.segfault.registry.SegfaultModBlockEntities;
 import archives.tater.segfault.registry.SegfaultModComponents;
@@ -8,6 +9,7 @@ import archives.tater.segfault.registry.SegfaultModComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,8 +20,10 @@ import org.jspecify.annotations.Nullable;
 
 public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
     public static final int SLOT_INPUT = 0;
-    public static final int SLOT_RESULT = 1;
-    private static final int[] SLOTS_FOR_UP_SIDES = {SLOT_INPUT};
+    public static final int SLOT_TEMPLATE = 1;
+    public static final int SLOT_RESULT = 2;
+    private static final int[] SLOTS_FOR_UP = {SLOT_INPUT};
+    private static final int[] SLOTS_FOR_SIDE = {SLOT_TEMPLATE};
     private static final int[] SLOTS_FOR_DOWN = {SLOT_RESULT};
 
     public static final Component DEFAULT_NAME = Component.translatable("container.segfault.allocator");
@@ -30,6 +34,10 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
 
     public ItemStack getInput() {
         return getItem(SLOT_INPUT);
+    }
+
+    public ItemStack getTemplate() {
+        return getItem(SLOT_TEMPLATE);
     }
 
     public ItemStack getResult() {
@@ -52,19 +60,23 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
 
     @Override
     public int getContainerSize() {
-        return 2;
+        return 3;
     }
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack itemStack) {
-        return slot == SLOT_INPUT && itemStack.has(SegfaultModComponents.POINTER);
+        return switch (slot) {
+            case SLOT_INPUT -> itemStack.has(SegfaultModComponents.POINTER);
+            case SLOT_TEMPLATE -> itemStack.has(SegfaultModComponents.STRUCT_TEMPLATE);
+            default -> false;
+        };
     }
 
     @Override
     public int[] getSlotsForFace(Direction direction) {
-        return direction == Direction.DOWN
-                ? SLOTS_FOR_DOWN
-                : SLOTS_FOR_UP_SIDES;
+        return direction == Direction.UP ? SLOTS_FOR_UP :
+                direction == Direction.DOWN ? SLOTS_FOR_DOWN :
+                SLOTS_FOR_SIDE;
     }
 
     @Override
@@ -77,17 +89,20 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
         return true;
     }
 
-    public void tryAllocate() {
+    public void tryAllocate(ServerLevel serverLevel) {
         if (!getResult().isEmpty()) return;
+
+        var template = getTemplate().get(SegfaultModComponents.STRUCT_TEMPLATE);
+        if (template == null) return;
 
         var input = getInput().split(1);
         if (input.isEmpty()) return;
 
-        input.set(SegfaultModComponents.POINTER, allocate());
+        input.set(SegfaultModComponents.POINTER, allocate(serverLevel, template));
         setResult(input);
     }
 
-    private PointerValue allocate() {
+    public static PointerValue allocate(ServerLevel serverLevel, StructTemplate template) {
         return new PointerValue(new BlockPos(8, 0, 8));
     }
 }

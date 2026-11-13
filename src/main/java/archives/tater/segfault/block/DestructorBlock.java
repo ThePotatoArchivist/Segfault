@@ -18,7 +18,7 @@ public class DestructorBlock extends TriggeredContainerEntityBlock {
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (level.getBlockEntity(pos) instanceof DestructorBlockEntity destructor)
-            destructor.tryDestruct();
+            destructor.tryDestruct(level);
     }
 
     @Override
