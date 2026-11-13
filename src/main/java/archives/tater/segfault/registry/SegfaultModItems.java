@@ -1,6 +1,10 @@
 package archives.tater.segfault.registry;
 
 import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.component.StoredPointer;
+
+import net.fabricmc.fabric.api.event.player.ItemEvents;
+import net.fabricmc.fabric.api.item.v1.ItemClickBehaviorCallback;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,6 +23,10 @@ public interface SegfaultModItems {
 
     Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties()
             .component(SegfaultModComponents.POINTER, PointerValue.NULL)
+    );
+    Item PORTABLE_DEREFERENCER = register(SegfaultModItemIds.PORTABLE_DEREFERENCER, new Item.Properties()
+            .component(SegfaultModComponents.STORED_POINTER, StoredPointer.EMPTY)
+            .useCooldown(0.5f)
     );
 
     private static Item register(BlockItemId id, Block block) {
@@ -42,6 +50,7 @@ public interface SegfaultModItems {
     }
 
     static void init() {
-
+        ItemClickBehaviorCallback.EVENT.register(StoredPointer::onItemClickBehavior);
+        ItemEvents.USE.register(StoredPointer::use);
     }
 }

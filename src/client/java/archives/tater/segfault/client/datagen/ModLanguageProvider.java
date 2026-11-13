@@ -25,9 +25,11 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(SegfaultModBlocks.DEREFERENCER, "Dereferencer");
 
         translationBuilder.add(SegfaultModItems.POINTER, "Pointer");
+        translationBuilder.add(SegfaultModItems.PORTABLE_DEREFERENCER, "Portable Dereferencer");
 
-        translationBuilder.add("item.segfault.pointer.value", "→ (%s, %s, %s)");
-        translationBuilder.add("item.segfault.pointer.null", "→ NULL");
+        translationBuilder.add("item.segfault.pointer.value", "(%s, %s, %s)");
+        translationBuilder.add("item.segfault.pointer.null", "NULL");
+        translationBuilder.add("item.segfault.pointer.target", "→ %s");
         translationBuilder.add(getKey(AllocatorBlockEntity.DEFAULT_NAME), "Allocator");
         translationBuilder.add(getKey(DereferencerBlockEntity.DEFAULT_NAME), "Dereferencer");
     }

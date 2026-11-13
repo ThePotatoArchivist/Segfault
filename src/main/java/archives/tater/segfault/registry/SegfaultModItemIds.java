@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 
 public interface SegfaultModItemIds {
     ResourceKey<Item> POINTER = create("pointer");
+    ResourceKey<Item> PORTABLE_DEREFERENCER = create("portable_dereferencer");
 
     private static ResourceKey<Item> create(String path) {
         return ResourceKey.create(Registries.ITEM, Segfault.id(path));

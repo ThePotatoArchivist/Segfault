@@ -4,6 +4,8 @@
 8b4869f88dc55e516dc09c1b435bf10c6a0843b9 assets/segfault/items/allocator.json
 609183ef7ece9b7abcaf36fd6a324a140ffa2332 assets/segfault/items/dereferencer.json
 9bd0e45d8e6b14bfb99946a750a884ebacca19c5 assets/segfault/items/pointer.json
+a140acc4f6840abae46f1850286601fd70cd3154 assets/segfault/items/portable_dereferencer.json
 21cfc64ef9ff86f1c36348cc16e7140ead0b1776 assets/segfault/models/block/allocator.json
 5e7ace65b01b3a4b47eb602b98fd9a3502bd0d26 assets/segfault/models/block/dereferencer.json
 74f6dbe91a252f14ee2a84a39c2c4e1b3a745daf assets/segfault/models/item/pointer.json
+8e4662fc0471d6e82e29bff2c57d9f5dab54b12d assets/segfault/models/item/portable_dereferencer.json

@@ -39,10 +39,13 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> consumer, TooltipFlag flag, DataComponentGetter components) {
-        consumer.accept((isNull()
+        consumer.accept(Component.translatable("item.segfault.pointer.target", getDescription()).withStyle(ChatFormatting.GOLD));
+    }
+
+    public Component getDescription() {
+        return isNull()
                 ? Component.translatable("item.segfault.pointer.null")
-                : Component.translatable("item.segfault.pointer.value", pos.getX(), pos.getY(), pos.getZ())
-        ).withStyle(ChatFormatting.GOLD));
+                : Component.translatable("item.segfault.pointer.value", pos.getX(), pos.getY(), pos.getZ());
     }
 
     public static @Nullable TeleportTransition getDestination(ServerLevel level, @Nullable PointerValue pointer, Entity entity) {
