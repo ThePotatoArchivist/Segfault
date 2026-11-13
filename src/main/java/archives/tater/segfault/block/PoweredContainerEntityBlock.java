@@ -25,7 +25,7 @@ public abstract class PoweredContainerEntityBlock extends ContainerEntityBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
     }
 
@@ -34,10 +34,6 @@ public abstract class PoweredContainerEntityBlock extends ContainerEntityBlock {
         if (level.isClientSide()) return;
         var signal = level.hasNeighborSignal(pos);
         if (signal != state.getValue(POWERED))
-            level.setBlock(pos, updateShapeForPower(state.setValue(POWERED, signal), level, pos), UPDATE_CLIENTS);
-    }
-
-    protected BlockState updateShapeForPower(BlockState state, Level level, BlockPos pos) {
-        return state;
+            level.setBlock(pos, state.setValue(POWERED, signal), UPDATE_CLIENTS);
     }
 }
