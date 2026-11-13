@@ -66,7 +66,7 @@ public record StoredPointer(Optional<ItemStackTemplate> item) implements Tooltip
         var destination = PointerValue.getDestination(serverLevel, storedPointer.itemCopy().get(SegfaultModComponents.POINTER), player);
         if (destination == null) return InteractionResult.FAIL;
 
-        player.teleport(destination);
+        PointerValue.teleportInstant(player, destination);
         return InteractionResult.SUCCESS;
     }
 

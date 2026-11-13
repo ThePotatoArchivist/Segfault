@@ -2,7 +2,6 @@ package archives.tater.segfault.block;
 
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
 import archives.tater.segfault.component.PointerValue;
-import archives.tater.segfault.registry.SegfaultModAttachments;
 import archives.tater.segfault.registry.SegfaultModComponents;
 
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
@@ -26,16 +25,14 @@ public class DereferencerBlock extends PoweredContainerEntityBlock implements Po
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState onState, Entity entity) {
-        if (!(level instanceof ServerLevel serverLevel) || !onState.getValue(POWERED) || entity.is(ConventionalEntityTypeTags.TELEPORTING_NOT_SUPPORTED)) return;
+        if (!onState.getValue(POWERED) || entity.is(ConventionalEntityTypeTags.TELEPORTING_NOT_SUPPORTED)) return;
 
-        var portalDestination = getPortalDestination(serverLevel, entity, pos);
-        if (portalDestination != null)
-            entity.teleport(portalDestination);
+        entity.setAsInsidePortal(this, pos);
     }
 
     @Override
     public @Nullable TeleportTransition getPortalDestination(ServerLevel currentLevel, Entity entity, BlockPos portalEntryPos) {
-        if (entity.hasAttached(SegfaultModAttachments.EXITED_MEMORY) || !(currentLevel.getBlockEntity(portalEntryPos) instanceof DereferencerBlockEntity dereferencer)) return null;
+        if (!(currentLevel.getBlockEntity(portalEntryPos) instanceof DereferencerBlockEntity dereferencer)) return null;
 
         return PointerValue.getDestination(currentLevel, dereferencer.getTheItem().get(SegfaultModComponents.POINTER), entity);
     }

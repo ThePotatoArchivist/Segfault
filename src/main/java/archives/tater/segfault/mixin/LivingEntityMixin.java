@@ -28,8 +28,7 @@ public abstract class LivingEntityMixin extends Entity {
 
             var destination = PointerValue.getExitDestination(serverLevel, this);
             if (destination != null) {
-                resetFallDistance();
-                teleport(destination);
+                PointerValue.teleportInstant(this, destination);
                 return;
             }
         }

@@ -11,7 +11,6 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.item.Item;
@@ -30,8 +29,6 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
 
     public static final Codec<PointerValue> CODEC = BlockPos.CODEC.xmap(PointerValue::new, PointerValue::pos);
     public static final StreamCodec<ByteBuf, PointerValue> STREAM_CODEC = BlockPos.STREAM_CODEC.map(PointerValue::new, PointerValue::pos);
-
-    public static final TeleportTransition.PostTeleportTransition SET_EXITED = PointerValue::setExited;
 
     public boolean isNull() {
         return pos.equals(BlockPos.ZERO);
@@ -66,10 +63,12 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
         var newLevel = level.getServer().getLevel(entryPos.dimension());
         if (newLevel == null) return null;
 
-        return new TeleportTransition(newLevel, Vec3.atBottomCenterOf(entryPos.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, SET_EXITED);
+        return new TeleportTransition(newLevel, Vec3.atBottomCenterOf(entryPos.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, TeleportTransition.DO_NOTHING);
     }
 
-    private static void setExited(final Entity entity) {
-        entity.setAttached(SegfaultModAttachments.EXITED_MEMORY, Unit.INSTANCE);
+    public static void teleportInstant(Entity entity, TeleportTransition destination) {
+        entity.setPortalCooldown();
+        entity.resetFallDistance();
+        entity.teleport(destination);
     }
 }
