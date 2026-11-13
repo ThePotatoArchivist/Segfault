@@ -26,7 +26,7 @@ public interface SegfaultModItems {
     );
     Item PORTABLE_DEREFERENCER = register(SegfaultModItemIds.PORTABLE_DEREFERENCER, new Item.Properties()
             .component(SegfaultModComponents.STORED_POINTER, StoredPointer.EMPTY)
-            .useCooldown(0.5f)
+            .useCooldown(2f)
     );
 
     private static Item register(BlockItemId id, Block block) {
