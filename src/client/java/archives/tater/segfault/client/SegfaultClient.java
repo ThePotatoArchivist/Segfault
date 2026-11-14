@@ -4,10 +4,14 @@ import archives.tater.segfault.client.screen.AllocatorScreen;
 import archives.tater.segfault.client.screen.DestructorScreen;
 import archives.tater.segfault.client.screen.SingleSlotScreen;
 import archives.tater.segfault.registry.SegfaultModComponents;
+import archives.tater.segfault.registry.SegfaultModDebug;
 import archives.tater.segfault.registry.SegfaultModMenus;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.debug.v1.ClientDebugSubscriptionRegistry;
+import net.fabricmc.fabric.api.client.debug.v1.renderer.DebugRendererRegistry;
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 
@@ -22,5 +26,9 @@ public class SegfaultClient implements ClientModInitializer {
 		MenuScreens.register(SegfaultModMenus.ALLOCATOR, AllocatorScreen::new);
 		MenuScreens.register(SegfaultModMenus.DEREFERENCER, SingleSlotScreen::new);
 		MenuScreens.register(SegfaultModMenus.DESTRUCTOR, DestructorScreen::new);
+
+		var renderAllocations = FabricLoader.getInstance().isDevelopmentEnvironment();
+		ClientDebugSubscriptionRegistry.register(SegfaultModDebug.ALLOCATIONS, renderAllocations);
+		DebugRendererRegistry.register(SegfaultModDebug.ALLOCATIONS, _ -> new AllocationDebugRenderer(), renderAllocations);
 	}
 }
