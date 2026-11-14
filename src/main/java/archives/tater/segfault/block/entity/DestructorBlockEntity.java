@@ -1,5 +1,6 @@
 package archives.tater.segfault.block.entity;
 
+import archives.tater.segfault.AllocationManager;
 import archives.tater.segfault.component.PointerValue;
 import archives.tater.segfault.menu.DestructorMenu;
 import archives.tater.segfault.registry.SegfaultModBlockEntities;
@@ -8,7 +9,7 @@ import archives.tater.segfault.registry.SegfaultModComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -78,13 +79,13 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
         return true;
     }
 
-    public void tryDestruct(ServerLevel serverLevel) {
+    public void tryDestruct(MinecraftServer server) {
         var input = getInput().copyWithCount(1);
         if (input.isEmpty()) return;
 
         var pointer = input.set(SegfaultModComponents.POINTER, PointerValue.NULL);
         if (pointer == null) return;
-        destruct(serverLevel, pointer);
+        AllocationManager.get(server).destruct(pointer);
 
         var result = getResult();
 
@@ -99,7 +100,4 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
         setChanged();
     }
 
-    public static void destruct(ServerLevel serverLevel, PointerValue pointer) {
-
-    }
 }

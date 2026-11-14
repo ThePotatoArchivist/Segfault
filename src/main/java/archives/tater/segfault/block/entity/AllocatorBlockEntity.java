@@ -1,7 +1,6 @@
 package archives.tater.segfault.block.entity;
 
-import archives.tater.segfault.component.PointerValue;
-import archives.tater.segfault.component.StructTemplate;
+import archives.tater.segfault.AllocationManager;
 import archives.tater.segfault.menu.AllocatorMenu;
 import archives.tater.segfault.registry.SegfaultModBlockEntities;
 import archives.tater.segfault.registry.SegfaultModComponents;
@@ -9,7 +8,7 @@ import archives.tater.segfault.registry.SegfaultModComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -89,7 +88,7 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
         return true;
     }
 
-    public void tryAllocate(ServerLevel serverLevel) {
+    public void tryAllocate(MinecraftServer server) {
         if (!getResult().isEmpty()) return;
 
         var template = getTemplate().get(SegfaultModComponents.STRUCT_TEMPLATE);
@@ -98,11 +97,8 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
         var input = getInput().split(1);
         if (input.isEmpty()) return;
 
-        input.set(SegfaultModComponents.POINTER, allocate(serverLevel, template));
+        input.set(SegfaultModComponents.POINTER, AllocationManager.get(server).allocate(template));
         setResult(input);
     }
 
-    public static PointerValue allocate(ServerLevel serverLevel, StructTemplate template) {
-        return new PointerValue(new BlockPos(8, 0, 8));
-    }
 }

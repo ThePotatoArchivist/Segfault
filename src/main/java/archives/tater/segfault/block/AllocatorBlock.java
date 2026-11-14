@@ -20,7 +20,7 @@ public class AllocatorBlock extends TriggeredContainerEntityBlock {
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (level.getBlockEntity(pos) instanceof AllocatorBlockEntity allocator)
-            allocator.tryAllocate(level);
+            allocator.tryAllocate(level.getServer());
     }
 
     @Override
