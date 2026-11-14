@@ -28,6 +28,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(SegfaultModBlocks.DESTRUCTOR, "Destructor");
 
         translationBuilder.add(SegfaultModItems.POINTER, "Pointer");
+        translationBuilder.add(SegfaultModItems.STRUCT_TEMPLATE, "Struct Template");
         translationBuilder.add(SegfaultModItems.PORTABLE_DEREFERENCER, "Portable Dereferencer");
 
         translationBuilder.add(getKey(SegfaultModCreativeTabs.SEGFAULT.getDisplayName()), "Segfault");
@@ -35,6 +36,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("item.segfault.pointer.value", "(%s, %s, %s)");
         translationBuilder.add("item.segfault.pointer.null", "NULL");
         translationBuilder.add("item.segfault.pointer.target", "→ %s");
+        translationBuilder.add("item.segfault.struct_template.dimensions", "%sx%sx%s");
         translationBuilder.add(getKey(AllocatorBlockEntity.DEFAULT_NAME), "Allocator");
         translationBuilder.add(getKey(DereferencerBlockEntity.DEFAULT_NAME), "Dereferencer");
         translationBuilder.add(getKey(DestructorBlockEntity.DEFAULT_NAME), "Destructor");

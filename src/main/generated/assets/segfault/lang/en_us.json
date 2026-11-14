@@ -10,5 +10,7 @@
   "item.segfault.pointer.target": "→ %s",
   "item.segfault.pointer.value": "(%s, %s, %s)",
   "item.segfault.portable_dereferencer": "Portable Dereferencer",
+  "item.segfault.struct_template": "Struct Template",
+  "item.segfault.struct_template.dimensions": "%sx%sx%s",
   "itemGroup.segfault.segfault": "Segfault"
 }

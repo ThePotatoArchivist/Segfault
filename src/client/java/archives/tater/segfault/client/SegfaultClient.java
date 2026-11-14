@@ -17,6 +17,7 @@ public class SegfaultClient implements ClientModInitializer {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 		ItemComponentTooltipProviderRegistry.addFirst(SegfaultModComponents.STORED_POINTER);
 		ItemComponentTooltipProviderRegistry.addFirst(SegfaultModComponents.POINTER);
+		ItemComponentTooltipProviderRegistry.addFirst(SegfaultModComponents.STRUCT_TEMPLATE);
 		MenuScreens.register(SegfaultModMenus.SINGLE_SLOT, SingleSlotScreen::new);
 		MenuScreens.register(SegfaultModMenus.ALLOCATOR, AllocatorScreen::new);
 		MenuScreens.register(SegfaultModMenus.DEREFERENCER, SingleSlotScreen::new);
