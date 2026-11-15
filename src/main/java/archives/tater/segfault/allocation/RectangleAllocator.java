@@ -21,8 +21,11 @@ public class RectangleAllocator {
     ).apply(instance, RectangleAllocator::new));
 
     private final List<Allocation> allocations = new ArrayList<Allocation>();
+
     private int maxX;
     private int maxZ;
+    private final List<Allocation> holes = new ArrayList<>();
+
     private final Map<ChunkPos, Allocation> originCache = new HashMap<ChunkPos, Allocation>();
     private final Map<ChunkPos, Allocation> regionCache = new HashMap<ChunkPos, Allocation>();
 
@@ -54,19 +57,29 @@ public class RectangleAllocator {
 
     public Allocation allocate(int sizeX, int sizeZ) {
         var allocation = new Allocation(findNext(sizeX, sizeZ), sizeX, sizeZ);
+
         maxX = max(maxX, allocation.end().x() + 1);
         maxZ = max(maxZ, allocation.end().z() + 1);
+        holes.removeIf(allocation::intersects);
+
         add(allocation);
         return allocation;
     }
 
     private ChunkPos findNext(int sizeX, int sizeZ) {
+        for (var hole : holes)
+            if (sizeX <= hole.sizeX() && sizeZ <= hole.sizeZ())
+                return hole.start();
+
         return sizeX <= maxX && (sizeZ > maxZ || sizeX > sizeZ) ? new ChunkPos(0, maxZ) : new ChunkPos(maxX, 0);
     }
 
     public void deallocate(Allocation allocation) {
         remove(allocation);
+        holes.add(allocation);
     }
+
+    // cache updates
 
     private void add(Allocation allocation) {
         allocations.add(allocation);
