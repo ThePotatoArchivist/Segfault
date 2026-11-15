@@ -1,6 +1,6 @@
 package archives.tater.segfault.block.entity;
 
-import archives.tater.segfault.AllocationManager;
+import archives.tater.segfault.allocation.AllocationManager;
 import archives.tater.segfault.menu.AllocatorMenu;
 import archives.tater.segfault.registry.SegfaultModBlockEntities;
 import archives.tater.segfault.registry.SegfaultModComponents;

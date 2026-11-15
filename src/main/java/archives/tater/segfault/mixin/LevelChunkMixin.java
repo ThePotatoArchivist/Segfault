@@ -1,6 +1,6 @@
 package archives.tater.segfault.mixin;
 
-import archives.tater.segfault.AllocationManager;
+import archives.tater.segfault.allocation.AllocationManager;
 import archives.tater.segfault.registry.SegfaultModDebug;
 import archives.tater.segfault.registry.SegfaultModDimensions;
 

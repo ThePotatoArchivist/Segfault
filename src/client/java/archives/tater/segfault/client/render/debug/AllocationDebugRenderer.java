@@ -10,7 +10,7 @@ import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.Vec3;
 
-import static archives.tater.segfault.AllocationManager.CHUNK_SIZE;
+import static archives.tater.segfault.allocation.AllocationManager.CHUNK_SIZE;
 
 public class AllocationDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     @Override

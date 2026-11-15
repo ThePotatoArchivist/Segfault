@@ -1,20 +1,17 @@
-package archives.tater.segfault;
+package archives.tater.segfault.allocation;
 
+import archives.tater.segfault.Segfault;
 import archives.tater.segfault.component.PointerValue;
 import archives.tater.segfault.component.StructTemplate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
-import io.netty.buffer.ByteBuf;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -87,35 +84,17 @@ public class AllocationManager extends SavedData {
     }
 
     private void addToCache(Allocation allocation) {
-        originCache.put(allocation.origin, allocation);
-        ChunkPos.rangeClosed(allocation.origin, allocation.end()).forEach(pos -> regionCache.put(pos, allocation));
+        originCache.put(allocation.origin(), allocation);
+        ChunkPos.rangeClosed(allocation.origin(), allocation.end()).forEach(pos -> regionCache.put(pos, allocation));
     }
 
     private void removeFromCache(Allocation allocation) {
-        originCache.remove(allocation.origin, allocation);
-        ChunkPos.rangeClosed(allocation.origin, allocation.end()).forEach(pos -> regionCache.remove(pos, allocation));
+        originCache.remove(allocation.origin(), allocation);
+        ChunkPos.rangeClosed(allocation.origin(), allocation.end()).forEach(pos -> regionCache.remove(pos, allocation));
     }
 
     public static AllocationManager get(MinecraftServer server) {
         return server.getDataStorage().computeIfAbsent(TYPE);
     }
 
-    public record Allocation(ChunkPos origin, int chunksX, int chunksZ) {
-        public static final Codec<Allocation> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ChunkPos.CODEC.fieldOf("origin").forGetter(Allocation::origin),
-                ExtraCodecs.POSITIVE_INT.fieldOf("chunks_x").forGetter(Allocation::chunksX),
-                ExtraCodecs.POSITIVE_INT.fieldOf("chunks_y").forGetter(Allocation::chunksZ)
-        ).apply(instance, Allocation::new));
-
-        public static final StreamCodec<ByteBuf, Allocation> STREAM_CODEC = StreamCodec.composite(
-                ChunkPos.STREAM_CODEC, Allocation::origin,
-                ByteBufCodecs.VAR_INT, Allocation::chunksX,
-                ByteBufCodecs.VAR_INT, Allocation::chunksZ,
-                Allocation::new
-        );
-
-        public ChunkPos end() {
-            return new ChunkPos(origin.x() + chunksX, origin.z() + chunksZ);
-        }
-    }
 }
