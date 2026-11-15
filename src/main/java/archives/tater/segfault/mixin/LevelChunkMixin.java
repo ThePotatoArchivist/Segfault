@@ -33,7 +33,7 @@ public abstract class LevelChunkMixin extends ChunkAccess {
     private void registerAllocationDebug(ServerLevel level, DebugValueSource.Registration registration, CallbackInfo ci) {
         if (level.dimension() != SegfaultModDimensions.MEMORY) return;
         var allocationManager = AllocationManager.get(level.getServer());
-        var pos = getPos();
-        registration.register(SegfaultModDebug.ALLOCATION, () -> Optional.ofNullable(allocationManager.getWithOrigin(pos)));
+        var pos = AllocationManager.toGridPos(getPos());
+        registration.register(SegfaultModDebug.ALLOCATION, () -> Optional.ofNullable(allocationManager.getAllocationByOrigin(pos)));
     }
 }

@@ -8,9 +8,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.debug.DebugValueAccess;
-import net.minecraft.world.phys.Vec3;
 
-import static archives.tater.segfault.allocation.AllocationManager.CHUNK_SIZE;
+import static archives.tater.segfault.allocation.AllocationManager.toVec3;
 
 public class AllocationDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     @Override
@@ -19,8 +18,8 @@ public class AllocationDebugRenderer implements DebugRenderer.SimpleDebugRendere
             var allocation = maybeAllocation.orElse(null);
             if (allocation == null) return;
 
-            var begin = Vec3.atLowerCornerOf(allocation.start().getWorldPosition());
-            var end = Vec3.atLowerCornerOf(allocation.end().getBlockAt(CHUNK_SIZE, 0, CHUNK_SIZE));
+            var begin = toVec3(allocation.start());
+            var end = toVec3(allocation.end());
             Gizmos.rect(begin, end, Direction.UP, GizmoStyle.strokeAndFill(0xff00ffff, 3, 0x3f00ffff));
         });
     }

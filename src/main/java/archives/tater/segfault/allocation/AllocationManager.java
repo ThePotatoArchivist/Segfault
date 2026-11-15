@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.phys.Vec3;
 
 import org.jspecify.annotations.Nullable;
 
@@ -36,12 +37,12 @@ public class AllocationManager extends SavedData {
         this.rectangleAllocator = rectangleAllocator;
     }
 
-    public @Nullable Allocation get(ChunkPos pos) {
-        return rectangleAllocator.get(pos);
+    public @Nullable GridRegion getAllocation(GridPos pos) {
+        return rectangleAllocator.getAllocation(pos);
     }
 
-    public @Nullable Allocation getWithOrigin(ChunkPos pos) {
-        return rectangleAllocator.getWithOrigin(pos);
+    public @Nullable GridRegion getAllocationByOrigin(GridPos pos) {
+        return rectangleAllocator.getAllocationByOrigin(pos);
     }
 
     public PointerValue construct(MinecraftServer server, StructTemplate template) {
@@ -54,17 +55,18 @@ public class AllocationManager extends SavedData {
         );
 
         var state = Blocks.SMOOTH_STONE.defaultBlockState();
-        for (var pos : BlockPos.betweenClosed(allocation.start().getWorldPosition(), allocation.start().getBlockAt(template.dimensions().getX() - 1, 0, template.dimensions().getZ() - 1)))
+        var startBlock = minBlockPos(allocation.start());
+        for (var pos : BlockPos.betweenClosed(startBlock, startBlock.offset(template.dimensions().getX() - 1, 0, template.dimensions().getZ() - 1)))
             level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
 
         setDirty();
-        return new PointerValue(allocation.start().getBlockAt(0, 1, 0));
+        return new PointerValue(startBlock.offset(0, 1, 0));
     }
 
     public void destruct(PointerValue pointer) {
         if (pointer.isNull()) return;
 
-        var allocation = rectangleAllocator.get(ChunkPos.containing(pointer.pos()));
+        var allocation = rectangleAllocator.getAllocation(posContaining(pointer.pos()));
         if (allocation == null) return;
         rectangleAllocator.deallocate(allocation);
 
@@ -75,4 +77,19 @@ public class AllocationManager extends SavedData {
         return server.getDataStorage().computeIfAbsent(TYPE);
     }
 
+    public static GridPos posContaining(BlockPos pos) {
+        return new GridPos(pos.getX() / CHUNK_SIZE, pos.getZ() / CHUNK_SIZE);
+    }
+
+    public static GridPos toGridPos(ChunkPos pos) {
+        return new GridPos(pos.x(), pos.z());
+    }
+
+    public static BlockPos minBlockPos(GridPos pos) {
+        return new BlockPos(pos.x() * CHUNK_SIZE, 0, pos.z() * CHUNK_SIZE);
+    }
+
+    public static Vec3 toVec3(GridPos pos) {
+        return new Vec3(pos.x() * CHUNK_SIZE, 0, pos.z() * CHUNK_SIZE);
+    }
 }

@@ -2,7 +2,6 @@ package archives.tater.segfault.allocation;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.world.level.ChunkPos;
 
 import org.jspecify.annotations.Nullable;
 
@@ -13,28 +12,27 @@ import java.util.Map;
 
 import static java.lang.Math.max;
 
-// Note: uses ChunkPos so that
 public class RectangleAllocator {
 
     public static final Codec<RectangleAllocator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Allocation.CODEC.listOf().fieldOf("allocations").forGetter(o -> o.allocations)
+            GridRegion.CODEC.listOf().fieldOf("allocations").forGetter(o -> o.allocations)
     ).apply(instance, RectangleAllocator::new));
 
-    private final List<Allocation> allocations = new ArrayList<Allocation>();
+    private final List<GridRegion> allocations = new ArrayList<GridRegion>();
 
     private int maxX;
     private int maxZ;
-    private final List<Allocation> holes = new ArrayList<>();
+    private final List<GridRegion> holes = new ArrayList<>();
 
-    private final Map<ChunkPos, Allocation> originCache = new HashMap<ChunkPos, Allocation>();
-    private final Map<ChunkPos, Allocation> regionCache = new HashMap<ChunkPos, Allocation>();
+    private final Map<GridPos, GridRegion> originCache = new HashMap<>();
+    private final Map<GridPos, GridRegion> regionCache = new HashMap<>();
 
     public RectangleAllocator() {
         maxX = 1;
         maxZ = 1;
     }
 
-    public RectangleAllocator(List<Allocation> allocations) {
+    public RectangleAllocator(List<GridRegion> allocations) {
         this.allocations.addAll(allocations);
         for (var allocation : allocations)
             addToCache(allocation);
@@ -43,20 +41,20 @@ public class RectangleAllocator {
         maxZ = allocations.stream().mapToInt(allocation -> allocation.end().z()).max().orElse(1);
     }
 
-    public List<Allocation> getAllocations() {
+    public List<GridRegion> getAllocations() {
         return allocations;
     }
 
-    public @Nullable Allocation get(ChunkPos pos) {
+    public @Nullable GridRegion getAllocation(GridPos pos) {
         return regionCache.get(pos);
     }
 
-    public @Nullable Allocation getWithOrigin(ChunkPos pos) {
+    public @Nullable GridRegion getAllocationByOrigin(GridPos pos) {
         return originCache.get(pos);
     }
 
-    public Allocation allocate(int sizeX, int sizeZ) {
-        var allocation = new Allocation(findNext(sizeX, sizeZ), sizeX, sizeZ);
+    public GridRegion allocate(int sizeX, int sizeZ) {
+        var allocation = new GridRegion(findNext(sizeX, sizeZ), sizeX, sizeZ);
 
         maxX = max(maxX, allocation.end().x() + 1);
         maxZ = max(maxZ, allocation.end().z() + 1);
@@ -66,38 +64,40 @@ public class RectangleAllocator {
         return allocation;
     }
 
-    private ChunkPos findNext(int sizeX, int sizeZ) {
+    private GridPos findNext(int sizeX, int sizeZ) {
         for (var hole : holes)
             if (sizeX <= hole.sizeX() && sizeZ <= hole.sizeZ())
                 return hole.start();
 
-        return sizeX <= maxX && (sizeZ > maxZ || sizeX > sizeZ) ? new ChunkPos(0, maxZ) : new ChunkPos(maxX, 0);
+        return sizeX <= maxX && (sizeZ > maxZ || sizeX > sizeZ) ? new GridPos(0, maxZ) : new GridPos(maxX, 0);
     }
 
-    public void deallocate(Allocation allocation) {
+    public void deallocate(GridRegion allocation) {
         remove(allocation);
         holes.add(allocation);
     }
 
     // cache updates
 
-    private void add(Allocation allocation) {
+    private void add(GridRegion allocation) {
         allocations.add(allocation);
         addToCache(allocation);
     }
 
-    private void remove(Allocation allocation) {
+    private void remove(GridRegion allocation) {
         allocations.remove(allocation);
         removeFromCache(allocation);
     }
 
-    private void addToCache(Allocation allocation) {
+    private void addToCache(GridRegion allocation) {
         originCache.put(allocation.start(), allocation);
-        ChunkPos.rangeClosed(allocation.start(), allocation.end()).forEach(pos -> regionCache.put(pos, allocation));
+        for (GridPos pos : allocation)
+            regionCache.put(pos, allocation);
     }
 
-    private void removeFromCache(Allocation allocation) {
+    private void removeFromCache(GridRegion allocation) {
         originCache.remove(allocation.start(), allocation);
-        ChunkPos.rangeClosed(allocation.start(), allocation.end()).forEach(pos -> regionCache.remove(pos, allocation));
+        for (GridPos pos : allocation)
+            regionCache.remove(pos, allocation);
     }
 }
