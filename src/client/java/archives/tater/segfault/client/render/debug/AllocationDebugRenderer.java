@@ -19,8 +19,9 @@ public class AllocationDebugRenderer implements DebugRenderer.SimpleDebugRendere
             var allocation = maybeAllocation.orElse(null);
             if (allocation == null) return;
 
-            var begin = Vec3.atLowerCornerOf(allocation.origin().getWorldPosition());
-            Gizmos.rect(begin, begin.add(allocation.chunksX() * CHUNK_SIZE, 0, allocation.chunksZ() * CHUNK_SIZE), Direction.UP, GizmoStyle.strokeAndFill(0xff00ffff, 3, 0x3f00ffff));
+            var begin = Vec3.atLowerCornerOf(allocation.start().getWorldPosition());
+            var end = Vec3.atLowerCornerOf(allocation.end().getBlockAt(CHUNK_SIZE, 0, CHUNK_SIZE));
+            Gizmos.rect(begin, end, Direction.UP, GizmoStyle.strokeAndFill(0xff00ffff, 3, 0x3f00ffff));
         });
     }
 }

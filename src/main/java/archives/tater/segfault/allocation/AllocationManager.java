@@ -84,13 +84,13 @@ public class AllocationManager extends SavedData {
     }
 
     private void addToCache(Allocation allocation) {
-        originCache.put(allocation.origin(), allocation);
-        ChunkPos.rangeClosed(allocation.origin(), allocation.end()).forEach(pos -> regionCache.put(pos, allocation));
+        originCache.put(allocation.start(), allocation);
+        ChunkPos.rangeClosed(allocation.start(), allocation.end()).forEach(pos -> regionCache.put(pos, allocation));
     }
 
     private void removeFromCache(Allocation allocation) {
-        originCache.remove(allocation.origin(), allocation);
-        ChunkPos.rangeClosed(allocation.origin(), allocation.end()).forEach(pos -> regionCache.remove(pos, allocation));
+        originCache.remove(allocation.start(), allocation);
+        ChunkPos.rangeClosed(allocation.start(), allocation.end()).forEach(pos -> regionCache.remove(pos, allocation));
     }
 
     public static AllocationManager get(MinecraftServer server) {
