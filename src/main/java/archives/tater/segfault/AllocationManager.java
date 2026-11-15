@@ -2,6 +2,7 @@ package archives.tater.segfault;
 
 import archives.tater.segfault.component.PointerValue;
 import archives.tater.segfault.component.StructTemplate;
+import archives.tater.segfault.util.LazyDerived;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -19,6 +20,8 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.Math.ceilDiv;
 
@@ -33,6 +36,7 @@ public class AllocationManager extends SavedData {
     public static final SavedDataType<AllocationManager> TYPE = new SavedDataType<>(Segfault.id("allocations"), AllocationManager::new, CODEC, DataFixTypes.LEVEL);
 
     private final List<Allocation> allocations = new ArrayList<>();
+    private final LazyDerived<List<Allocation>, Map<ChunkPos, List<Allocation>>> perChunkCache = new LazyDerived<>(this::getAllocations, _ -> new ConcurrentHashMap<>());
 
     private AllocationManager() {}
 
@@ -45,11 +49,11 @@ public class AllocationManager extends SavedData {
     }
 
     public List<Allocation> getAllocationsInChunk(ChunkPos pos) {
-        return allocations.stream().filter(allocation -> pos.contains(allocation.origin)).toList();
+        return perChunkCache.get().computeIfAbsent(pos, pos2 -> allocations.stream().filter(allocation -> pos2.contains(allocation.origin)).toList());
     }
 
     public PointerValue allocate(StructTemplate template) {
-        var origin = new BlockPos(8, 0, 8);
+        var origin = new BlockPos(16, 0, 0);
         allocations.add(new Allocation(
                 origin,
                 ceilDiv(template.dimensions().getX(), CHUNK_SIZE),
