@@ -1,5 +1,7 @@
 package archives.tater.segfault.client;
 
+import archives.tater.segfault.Segfault;
+import archives.tater.segfault.client.render.debug.AllocationDebugRenderer;
 import archives.tater.segfault.client.screen.AllocatorScreen;
 import archives.tater.segfault.client.screen.DestructorScreen;
 import archives.tater.segfault.client.screen.SingleSlotScreen;
@@ -13,9 +15,14 @@ import net.fabricmc.fabric.api.client.debug.v1.renderer.DebugRendererRegistry;
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 
+import net.minecraft.client.gui.components.debug.DebugEntryNoop;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.resources.Identifier;
 
 public class SegfaultClient implements ClientModInitializer {
+	public static final Identifier DEBUG_CHUNK_GRID = DebugScreenEntries.register(Segfault.id("chunk_grid"), new DebugEntryNoop());
+
 	@Override
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
