@@ -18,6 +18,8 @@ import net.minecraft.world.level.levelgen.blending.BlendingData;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Optional;
+
 @Mixin(LevelChunk.class)
 public abstract class LevelChunkMixin extends ChunkAccess {
     public LevelChunkMixin(ChunkPos chunkPos, UpgradeData upgradeData, LevelHeightAccessor levelHeightAccessor, PalettedContainerFactory containerFactory, long inhabitedTime, LevelChunkSection @Nullable [] sections, @Nullable BlendingData blendingData) {
@@ -32,6 +34,6 @@ public abstract class LevelChunkMixin extends ChunkAccess {
         if (level.dimension() != SegfaultModDimensions.MEMORY) return;
         var allocationManager = AllocationManager.get(level.getServer());
         var pos = getPos();
-        registration.register(SegfaultModDebug.ALLOCATIONS, () -> allocationManager.getAllocationsInChunk(pos));
+        registration.register(SegfaultModDebug.ALLOCATION, () -> Optional.ofNullable(allocationManager.get(pos)));
     }
 }

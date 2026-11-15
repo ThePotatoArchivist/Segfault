@@ -8,10 +8,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.debug.DebugSubscription;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface SegfaultModDebug {
-    DebugSubscription<List<AllocationManager.Allocation>> ALLOCATIONS = register("allocations", new DebugSubscription<>(AllocationManager.Allocation.STREAM_CODEC.apply(ByteBufCodecs.list())));
+    DebugSubscription<Optional<AllocationManager.Allocation>> ALLOCATION = register("allocation", new DebugSubscription<>(ByteBufCodecs.optional(AllocationManager.Allocation.STREAM_CODEC)));
 
     private static <T> DebugSubscription<T> register(String path, DebugSubscription<T> subscription) {
         return Registry.register(BuiltInRegistries.DEBUG_SUBSCRIPTION, Segfault.id(path), subscription);

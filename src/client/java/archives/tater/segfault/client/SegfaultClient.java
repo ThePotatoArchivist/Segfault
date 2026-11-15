@@ -35,7 +35,7 @@ public class SegfaultClient implements ClientModInitializer {
 		MenuScreens.register(SegfaultModMenus.DESTRUCTOR, DestructorScreen::new);
 
 		var renderAllocations = FabricLoader.getInstance().isDevelopmentEnvironment();
-		ClientDebugSubscriptionRegistry.register(SegfaultModDebug.ALLOCATIONS, renderAllocations);
-		DebugRendererRegistry.register(SegfaultModDebug.ALLOCATIONS, _ -> new AllocationDebugRenderer(), renderAllocations);
+		ClientDebugSubscriptionRegistry.register(SegfaultModDebug.ALLOCATION, renderAllocations);
+		DebugRendererRegistry.register(SegfaultModDebug.ALLOCATION, _ -> new AllocationDebugRenderer(), renderAllocations);
 	}
 }
