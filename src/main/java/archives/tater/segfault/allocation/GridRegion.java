@@ -38,6 +38,14 @@ public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos
         return end.z() - start.z();
     }
 
+    public boolean isEmpty() {
+        return sizeX() <= 0 || sizeZ() <= 0;
+    }
+
+    public boolean isNotEmpty() {
+        return !isEmpty();
+    }
+
     public boolean intersects(GridRegion other) {
         return this.equals(other) ||
                 intersects(this.start.x(), this.end.x(), other.start.x(), other.end.x()) &&
