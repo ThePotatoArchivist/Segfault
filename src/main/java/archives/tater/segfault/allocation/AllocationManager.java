@@ -3,18 +3,25 @@ package archives.tater.segfault.allocation;
 import archives.tater.segfault.Segfault;
 import archives.tater.segfault.component.PointerValue;
 import archives.tater.segfault.component.StructTemplate;
+import archives.tater.segfault.registry.SegfaultModDimensions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.ceilDiv;
 
@@ -49,17 +56,23 @@ public class AllocationManager extends SavedData {
         return originCache.get(pos);
     }
 
-    public PointerValue allocate(StructTemplate template) {
+    public PointerValue allocate(MinecraftServer server, StructTemplate template) {
+        var level = server.getLevel(SegfaultModDimensions.MEMORY);
+        if (level == null) return PointerValue.NULL;
+
+        var sizeX = ceilDiv(template.dimensions().getX(), CHUNK_SIZE);
+        var sizeZ = ceilDiv(template.dimensions().getZ(), CHUNK_SIZE);
+
         var origin = new ChunkPos(1, 0);
-        add(new Allocation(
-                origin,
-                ceilDiv(template.dimensions().getX(), CHUNK_SIZE),
-                ceilDiv(template.dimensions().getZ(), CHUNK_SIZE)
-        ));
+
+        add(new Allocation(origin, sizeX, sizeZ));
+
+        var state = Blocks.SMOOTH_STONE.defaultBlockState();
+        for (var pos : BlockPos.betweenClosed(origin.getWorldPosition(), origin.getBlockAt(template.dimensions().getX() - 1, 0, template.dimensions().getZ() - 1)))
+            level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
 
         setDirty();
-        // TODO
-        return new PointerValue(origin.getWorldPosition());
+        return new PointerValue(origin.getBlockAt(0, 1, 0));
     }
 
     public void destruct(PointerValue pointer) {
@@ -70,7 +83,6 @@ public class AllocationManager extends SavedData {
         remove(allocation);
 
         setDirty();
-        // TODO
     }
 
     private void add(Allocation allocation) {
