@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.Math.ceilDiv;
+import static java.lang.Math.max;
 
 public class AllocationManager extends SavedData {
 
@@ -36,16 +37,24 @@ public class AllocationManager extends SavedData {
     public static final SavedDataType<AllocationManager> TYPE = new SavedDataType<>(Segfault.id("allocations"), AllocationManager::new, CODEC, DataFixTypes.LEVEL);
 
     private final List<Allocation> allocations = new ArrayList<>();
+    private int maxX;
+    private int maxZ;
 
     private final Map<ChunkPos, Allocation> originCache = new HashMap<>();
     private final Map<ChunkPos, Allocation> regionCache = new HashMap<>();
 
-    private AllocationManager() {}
+    private AllocationManager() {
+        maxX = 1;
+        maxZ = 1;
+    }
 
     private AllocationManager(List<Allocation> allocations) {
         this.allocations.addAll(allocations);
         for (var allocation : allocations)
             addToCache(allocation);
+
+        maxX = allocations.stream().mapToInt(allocation -> allocation.end().x()).max().orElse(1);
+        maxZ = allocations.stream().mapToInt(allocation -> allocation.end().z()).max().orElse(1);
     }
 
     public List<Allocation> getAllocations() {
@@ -56,23 +65,33 @@ public class AllocationManager extends SavedData {
         return originCache.get(pos);
     }
 
-    public PointerValue allocate(MinecraftServer server, StructTemplate template) {
+    public PointerValue construct(MinecraftServer server, StructTemplate template) {
         var level = server.getLevel(SegfaultModDimensions.MEMORY);
         if (level == null) return PointerValue.NULL;
 
-        var sizeX = ceilDiv(template.dimensions().getX(), CHUNK_SIZE);
-        var sizeZ = ceilDiv(template.dimensions().getZ(), CHUNK_SIZE);
-
-        var origin = new ChunkPos(1, 0);
-
-        add(new Allocation(origin, sizeX, sizeZ));
+        var allocation = allocate(
+                ceilDiv(template.dimensions().getX(), CHUNK_SIZE),
+                ceilDiv(template.dimensions().getZ(), CHUNK_SIZE)
+        );
 
         var state = Blocks.SMOOTH_STONE.defaultBlockState();
-        for (var pos : BlockPos.betweenClosed(origin.getWorldPosition(), origin.getBlockAt(template.dimensions().getX() - 1, 0, template.dimensions().getZ() - 1)))
+        for (var pos : BlockPos.betweenClosed(allocation.start().getWorldPosition(), allocation.start().getBlockAt(template.dimensions().getX() - 1, 0, template.dimensions().getZ() - 1)))
             level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
 
         setDirty();
-        return new PointerValue(origin.getBlockAt(0, 1, 0));
+        return new PointerValue(allocation.start().getBlockAt(0, 1, 0));
+    }
+
+    private Allocation allocate(int sizeX, int sizeZ) {
+        var allocation = new Allocation(findNext(sizeX, sizeZ), sizeX, sizeZ);
+        maxX = max(maxX, allocation.end().x() + 1);
+        maxZ = max(maxZ, allocation.end().z() + 1);
+        add(allocation);
+        return allocation;
+    }
+
+    private ChunkPos findNext(int sizeX, int sizeZ) {
+        return sizeX <= maxX && (sizeZ > maxZ || sizeX > sizeZ) ? new ChunkPos(0, maxZ) : new ChunkPos(maxX, 0);
     }
 
     public void destruct(PointerValue pointer) {

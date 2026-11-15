@@ -97,7 +97,7 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
         var input = getInput().split(1);
         if (input.isEmpty()) return;
 
-        input.set(SegfaultModComponents.POINTER, AllocationManager.get(server).allocate(server, template));
+        input.set(SegfaultModComponents.POINTER, AllocationManager.get(server).construct(server, template));
         setResult(input);
     }
 

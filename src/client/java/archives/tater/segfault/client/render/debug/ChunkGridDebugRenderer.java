@@ -12,6 +12,7 @@ public class ChunkGridDebugRenderer implements DebugRenderer.SimpleDebugRenderer
 
     public static final int GRID_SIZE = 16;
     public static final int CHUNK_SIZE = 16;
+    public static final double Y = -1 / 16.0;
 
     @Override
     public void emitGizmos(double camX, double camY, double camZ, DebugValueAccess debugValues, Frustum frustum, float partialTicks) {
@@ -26,10 +27,10 @@ public class ChunkGridDebugRenderer implements DebugRenderer.SimpleDebugRenderer
         for (int i = -GRID_SIZE; i <= GRID_SIZE; i++) {
             var x = xStart + i * CHUNK_SIZE;
             var z = zStart + i * CHUNK_SIZE;
-            Gizmos.line(new Vec3(x, 0, zStart), new Vec3(x, 0, zMin), 0xffffffff, 1);
-            Gizmos.line(new Vec3(x, 0, zStart), new Vec3(x, 0, zMax), 0xffffffff, 1);
-            Gizmos.line(new Vec3(xStart, 0, z), new Vec3(xMin, 0, z), 0xffffffff, 1);
-            Gizmos.line(new Vec3(xStart, 0, z), new Vec3(xMax, 0, z), 0xffffffff, 1);
+            Gizmos.line(new Vec3(x, Y, zStart), new Vec3(x, Y, zMin), 0xffffffff, 1);
+            Gizmos.line(new Vec3(x, Y, zStart), new Vec3(x, Y, zMax), 0xffffffff, 1);
+            Gizmos.line(new Vec3(xStart, Y, z), new Vec3(xMin, Y, z), 0xffffffff, 1);
+            Gizmos.line(new Vec3(xStart, Y, z), new Vec3(xMax, Y, z), 0xffffffff, 1);
         }
 
         Gizmos.line(new Vec3(0, 0, 0), new Vec3(0, 256, 0), 0xff00ff00);
