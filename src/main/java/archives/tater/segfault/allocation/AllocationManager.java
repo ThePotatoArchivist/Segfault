@@ -6,7 +6,6 @@ import archives.tater.segfault.component.StructTemplate;
 import archives.tater.segfault.registry.SegfaultModDimensions;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -18,58 +17,38 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static java.lang.Math.ceilDiv;
-import static java.lang.Math.max;
 
 public class AllocationManager extends SavedData {
 
     public static final int CHUNK_SIZE = 16;
 
-    public static final Codec<AllocationManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Allocation.CODEC.listOf().fieldOf("allocations").forGetter(o -> o.allocations)
-    ).apply(instance, AllocationManager::new));
-
+    public static final Codec<AllocationManager> CODEC = RectangleAllocator.CODEC.xmap(AllocationManager::new, o -> o.rectangleAllocator);
     public static final SavedDataType<AllocationManager> TYPE = new SavedDataType<>(Segfault.id("allocations"), AllocationManager::new, CODEC, DataFixTypes.LEVEL);
 
-    private final List<Allocation> allocations = new ArrayList<>();
-    private int maxX;
-    private int maxZ;
+    private final RectangleAllocator rectangleAllocator;
 
-    private final Map<ChunkPos, Allocation> originCache = new HashMap<>();
-    private final Map<ChunkPos, Allocation> regionCache = new HashMap<>();
-
-    private AllocationManager() {
-        maxX = 1;
-        maxZ = 1;
+    public AllocationManager() {
+        this(new RectangleAllocator());
     }
 
-    private AllocationManager(List<Allocation> allocations) {
-        this.allocations.addAll(allocations);
-        for (var allocation : allocations)
-            addToCache(allocation);
-
-        maxX = allocations.stream().mapToInt(allocation -> allocation.end().x()).max().orElse(1);
-        maxZ = allocations.stream().mapToInt(allocation -> allocation.end().z()).max().orElse(1);
-    }
-
-    public List<Allocation> getAllocations() {
-        return allocations;
+    public AllocationManager(RectangleAllocator rectangleAllocator) {
+        this.rectangleAllocator = rectangleAllocator;
     }
 
     public @Nullable Allocation get(ChunkPos pos) {
-        return originCache.get(pos);
+        return rectangleAllocator.get(pos);
+    }
+
+    public @Nullable Allocation getWithOrigin(ChunkPos pos) {
+        return rectangleAllocator.getWithOrigin(pos);
     }
 
     public PointerValue construct(MinecraftServer server, StructTemplate template) {
         var level = server.getLevel(SegfaultModDimensions.MEMORY);
         if (level == null) return PointerValue.NULL;
 
-        var allocation = allocate(
+        var allocation = rectangleAllocator.allocate(
                 ceilDiv(template.dimensions().getX(), CHUNK_SIZE),
                 ceilDiv(template.dimensions().getZ(), CHUNK_SIZE)
         );
@@ -82,46 +61,14 @@ public class AllocationManager extends SavedData {
         return new PointerValue(allocation.start().getBlockAt(0, 1, 0));
     }
 
-    private Allocation allocate(int sizeX, int sizeZ) {
-        var allocation = new Allocation(findNext(sizeX, sizeZ), sizeX, sizeZ);
-        maxX = max(maxX, allocation.end().x() + 1);
-        maxZ = max(maxZ, allocation.end().z() + 1);
-        add(allocation);
-        return allocation;
-    }
-
-    private ChunkPos findNext(int sizeX, int sizeZ) {
-        return sizeX <= maxX && (sizeZ > maxZ || sizeX > sizeZ) ? new ChunkPos(0, maxZ) : new ChunkPos(maxX, 0);
-    }
-
     public void destruct(PointerValue pointer) {
         if (pointer.isNull()) return;
 
-        var allocation = regionCache.get(ChunkPos.containing(pointer.pos()));
+        var allocation = rectangleAllocator.get(ChunkPos.containing(pointer.pos()));
         if (allocation == null) return;
-        remove(allocation);
+        rectangleAllocator.deallocate(allocation);
 
         setDirty();
-    }
-
-    private void add(Allocation allocation) {
-        allocations.add(allocation);
-        addToCache(allocation);
-    }
-
-    private void remove(Allocation allocation) {
-        allocations.remove(allocation);
-        removeFromCache(allocation);
-    }
-
-    private void addToCache(Allocation allocation) {
-        originCache.put(allocation.start(), allocation);
-        ChunkPos.rangeClosed(allocation.start(), allocation.end()).forEach(pos -> regionCache.put(pos, allocation));
-    }
-
-    private void removeFromCache(Allocation allocation) {
-        originCache.remove(allocation.start(), allocation);
-        ChunkPos.rangeClosed(allocation.start(), allocation.end()).forEach(pos -> regionCache.remove(pos, allocation));
     }
 
     public static AllocationManager get(MinecraftServer server) {
