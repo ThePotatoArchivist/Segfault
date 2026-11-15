@@ -2,6 +2,7 @@ package archives.tater.segfault.allocation;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.util.VisibleForDebug;
 
 import org.jspecify.annotations.Nullable;
 
@@ -56,6 +57,11 @@ public class RectangleAllocator {
         return allocations;
     }
 
+    @VisibleForDebug
+    public List<GridRegion> getHoles() {
+        return holes;
+    }
+
     public @Nullable GridRegion getAllocation(GridPos pos) {
         return regionCache.get(pos);
     }
@@ -69,8 +75,8 @@ public class RectangleAllocator {
 
         var prevMaxX = maxX;
         var prevMaxZ = maxZ;
-        maxX = max(maxX, allocation.end().x() + 1);
-        maxZ = max(maxZ, allocation.end().z() + 1);
+        maxX = max(maxX, allocation.end().x());
+        maxZ = max(maxZ, allocation.end().z());
 
         if (prevMaxX != maxX || prevMaxZ != maxZ)
             updateHoles(stream -> stream
@@ -108,7 +114,7 @@ public class RectangleAllocator {
 
     private static Function<GridRegion, Stream<? extends GridRegion>> subtractFromHole(GridRegion allocation) {
         return hole -> {
-            if (hole.intersects(allocation)) return Stream.of(hole);
+            if (!hole.intersects(allocation)) return Stream.of(hole);
 
             return Stream.of(
                     new GridRegion(hole.start(), new GridPos(hole.end().x(), allocation.start().z())),
@@ -119,7 +125,7 @@ public class RectangleAllocator {
         };
     }
 
-    private Function<GridRegion, GridRegion> expandEdgeHole(int oldX, int newX, int oldZ, int newZ) {
+    private static Function<GridRegion, GridRegion> expandEdgeHole(int oldX, int newX, int oldZ, int newZ) {
         return hole -> {
             var end = expand(hole.end(), oldX, newX, oldZ, newZ);
             if (hole.end() == end) return hole;
@@ -127,7 +133,7 @@ public class RectangleAllocator {
         };
     }
 
-    private GridPos expand(GridPos pos, int oldX, int newX, int oldZ, int newZ) {
+    private static GridPos expand(GridPos pos, int oldX, int newX, int oldZ, int newZ) {
         if (pos.x() == oldX) {
             if (pos.z() == oldZ)
                 return new GridPos(newX, newZ);

@@ -21,11 +21,6 @@ public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos
             GridRegion::new
     );
 
-    public GridRegion {
-        if (end.x() < start.x() || end.z() < start.z())
-            throw new IllegalArgumentException("End of allocation may not be less than start");
-    }
-
     public GridRegion(GridPos start, int chunksX, int chunksZ) {
         this(start, new GridPos(start.x() + chunksX, start.z() + chunksZ));
     }
