@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static archives.tater.segfault.util.SegfaultUtil.foldCompose;
@@ -27,16 +26,10 @@ public class RectangleAllocator {
 
     private int maxX;
     private int maxZ;
-    private List<GridRegion> holes;
+    private List<GridRegion> holes = List.of();
 
     private final Map<GridPos, GridRegion> originCache = new HashMap<>();
     private final Map<GridPos, GridRegion> regionCache = new HashMap<>();
-
-    public RectangleAllocator() {
-        maxX = 1;
-        maxZ = 1;
-        holes = List.of(new GridRegion(new GridPos(0, 0), new GridPos(1, 1)));
-    }
 
     public RectangleAllocator(List<GridRegion> allocations) {
         this.allocations.addAll(allocations);
@@ -46,11 +39,7 @@ public class RectangleAllocator {
         maxX = allocations.stream().mapToInt(allocation -> allocation.end().x()).max().orElse(1);
         maxZ = allocations.stream().mapToInt(allocation -> allocation.end().z()).max().orElse(1);
 
-        holes = foldCompose(
-                Stream.of(new GridRegion(new GridPos(0, 0), new GridPos(maxX, maxZ))),
-                allocations,
-                allocation -> stream -> stream.flatMap(subtractFromHole(allocation))
-        ).toList();
+        rebuildHoles();
     }
 
     public List<GridRegion> getAllocations() {
@@ -73,17 +62,10 @@ public class RectangleAllocator {
     public GridRegion allocate(int sizeX, int sizeZ) {
         var allocation = new GridRegion(findNext(sizeX, sizeZ), sizeX, sizeZ);
 
-        var prevMaxX = maxX;
-        var prevMaxZ = maxZ;
         maxX = max(maxX, allocation.end().x());
         maxZ = max(maxZ, allocation.end().z());
 
-        if (prevMaxX != maxX || prevMaxZ != maxZ)
-            updateHoles(stream -> stream
-                    .map(expandEdgeHole(prevMaxX, maxX, prevMaxZ, maxZ))
-                    .flatMap(subtractFromHole(allocation)));
-        else
-            updateHoles(stream -> stream.flatMap(subtractFromHole(allocation)));
+        rebuildHoles();
 
         add(allocation);
         return allocation;
@@ -99,17 +81,17 @@ public class RectangleAllocator {
 
     public void deallocate(GridRegion allocation) {
         remove(allocation);
-        addHole(allocation);
+        rebuildHoles();
     }
 
     // hole maintenance
 
-    private void updateHoles(UnaryOperator<Stream<GridRegion>> pipeline) {
-        holes = pipeline.apply(holes.stream()).toList();
-    }
-
-    private void addHole(GridRegion hole) {
-        holes.add(hole);
+    private void rebuildHoles() {
+        holes = foldCompose(
+                Stream.of(new GridRegion(new GridPos(0, 0), new GridPos(maxX, maxZ))),
+                allocations,
+                allocation -> stream -> stream.flatMap(subtractFromHole(allocation))
+        ).toList();
     }
 
     private static Function<GridRegion, Stream<? extends GridRegion>> subtractFromHole(GridRegion allocation) {
@@ -123,28 +105,6 @@ public class RectangleAllocator {
                     new GridRegion(new GridPos(allocation.end().x(), hole.start().z()), hole.end())
             ).filter(GridRegion::isNotEmpty);
         };
-    }
-
-    private static Function<GridRegion, GridRegion> expandEdgeHole(int oldX, int newX, int oldZ, int newZ) {
-        return hole -> {
-            var end = expand(hole.end(), oldX, newX, oldZ, newZ);
-            if (hole.end() == end) return hole;
-            return new GridRegion(hole.start(), end);
-        };
-    }
-
-    private static GridPos expand(GridPos pos, int oldX, int newX, int oldZ, int newZ) {
-        if (pos.x() == oldX) {
-            if (pos.z() == oldZ)
-                return new GridPos(newX, newZ);
-            else
-                return new GridPos(newX, pos.z());
-        } else {
-            if (pos.z() == oldZ)
-                return new GridPos(pos.x(), newZ);
-            else
-                return pos;
-        }
     }
 
     // cache updates
