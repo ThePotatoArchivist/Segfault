@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static archives.tater.segfault.util.SegfaultUtil.foldCompose;
@@ -23,7 +24,7 @@ public class RectangleAllocator {
 
     private int maxX;
     private int maxZ;
-    private List<GridRegion> holes = List.of();
+    private Set<GridRegion> holes = Set.of();
 
     private final Map<GridPos, GridRegion> originCache = new HashMap<>();
     private final Map<GridPos, GridRegion> regionCache = new HashMap<>();
@@ -44,7 +45,7 @@ public class RectangleAllocator {
     }
 
     @VisibleForDebug
-    public List<GridRegion> getHoles() {
+    public Set<GridRegion> getHoles() {
         return holes;
     }
 
@@ -59,12 +60,13 @@ public class RectangleAllocator {
     public GridRegion allocate(int sizeX, int sizeZ) {
         var allocation = new GridRegion(findNext(sizeX, sizeZ), sizeX, sizeZ);
 
+        add(allocation);
+
         maxX = max(maxX, allocation.end().x());
         maxZ = max(maxZ, allocation.end().z());
 
         rebuildHoles();
 
-        add(allocation);
         return allocation;
     }
 
@@ -88,7 +90,7 @@ public class RectangleAllocator {
                 Stream.of(new GridRegion(new GridPos(0, 0), new GridPos(maxX, maxZ))),
                 allocations,
                 allocation -> stream -> stream.flatMap(subtractFromHole(allocation))
-        ).toList();
+        ).collect(Collectors.toSet());
     }
 
     private static Function<GridRegion, Stream<? extends GridRegion>> subtractFromHole(GridRegion allocation) {

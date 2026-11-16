@@ -58,7 +58,7 @@ public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos
     }
 
     private static boolean isValid(GridPos start, GridPos end) {
-        return start.x() > end.x() && start.z() > end.z();
+        return start.x() < end.x() && start.z() < end.z();
     }
 
     public static @Nullable GridRegion ofOrNull(GridPos start, GridPos end) {
@@ -73,17 +73,18 @@ public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos
 
             @Override
             public boolean hasNext() {
-                return x + 1 < end.x() || z + 1 < end.z();
+                return x < end.x() || z < end.z();
             }
 
             @Override
             public GridPos next() {
+                var next = new GridPos(x, z);
                 x++;
                 if (x >= end.z()) {
                     z++;
                     x = start.x();
                 }
-                return new GridPos(x, z);
+                return next;
             }
         };
     }
