@@ -6,10 +6,7 @@ import net.minecraft.util.VisibleForDebug;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -99,11 +96,11 @@ public class RectangleAllocator {
             if (!hole.intersects(allocation)) return Stream.of(hole);
 
             return Stream.of(
-                    new GridRegion(hole.start(), new GridPos(hole.end().x(), allocation.start().z())),
-                    new GridRegion(new GridPos(hole.start().x(), allocation.end().z()), hole.end()),
-                    new GridRegion(hole.start(), new GridPos(allocation.start().x(), hole.end().z())),
-                    new GridRegion(new GridPos(allocation.end().x(), hole.start().z()), hole.end())
-            ).filter(GridRegion::isNotEmpty);
+                    GridRegion.ofOrNull(hole.start(), new GridPos(hole.end().x(), allocation.start().z())),
+                    GridRegion.ofOrNull(new GridPos(hole.start().x(), allocation.end().z()), hole.end()),
+                    GridRegion.ofOrNull(hole.start(), new GridPos(allocation.start().x(), hole.end().z())),
+                    GridRegion.ofOrNull(new GridPos(allocation.end().x(), hole.start().z()), hole.end())
+            ).filter(Objects::nonNull);
         };
     }
 

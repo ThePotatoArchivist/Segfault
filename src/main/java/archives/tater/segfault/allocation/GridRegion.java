@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.codec.StreamCodec;
 
 import io.netty.buffer.ByteBuf;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 
@@ -20,6 +21,11 @@ public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos
             GridPos.STREAM_CODEC, GridRegion::end,
             GridRegion::new
     );
+
+    public GridRegion {
+        if (!isValid(start, end))
+            throw new IllegalArgumentException("Invalid region: " + start + ", " + end);
+    }
 
     public GridRegion(GridPos start, int chunksX, int chunksZ) {
         this(start, new GridPos(start.x() + chunksX, start.z() + chunksZ));
@@ -49,6 +55,14 @@ public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos
 
     private static boolean intersects(int min1, int max1, int min2, int max2) {
         return max1 > min2 && max2 > min1;
+    }
+
+    private static boolean isValid(GridPos start, GridPos end) {
+        return start.x() > end.x() && start.z() > end.z();
+    }
+
+    public static @Nullable GridRegion ofOrNull(GridPos start, GridPos end) {
+        return isValid(start, end) ? new GridRegion(start, end) : null;
     }
 
     @Override
