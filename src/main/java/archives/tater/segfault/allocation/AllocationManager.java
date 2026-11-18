@@ -22,7 +22,7 @@ import java.util.List;
 
 import static java.lang.Math.ceilDiv;
 
-public class AllocationManager extends SavedData {
+public final class AllocationManager extends SavedData {
 
     public static final int CHUNK_SIZE = 16;
 
