@@ -18,4 +18,9 @@ public record GridPos(int x, int z) {
             ByteBufCodecs.VAR_INT, GridPos::z,
             GridPos::new
     );
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + z + ")";
+    }
 }
