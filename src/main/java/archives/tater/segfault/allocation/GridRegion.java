@@ -1,89 +1,103 @@
 package archives.tater.segfault.allocation;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import io.netty.buffer.ByteBuf;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 
-public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos> {
+public record GridRegion(int startX, int startY, int endX, int endY) implements Iterable<GridPos> {
 
-    public static final Codec<GridRegion> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            GridPos.CODEC.fieldOf("start").forGetter(GridRegion::start),
-            GridPos.CODEC.fieldOf("end").forGetter(GridRegion::end)
+    public static final MapCodec<GridRegion> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.INT.fieldOf("start_x").forGetter(GridRegion::startX),
+            Codec.INT.fieldOf("start_y").forGetter(GridRegion::startY),
+            Codec.INT.fieldOf("end_x").forGetter(GridRegion::endX),
+            Codec.INT.fieldOf("end_y").forGetter(GridRegion::endY)
     ).apply(instance, GridRegion::new));
 
+    public static final Codec<GridRegion> CODEC = MAP_CODEC.codec();
+
     public static final StreamCodec<ByteBuf, GridRegion> STREAM_CODEC = StreamCodec.composite(
-            GridPos.STREAM_CODEC, GridRegion::start,
-            GridPos.STREAM_CODEC, GridRegion::end,
+            ByteBufCodecs.VAR_INT, GridRegion::startX,
+            ByteBufCodecs.VAR_INT, GridRegion::startY,
+            ByteBufCodecs.VAR_INT, GridRegion::endX,
+            ByteBufCodecs.VAR_INT, GridRegion::endY,
             GridRegion::new
     );
 
     public GridRegion {
-        if (!isValid(start, end))
-            throw new IllegalArgumentException("Invalid region: " + start + ", " + end);
+        if (!isValid(startX, startY, endX, endY))
+            throw new IllegalArgumentException("Invalid region: (" + startX + ", " + startY + "), (" + endX + ", " + endY + ")");
     }
 
-    public GridRegion(GridPos start, int chunksX, int chunksZ) {
-        this(start, new GridPos(start.x() + chunksX, start.z() + chunksZ));
+    public GridRegion(GridPos start, GridPos end) {
+        this(start.x(), start.y(), end.x(), end.y());
+    }
+
+    public GridRegion(GridPos start, int sizeX, int sizeY) {
+        this(start.x(), start.y(), start.x() + sizeX, start.y() + sizeY);
+    }
+
+    public GridPos start() {
+        return new GridPos(startX, startY);
+    }
+
+    public GridPos end() {
+        return new GridPos(endX, endY);
     }
 
     public int sizeX() {
-        return end.x() - start.x();
+        return endX - startX;
     }
 
-    public int sizeZ() {
-        return end.z() - start.z();
+    public int sizeY() {
+        return endY - startY;
     }
 
     public boolean contains(GridPos pos) {
-        return start.x() <= pos.x() && pos.x() < end.x() &&
-                start.z() <= pos.z() && pos.z() < end.z();
+        return startX <= pos.x() && pos.x() < endX &&
+                startY <= pos.y() && pos.y() < endY;
     }
 
     public boolean fits(int sizeX, int sizeZ) {
-        return sizeX <= sizeX() && sizeZ <= sizeZ();
+        return sizeX <= sizeX() && sizeZ <= sizeY();
     }
 
     public boolean intersects(GridRegion other) {
         return this.equals(other) ||
-                intersects(this.start.x(), this.end.x(), other.start.x(), other.end.x()) &&
-                intersects(this.start.z(), this.end.z(), other.start.z(), other.end.z());
+                intersects(this.startX, this.endX, other.startX, other.endX) &&
+                intersects(this.startY, this.endY, other.startY, other.endY);
     }
 
     private static boolean intersects(int min1, int max1, int min2, int max2) {
         return max1 > min2 && max2 > min1;
     }
 
-    private static boolean isValid(GridPos start, GridPos end) {
-        return start.x() < end.x() && start.z() < end.z();
-    }
-
-    public static @Nullable GridRegion ofOrNull(GridPos start, GridPos end) {
-        return isValid(start, end) ? new GridRegion(start, end) : null;
+    private static boolean isValid(int startX, int startY, int endX, int endY) {
+        return startX < endX && startY < endY;
     }
 
     @Override
     public Iterator<GridPos> iterator() {
         return new Iterator<>() {
-            int x = start.x();
-            int z = start.z();
+            int x = startX;
+            int y = startY;
 
             @Override
             public boolean hasNext() {
-                return x < end.x() || z < end.z();
+                return x < endX || y < endY;
             }
 
             @Override
             public GridPos next() {
-                var next = new GridPos(x, z);
-                x++;
-                if (x >= end.z()) {
-                    z++;
-                    x = start.x();
+                var next = new GridPos(x, y);
+                if (++x >= endX) {
+                    y++;
+                    x = startX;
                 }
                 return next;
             }

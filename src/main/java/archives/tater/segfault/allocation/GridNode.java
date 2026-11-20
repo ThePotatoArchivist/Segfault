@@ -30,7 +30,7 @@ public abstract sealed class GridNode {
     }
 
     private static <T extends GridNode> Products.P1<RecordCodecBuilder.Mu<T>, GridRegion> commonFields(RecordCodecBuilder.Instance<T> instance) {
-        return instance.group(GridRegion.CODEC.fieldOf("region").forGetter(o -> o.region));
+        return instance.group(GridRegion.MAP_CODEC.forGetter(o -> o.region));
     }
 
     public static final class Leaf extends GridNode {

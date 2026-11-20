@@ -7,20 +7,20 @@ import net.minecraft.network.codec.StreamCodec;
 
 import io.netty.buffer.ByteBuf;
 
-public record GridPos(int x, int z) {
+public record GridPos(int x, int y) {
     public static final Codec<GridPos> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("x").forGetter(GridPos::x),
-            Codec.INT.fieldOf("z").forGetter(GridPos::z)
+            Codec.INT.fieldOf("y").forGetter(GridPos::y)
     ).apply(instance, GridPos::new));
 
     public static final StreamCodec<ByteBuf, GridPos> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, GridPos::x,
-            ByteBufCodecs.VAR_INT, GridPos::z,
+            ByteBufCodecs.VAR_INT, GridPos::y,
             GridPos::new
     );
 
     @Override
     public String toString() {
-        return "(" + x + ", " + z + ")";
+        return "(" + x + ", " + y + ")";
     }
 }

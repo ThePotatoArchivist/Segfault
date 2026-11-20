@@ -64,14 +64,14 @@ public final class AllocationManager extends SavedData {
         return new PointerValue(startBlock.offset(0, 1, 0));
     }
 
-    public void destruct(PointerValue pointer) {
-        if (pointer.isNull()) return;
+    public boolean destruct(PointerValue pointer) {
+        if (pointer.isNull()) return false;
 
-        var allocation = rectangleAllocator.getAllocation(posContaining(pointer.pos()));
-        if (allocation == null) return;
-        rectangleAllocator.deallocate(allocation);
+        if (!rectangleAllocator.deallocate(posContaining(pointer.pos()))) return false;
 
         setDirty();
+
+        return true;
     }
 
     public static AllocationManager get(MinecraftServer server) {
@@ -87,10 +87,10 @@ public final class AllocationManager extends SavedData {
     }
 
     public static BlockPos minBlockPos(GridPos pos) {
-        return new BlockPos(pos.x() * CHUNK_SIZE, 0, pos.z() * CHUNK_SIZE);
+        return new BlockPos(pos.x() * CHUNK_SIZE, 0, pos.y() * CHUNK_SIZE);
     }
 
     public static Vec3 toVec3(GridPos pos) {
-        return new Vec3(pos.x() * CHUNK_SIZE, 0, pos.z() * CHUNK_SIZE);
+        return new Vec3(pos.x() * CHUNK_SIZE, 0, pos.y() * CHUNK_SIZE);
     }
 }

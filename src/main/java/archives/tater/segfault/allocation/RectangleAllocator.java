@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
+/// Based on the [Guillotiere](https://github.com/nical/guillotiere) algorithm
 public final class RectangleAllocator {
 
     public static final Codec<RectangleAllocator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -25,10 +26,15 @@ public final class RectangleAllocator {
     }
 
     public @Nullable GridRegion getAllocation(GridPos pos) {
+        var node = getNode(pos);
+        return node == null || !node.free ? null : node.region;
+    }
+
+    private GridNode.@Nullable Leaf getNode(GridPos pos) {
         GridNode node = allocations;
 
         while (true) switch (node) {
-            case GridNode.Leaf leaf -> { return leaf.free ? null : leaf.region; }
+            case GridNode.Leaf leaf -> { return leaf; }
             case GridNode.Split split -> {
                 for (var child : split.children) {
                     if (child.region.contains(pos)) {
@@ -68,7 +74,7 @@ public final class RectangleAllocator {
 
     private Pair<GridNode, GridNode> subdivide(GridNode node, int sizeX, int sizeZ) {
         var remainderX = node.region.sizeX() - sizeX;
-        var remainderZ = node.region.sizeZ() - sizeZ;
+        var remainderZ = node.region.sizeY() - sizeZ;
 
         var horizontalFirst = node.parent == null || node.parent.vertical;
 
@@ -95,7 +101,12 @@ public final class RectangleAllocator {
         };
     }
 
-    public void deallocate(GridRegion allocation) {
+    public boolean deallocate(GridPos pos) {
+        var node = getNode(pos);
+        if (node == null || node.free) return false;
 
+        //
+
+        return true;
     }
 }
