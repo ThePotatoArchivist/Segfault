@@ -53,6 +53,7 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
 
         if (entity.level().dimension() != SegfaultModDimensions.MEMORY)
             entity.setAttached(SegfaultModAttachments.ENTRY_POS, GlobalPos.of(entity.level().dimension(), entity.blockPosition()));
+        // TODO play teleport sound
         return new TeleportTransition(memory, Vec3.atBottomCenterOf(pointer.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, TeleportTransition.DO_NOTHING);
     }
 

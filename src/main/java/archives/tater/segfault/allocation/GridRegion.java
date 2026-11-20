@@ -7,6 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.Pair;
 
 import java.util.Iterator;
 
@@ -34,12 +35,16 @@ public record GridRegion(int startX, int startY, int endX, int endY) implements 
             throw new IllegalArgumentException("Invalid region: (" + startX + ", " + startY + "), (" + endX + ", " + endY + ")");
     }
 
-    public GridRegion(GridPos start, GridPos end) {
-        this(start.x(), start.y(), end.x(), end.y());
+    public static GridRegion region(int startX, int startY, int endX, int endY) {
+        return new GridRegion(startX, startY, endX, endY);
     }
 
-    public GridRegion(GridPos start, int sizeX, int sizeY) {
-        this(start.x(), start.y(), start.x() + sizeX, start.y() + sizeY);
+    public static GridRegion region(GridPos start, GridPos end) {
+        return region(start.x(), start.y(), end.x(), end.y());
+    }
+
+    public static GridRegion region(GridPos start, int sizeX, int sizeY) {
+        return region(start.x(), start.y(), start.x() + sizeX, start.y() + sizeY);
     }
 
     public GridPos start() {
@@ -63,8 +68,8 @@ public record GridRegion(int startX, int startY, int endX, int endY) implements 
                 startY <= pos.y() && pos.y() < endY;
     }
 
-    public boolean fits(int sizeX, int sizeZ) {
-        return sizeX <= sizeX() && sizeZ <= sizeY();
+    public boolean fits(int sizeX, int sizeY) {
+        return sizeX <= sizeX() && sizeY <= sizeY();
     }
 
     public boolean intersects(GridRegion other) {
@@ -77,8 +82,41 @@ public record GridRegion(int startX, int startY, int endX, int endY) implements 
         return max1 > min2 && max2 > min1;
     }
 
+    public Pair<GridRegion, GridRegion> splitX(int size1X) {
+        if (size1X <= 0 || size1X >= sizeX()) throw new IllegalArgumentException("Cannot split " + this + " at x size " + size1X);
+        return Pair.of(
+                new GridRegion(startX, startY, startX + size1X, endY),
+                new GridRegion(startX + size1X, startY, endX, endY)
+        );
+    }
+
+    public Pair<GridRegion, GridRegion> splitY(int size1Y) {
+        if (size1Y <= 0 || size1Y >= sizeY()) throw new IllegalArgumentException("Cannot split " + this + " at y size " + size1Y);
+        return Pair.of(
+                new GridRegion(startX, startY, endX, startY + size1Y),
+                new GridRegion(startX, startY + size1Y, endX, endY)
+        );
+    }
+
+    public Pair<GridRegion, GridRegion> split(int size1, boolean vertical) {
+        return vertical ? splitY(size1) : splitX(size1);
+    }
+
+    public GridRegion expandX(int add) {
+        return region(start(), sizeX() + add, sizeY());
+    }
+
+    public GridRegion expandY(int add) {
+        return region(start(), sizeX(), sizeY() + add);
+    }
+
     private static boolean isValid(int startX, int startY, int endX, int endY) {
         return startX < endX && startY < endY;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + startX + ", " + startY + ")-(" + endX + ", " + endY + ")";
     }
 
     @Override

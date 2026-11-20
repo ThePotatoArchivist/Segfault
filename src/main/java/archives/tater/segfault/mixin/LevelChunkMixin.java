@@ -34,6 +34,6 @@ public abstract class LevelChunkMixin extends ChunkAccess {
         if (level.dimension() != SegfaultModDimensions.MEMORY) return;
         var allocationManager = AllocationManager.get(level.getServer());
         var pos = AllocationManager.toGridPos(getPos());
-        registration.register(SegfaultModDebug.ALLOCATION, () -> Optional.ofNullable(allocationManager.getAllocationByOrigin(pos)));
+        registration.register(SegfaultModDebug.ALLOCATION, () -> Optional.ofNullable(allocationManager.getRegionByOrigin(pos)));
     }
 }

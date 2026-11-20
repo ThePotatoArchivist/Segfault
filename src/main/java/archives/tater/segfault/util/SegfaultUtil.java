@@ -1,5 +1,7 @@
 package archives.tater.segfault.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -12,5 +14,12 @@ public class SegfaultUtil {
         for (var operation : operations)
             stream = apply.apply(operation).apply(stream);
         return stream;
+    }
+
+    public static <T> List<T> withAppended(List<T> list, T value) {
+        var result = new ArrayList<T>(list.size() + 1);
+        result.addAll(list);
+        result.add(value);
+        return result;
     }
 }

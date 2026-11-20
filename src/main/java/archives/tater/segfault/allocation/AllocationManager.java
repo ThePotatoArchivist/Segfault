@@ -8,6 +8,7 @@ import archives.tater.segfault.registry.SegfaultModDimensions;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.VisibleForDebug;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
@@ -44,6 +45,11 @@ public final class AllocationManager extends SavedData {
 
     public @Nullable GridRegion getAllocationByOrigin(GridPos pos) {
         return rectangleAllocator.getAllocationByOrigin(pos);
+    }
+
+    @VisibleForDebug
+    public @Nullable DisplayRegion getRegionByOrigin(GridPos pos) {
+        return rectangleAllocator.getRegionByOrigin(pos);
     }
 
     public PointerValue construct(MinecraftServer server, StructTemplate template) {

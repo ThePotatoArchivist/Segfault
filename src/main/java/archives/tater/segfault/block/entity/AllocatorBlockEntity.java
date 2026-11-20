@@ -9,6 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -96,6 +98,8 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
 
         var input = getInput().split(1);
         if (input.isEmpty()) return;
+
+        getLevel().playSound(null, getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS); // TODO custom sound event
 
         input.set(SegfaultModComponents.POINTER, AllocationManager.get(server).construct(server, template));
         setResult(input);

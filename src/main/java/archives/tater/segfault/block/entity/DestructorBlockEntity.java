@@ -10,6 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -85,7 +87,8 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
 
         var pointer = input.set(SegfaultModComponents.POINTER, PointerValue.NULL);
         if (pointer == null) return;
-        AllocationManager.get(server).destruct(pointer);
+        if (AllocationManager.get(server).destruct(pointer))
+            getLevel().playSound(null, getBlockPos(), SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS); // TODO custom sound event
 
         var result = getResult();
 

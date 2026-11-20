@@ -33,21 +33,33 @@ public abstract sealed class GridNode {
         return instance.group(GridRegion.MAP_CODEC.forGetter(o -> o.region));
     }
 
+    public static Split split(GridRegion region, boolean vertical, GridNode... children) {
+        return new Split(region, vertical, children);
+    }
+
+    public static Split split(GridRegion region, boolean vertical, List<GridNode> children) {
+        return new Split(region, vertical, children);
+    }
+
+    public static Leaf free(GridRegion region) {
+        return new Leaf(region, false);
+    }
+
+    public static Leaf used(GridRegion region) {
+        return new Leaf(region, true);
+    }
+
     public static final class Leaf extends GridNode {
 
         public static final Codec<Leaf> CODEC = RecordCodecBuilder.create(instance -> commonFields(instance).and(
-                Codec.BOOL.fieldOf("free").forGetter(o -> o.free)
+                Codec.BOOL.fieldOf("free").forGetter(o -> !o.used)
         ).apply(instance, Leaf::new));
 
-        public boolean free;
+        public boolean used;
 
-        public Leaf(GridRegion region, boolean free) {
+        private Leaf(GridRegion region, boolean used) {
             super(region);
-            this.free = free;
-        }
-
-        public Leaf(GridRegion region) {
-            this(region, true);
+            this.used = used;
         }
     }
 
@@ -61,19 +73,19 @@ public abstract sealed class GridNode {
         public final boolean vertical;
         public List<GridNode> children = new LinkedList<>();
 
-        public Split(GridRegion region, boolean vertical) {
+        private Split(GridRegion region, boolean vertical) {
             super(region);
             this.vertical = vertical;
         }
 
-        public Split(GridRegion region, boolean vertical, List<GridNode> children) {
+        private Split(GridRegion region, boolean vertical, List<GridNode> children) {
             this(region, vertical);
             this.children.addAll(children);
             for (var child : children)
                 child.parent = this;
         }
 
-        public Split(GridRegion region, boolean vertical, GridNode... children) {
+        private Split(GridRegion region, boolean vertical, GridNode... children) {
             this(region, vertical);
             for (var child : children) {
                 this.children.add(child);
