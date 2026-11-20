@@ -18,8 +18,6 @@ import net.minecraft.world.phys.Vec3;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-
 import static java.lang.Math.ceilDiv;
 
 public final class AllocationManager extends SavedData {
@@ -31,11 +29,12 @@ public final class AllocationManager extends SavedData {
 
     private final RectangleAllocator rectangleAllocator;
 
-    public AllocationManager() {
-        this(new RectangleAllocator(List.of(new GridRegion(new GridPos(0, 0), 1, 1))));
+    private AllocationManager() {
+        this(new RectangleAllocator());
+        rectangleAllocator.allocate(1, 1);
     }
 
-    public AllocationManager(RectangleAllocator rectangleAllocator) {
+    private AllocationManager(RectangleAllocator rectangleAllocator) {
         this.rectangleAllocator = rectangleAllocator;
     }
 

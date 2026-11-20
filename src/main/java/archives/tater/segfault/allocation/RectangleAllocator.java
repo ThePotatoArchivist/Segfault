@@ -3,49 +3,42 @@ package archives.tater.segfault.allocation;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import it.unimi.dsi.fastutil.Pair;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
+import java.util.Optional;
 
 public final class RectangleAllocator {
 
     public static final Codec<RectangleAllocator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            GridMap.REGIONS_CODEC.fieldOf("allocations").forGetter(o -> o.allocations)
-    ).apply(instance, RectangleAllocator::new));
+            GridNode.CODEC.optionalFieldOf("allocations").forGetter(o -> Optional.ofNullable(o.allocations))
+    ).apply(instance, allocations -> new RectangleAllocator(allocations.orElse(null))));
 
-    private final GridNode allocations = GridNode.FREE;
-    private int maxX = 0;
-    private int maxZ = 0;
+    private @Nullable GridNode allocations;
 
-    public RectangleAllocator(List<GridRegion> allocations) {
-        maxX = allocations.stream().mapToInt(allocation -> allocation.end().x()).max().orElse(0);
-        maxZ = allocations.stream().mapToInt(allocation -> allocation.end().z()).max().orElse(0);
+    public RectangleAllocator() {
+        allocations = null;
+    }
+
+    public RectangleAllocator(@Nullable GridNode allocations) {
+        this.allocations = allocations;
     }
 
     public @Nullable GridRegion getAllocation(GridPos pos) {
-        int startX = 0;
-        int startZ = 0;
         GridNode node = allocations;
 
         while (true) switch (node) {
-            case GridNode.Free _ -> { return null; }
-            case GridNode.Used(var region) -> { return region; }
-            case GridNode.HorizontalSplit split -> {
-                if (pos.x() < startX + split.sizeLeft)
-                    node = split.left;
-                else {
-                    node = split.right;
-                    startX += split.sizeLeft;
+            case GridNode.Leaf leaf -> { return leaf.free ? null : leaf.region; }
+            case GridNode.Split split -> {
+                for (var child : split.children) {
+                    if (child.region.contains(pos)) {
+                        node = child;
+                        break;
+                    }
+                    return null;
                 }
             }
-            case GridNode.VerticalSplit split -> {
-                if (pos.z() < startZ + split.sizeUp)
-                    node = split.up;
-                else {
-                    node = split.down;
-                    startZ += split.sizeUp;
-                }
-            }
+            case null, default -> { return null; }
         }
     }
 
@@ -55,38 +48,51 @@ public final class RectangleAllocator {
     }
 
     public GridRegion allocate(int sizeX, int sizeZ) {
+        if (allocations == null) {
+            allocations = new GridNode.Leaf(new GridRegion(new GridPos(0, 0), sizeX, sizeZ), false);
+            return allocations.region;
+        }
 
+        var free = findFree(allocations, sizeX, sizeZ);
+        if (free == null) {
+
+            return;
+        }
+
+        var nodes = subdivide(free, sizeX, sizeZ);
+        if (free.parent == null)
+            allocations = new GridNode.Split(free.region, false, nodes.first(), nodes.second());
+        else
+            free.parent.replace(free, nodes.first(), nodes.second());
     }
 
-    private @Nullable GridRegion find(int sizeX, int sizeZ) {
-        int startX = 0;
-        int startZ = 0;
-        int endX = maxX;
-        int endZ = maxZ;
-        GridNode node = allocations;
+    private Pair<GridNode, GridNode> subdivide(GridNode node, int sizeX, int sizeZ) {
+        var remainderX = node.region.sizeX() - sizeX;
+        var remainderZ = node.region.sizeZ() - sizeZ;
 
-        while (true) switch (node) {
-            case GridNode.Free _ -> { return null; }
-            case GridNode.Used(var region) -> { return null; }
-            case GridNode.HorizontalSplit split -> {
-                if (pos.x() < startX + split.sizeLeft) {
-                    node = split.left;
-                    endX = split.sizeLeft;
-                } else {
-                    node = split.right;
-                    startX += split.sizeLeft;
+        var horizontalFirst = node.parent == null || node.parent.vertical;
+
+        var region = new GridRegion(node.region.start(), sizeX, sizeZ);
+        var main = horizontalFirst
+                ? new GridNode.Leaf(region, false);
+
+        var remainder = new GridNode.Leaf();
+
+        return Pair.of(main, remainder);
+    }
+
+    private @Nullable GridNode findFree(GridNode node, int sizeX, int sizeZ) {
+        return switch (node) {
+            case GridNode.Leaf leaf -> leaf.free && leaf.region.fits(sizeX, sizeZ) ? leaf : null;
+            case GridNode.Split split -> {
+                for (var child : split.children) {
+                    var result = findFree(child, sizeX, sizeZ);
+                    if (result != null) yield result;
                 }
+                yield null;
             }
-            case GridNode.VerticalSplit split -> {
-                if (pos.z() < startZ + split.sizeUp) {
-                    node = split.up;
-                    endZ = split.sizeUp;
-                } else {
-                    node = split.down;
-                    startZ += split.sizeUp;
-                }
-            }
-        }
+            default -> throw new IllegalStateException("Unexpected value: " + node);
+        };
     }
 
     public void deallocate(GridRegion allocation) {

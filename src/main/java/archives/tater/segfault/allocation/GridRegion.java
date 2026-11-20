@@ -39,6 +39,15 @@ public record GridRegion(GridPos start, GridPos end) implements Iterable<GridPos
         return end.z() - start.z();
     }
 
+    public boolean contains(GridPos pos) {
+        return start.x() <= pos.x() && pos.x() < end.x() &&
+                start.z() <= pos.z() && pos.z() < end.z();
+    }
+
+    public boolean fits(int sizeX, int sizeZ) {
+        return sizeX <= sizeX() && sizeZ <= sizeZ();
+    }
+
     public boolean intersects(GridRegion other) {
         return this.equals(other) ||
                 intersects(this.start.x(), this.end.x(), other.start.x(), other.end.x()) &&
