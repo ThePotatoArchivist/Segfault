@@ -73,7 +73,9 @@ public final class AllocationManager extends SavedData {
     public boolean destruct(PointerValue pointer) {
         if (pointer.isNull()) return false;
 
-        if (!rectangleAllocator.deallocate(posContaining(pointer.pos()))) return false;
+        var pos = posContaining(pointer.pos());
+        if (pos.x() == 0 && pos.y() == 0) return false;
+        if (!rectangleAllocator.deallocate(pos)) return false;
 
         setDirty();
 

@@ -52,7 +52,7 @@ public abstract sealed class GridNode {
     public static final class Leaf extends GridNode {
 
         public static final Codec<Leaf> CODEC = RecordCodecBuilder.create(instance -> commonFields(instance).and(
-                Codec.BOOL.fieldOf("free").forGetter(o -> !o.used)
+                Codec.BOOL.fieldOf("used").forGetter(o -> o.used)
         ).apply(instance, Leaf::new));
 
         public boolean used;

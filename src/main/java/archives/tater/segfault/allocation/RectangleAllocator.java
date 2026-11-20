@@ -211,21 +211,23 @@ public final class RectangleAllocator {
                     start = leaf.region.start();
                 freeCount++;
             } else {
-                trySimplify(iterator, freeCount, start, child.region.end());
+                trySimplify(node, iterator, freeCount, start, child.region.end());
                 start = null;
                 freeCount = 0;
             }
         }
         if (child != null)
-            trySimplify(iterator, freeCount, start, child.region.end());
+            trySimplify(node, iterator, freeCount, start, child.region.end());
     }
 
-    private static void trySimplify(ListIterator<GridNode> iterator, int freeCount, @Nullable GridPos start, GridPos end) {
+    private static void trySimplify(Split parent, ListIterator<GridNode> iterator, int freeCount, @Nullable GridPos start, GridPos end) {
         if (start == null || freeCount < 2) return;
         for (int i = 0; i < freeCount; i++) {
+            if (i != 0) iterator.previous();
             iterator.remove();
-            iterator.previous();
         }
-        iterator.add(free(region(start, end)));
+        var free = free(region(start, end));
+        iterator.add(free);
+        free.parent = parent;
     }
 }

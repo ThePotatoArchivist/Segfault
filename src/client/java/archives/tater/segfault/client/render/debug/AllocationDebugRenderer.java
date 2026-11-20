@@ -18,8 +18,8 @@ public class AllocationDebugRenderer implements DebugRenderer.SimpleDebugRendere
         debugValues.forEachChunk(SegfaultModDebug.ALLOCATION, (_, maybeRegion) -> {
             if (!(maybeRegion.orElse(null) instanceof DisplayRegion(var region, var free))) return;
 
-            var begin = toVec3(region.start());
-            var end = toVec3(region.end());
+            var begin = toVec3(region.start()).add(1, 0, 1);
+            var end = toVec3(region.end()).add(-1, 0, -1);
             Gizmos.rect(begin, end, Direction.UP, GizmoStyle.strokeAndFill(
                     free ? 0xffff0000 : 0xff00ffff,
                     3,
