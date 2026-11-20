@@ -61,7 +61,7 @@ public final class AllocationManager extends SavedData {
                 ceilDiv(template.dimensions().getZ(), CHUNK_SIZE)
         );
 
-        var state = Blocks.SMOOTH_STONE.defaultBlockState();
+        var state = Blocks.GLASS.defaultBlockState();
         var startBlock = minBlockPos(allocation.start());
         for (var pos : BlockPos.betweenClosed(startBlock, startBlock.offset(template.dimensions().getX() - 1, 0, template.dimensions().getZ() - 1)))
             level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
