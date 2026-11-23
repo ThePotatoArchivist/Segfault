@@ -204,11 +204,15 @@ public final class RectangleAllocator {
         return true;
     }
 
-    private static void simplifyRecursive(GridNode.Split node) {
+    private void simplifyRecursive(GridNode.Split node) {
         var current = node;
         while (true) {
             simplify(current);
-            if (current.parent == null || current.children.size() > 1) break;
+            if (current.children.size() > 1) return;
+            if (current.parent == null) {
+                allocations = null;
+                return;
+            }
 
             current.parent.replace(current, free(current.region));
             current = current.parent;
