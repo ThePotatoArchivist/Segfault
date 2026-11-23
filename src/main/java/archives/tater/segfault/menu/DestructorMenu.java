@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class DestructorMenu extends AbstractContainerMenu {
     private static final int CONTAINER_SIZE = 2;
-    private final Container allocator;
+    private final Container destructor;
 
     public DestructorMenu(int containerId, Inventory inventory) {
         this(containerId, inventory, new SimpleContainer(CONTAINER_SIZE));
@@ -22,7 +22,7 @@ public class DestructorMenu extends AbstractContainerMenu {
 
     public DestructorMenu(int containerId, Inventory inventory, Container destructor) {
         super(SegfaultModMenus.DESTRUCTOR, containerId);
-        this.allocator = destructor;
+        this.destructor = destructor;
         checkContainerSize(destructor, CONTAINER_SIZE);
         destructor.startOpen(inventory.player);
 
@@ -50,8 +50,8 @@ public class DestructorMenu extends AbstractContainerMenu {
         var stack = slot.getItem();
         var clicked = stack.copy();
 
-        if (slotIndex < allocator.getContainerSize()) {
-            if (!moveItemStackTo(stack, allocator.getContainerSize(), slots.size(), true))
+        if (slotIndex < destructor.getContainerSize()) {
+            if (!moveItemStackTo(stack, destructor.getContainerSize(), slots.size(), true))
                 return ItemStack.EMPTY;
         } else if (!moveItemStackTo(stack, 0, 1, false))
             return ItemStack.EMPTY;
@@ -71,12 +71,12 @@ public class DestructorMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return allocator.stillValid(player);
+        return destructor.stillValid(player);
     }
 
     @Override
     public void removed(Player player) {
         super.removed(player);
-        allocator.stopOpen(player);
+        destructor.stopOpen(player);
     }
 }

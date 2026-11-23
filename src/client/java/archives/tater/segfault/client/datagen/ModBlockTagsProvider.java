@@ -19,7 +19,7 @@ public class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider registries) {
         builder(SegfaultModBlockTags.MEMORY_MACHINES)
-                .add(SegfaultModBlockItemIds.ALLOCATOR)
+                .add(SegfaultModBlockItemIds.CONSTRUCTOR)
                 .add(SegfaultModBlockItemIds.DEREFERENCER)
                 .add(SegfaultModBlockItemIds.DESTRUCTOR);
 

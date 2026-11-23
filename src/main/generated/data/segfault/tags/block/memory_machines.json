@@ -1,6 +1,6 @@
 {
   "values": [
-    "segfault:allocator",
+    "segfault:constructor",
     "segfault:dereferencer",
     "segfault:destructor"
   ]

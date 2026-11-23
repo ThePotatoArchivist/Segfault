@@ -1,7 +1,7 @@
 package archives.tater.segfault.registry;
 
 import archives.tater.segfault.Segfault;
-import archives.tater.segfault.menu.AllocatorMenu;
+import archives.tater.segfault.menu.ConstructorMenu;
 import archives.tater.segfault.menu.DereferencerMenu;
 import archives.tater.segfault.menu.DestructorMenu;
 import archives.tater.segfault.menu.SingleSlotMenu;
@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.MenuType;
 
 public interface SegfaultModMenus {
     MenuType<SingleSlotMenu> SINGLE_SLOT = register("single_slot", SingleSlotMenu::new);
-    MenuType<AllocatorMenu> ALLOCATOR = register("allocator", AllocatorMenu::new);
+    MenuType<ConstructorMenu> CONSTRUCTOR = register("constructor", ConstructorMenu::new);
     MenuType<DereferencerMenu> DEREFERENCER = register("dereferencer", DereferencerMenu::new);
     MenuType<DestructorMenu> DESTRUCTOR = register("destructor", DestructorMenu::new);
 

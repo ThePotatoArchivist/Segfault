@@ -1,7 +1,7 @@
 package archives.tater.segfault.block.entity;
 
 import archives.tater.segfault.allocation.AllocationManager;
-import archives.tater.segfault.menu.AllocatorMenu;
+import archives.tater.segfault.menu.ConstructorMenu;
 import archives.tater.segfault.registry.SegfaultModBlockEntities;
 import archives.tater.segfault.registry.SegfaultModComponents;
 
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import org.jspecify.annotations.Nullable;
 
-public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
+public class ConstructorBlockEntity extends SimpleContainerBlockEntity implements WorldlyContainer {
     public static final int SLOT_INPUT = 0;
     public static final int SLOT_TEMPLATE = 1;
     public static final int SLOT_RESULT = 2;
@@ -27,10 +27,10 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
     private static final int[] SLOTS_FOR_SIDE = {SLOT_TEMPLATE};
     private static final int[] SLOTS_FOR_DOWN = {SLOT_RESULT};
 
-    public static final Component DEFAULT_NAME = Component.translatable("container.segfault.allocator");
+    public static final Component DEFAULT_NAME = Component.translatable("container.segfault.constructor");
 
-    public AllocatorBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(SegfaultModBlockEntities.ALLOCATOR, worldPosition, blockState);
+    public ConstructorBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(SegfaultModBlockEntities.CONSTRUCTOR, worldPosition, blockState);
     }
 
     public ItemStack getInput() {
@@ -56,7 +56,7 @@ public class AllocatorBlockEntity extends SimpleContainerBlockEntity implements 
 
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
-        return new AllocatorMenu(containerId, inventory, this);
+        return new ConstructorMenu(containerId, inventory, this);
     }
 
     @Override

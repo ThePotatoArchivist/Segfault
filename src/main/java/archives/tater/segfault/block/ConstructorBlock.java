@@ -1,6 +1,6 @@
 package archives.tater.segfault.block;
 
-import archives.tater.segfault.block.entity.AllocatorBlockEntity;
+import archives.tater.segfault.block.entity.ConstructorBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -10,21 +10,21 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import org.jspecify.annotations.Nullable;
 
-public class AllocatorBlock extends TriggeredContainerEntityBlock {
+public class ConstructorBlock extends TriggeredContainerEntityBlock {
 
-    public AllocatorBlock(Properties properties) {
+    public ConstructorBlock(Properties properties) {
         super(properties);
         registerDefaultState(getStateDefinition().any().setValue(TRIGGERED, false));
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (level.getBlockEntity(pos) instanceof AllocatorBlockEntity allocator)
-            allocator.tryAllocate(level.getServer());
+        if (level.getBlockEntity(pos) instanceof ConstructorBlockEntity constructor)
+            constructor.tryAllocate(level.getServer());
     }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        return new AllocatorBlockEntity(worldPosition, blockState);
+        return new ConstructorBlockEntity(worldPosition, blockState);
     }
 }

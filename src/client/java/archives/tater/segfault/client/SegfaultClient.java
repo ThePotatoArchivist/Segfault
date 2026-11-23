@@ -2,7 +2,7 @@ package archives.tater.segfault.client;
 
 import archives.tater.segfault.Segfault;
 import archives.tater.segfault.client.render.debug.AllocationDebugRenderer;
-import archives.tater.segfault.client.screen.AllocatorScreen;
+import archives.tater.segfault.client.screen.ConstructorScreen;
 import archives.tater.segfault.client.screen.DestructorScreen;
 import archives.tater.segfault.client.screen.SingleSlotScreen;
 import archives.tater.segfault.registry.SegfaultModComponents;
@@ -34,7 +34,7 @@ public class SegfaultClient implements ClientModInitializer {
 		ItemComponentTooltipProviderRegistry.addFirst(SegfaultModComponents.POINTER);
 		ItemComponentTooltipProviderRegistry.addFirst(SegfaultModComponents.STRUCT_TEMPLATE);
 		MenuScreens.register(SegfaultModMenus.SINGLE_SLOT, SingleSlotScreen::new);
-		MenuScreens.register(SegfaultModMenus.ALLOCATOR, AllocatorScreen::new);
+		MenuScreens.register(SegfaultModMenus.CONSTRUCTOR, ConstructorScreen::new);
 		MenuScreens.register(SegfaultModMenus.DEREFERENCER, SingleSlotScreen::new);
 		MenuScreens.register(SegfaultModMenus.DESTRUCTOR, DestructorScreen::new);
 

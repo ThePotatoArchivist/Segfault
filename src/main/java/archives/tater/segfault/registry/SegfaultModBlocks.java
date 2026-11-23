@@ -1,6 +1,7 @@
 package archives.tater.segfault.registry;
 
-import archives.tater.segfault.block.AllocatorBlock;
+import archives.tater.segfault.Segfault;
+import archives.tater.segfault.block.ConstructorBlock;
 import archives.tater.segfault.block.DereferencerBlock;
 import archives.tater.segfault.block.DestructorBlock;
 
@@ -18,7 +19,7 @@ import java.util.function.Function;
 
 public interface SegfaultModBlocks {
 
-    Block ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, AllocatorBlock::new, memoryMachineProperties());
+    Block CONSTRUCTOR = register(SegfaultModBlockItemIds.CONSTRUCTOR, ConstructorBlock::new, memoryMachineProperties());
     Block DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, DereferencerBlock::new, memoryMachineProperties());
     Block DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, DestructorBlock::new, memoryMachineProperties());
 
@@ -39,6 +40,6 @@ public interface SegfaultModBlocks {
     }
 
     static void init() {
-
+        BuiltInRegistries.BLOCK.addAlias(Segfault.id("allocator"), BuiltInRegistries.BLOCK.getKey(CONSTRUCTOR));
     }
 }

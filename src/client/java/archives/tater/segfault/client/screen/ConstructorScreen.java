@@ -1,7 +1,7 @@
 package archives.tater.segfault.client.screen;
 
 import archives.tater.segfault.Segfault;
-import archives.tater.segfault.menu.AllocatorMenu;
+import archives.tater.segfault.menu.ConstructorMenu;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -10,10 +10,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AllocatorScreen extends AbstractContainerScreen<AllocatorMenu> {
-    private static final Identifier CONTAINER_LOCATION = Segfault.id("textures/gui/container/allocator.png");
+public class ConstructorScreen extends AbstractContainerScreen<ConstructorMenu> {
+    private static final Identifier CONTAINER_LOCATION = Segfault.id("textures/gui/container/constructor.png");
 
-    public AllocatorScreen(AllocatorMenu menu, Inventory inventory, Component title) {
+    public ConstructorScreen(ConstructorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 176, 155);
         inventoryLabelY = imageHeight - 94;
     }

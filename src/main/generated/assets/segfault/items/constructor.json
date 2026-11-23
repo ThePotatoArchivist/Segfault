@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "segfault:block/allocator"
+    "model": "segfault:block/constructor"
   }
 }

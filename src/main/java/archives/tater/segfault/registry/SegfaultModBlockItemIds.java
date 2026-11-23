@@ -6,7 +6,7 @@ import net.minecraft.references.BlockItemId;
 
 public interface SegfaultModBlockItemIds {
 
-    BlockItemId ALLOCATOR = create("allocator");
+    BlockItemId CONSTRUCTOR = create("constructor");
     BlockItemId DEREFERENCER = create("dereferencer");
     BlockItemId DESTRUCTOR = create("destructor");
 

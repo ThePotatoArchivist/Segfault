@@ -1,5 +1,6 @@
 package archives.tater.segfault.registry;
 
+import archives.tater.segfault.Segfault;
 import archives.tater.segfault.component.PointerValue;
 import archives.tater.segfault.component.StoredPointer;
 
@@ -18,7 +19,7 @@ import java.util.function.Function;
 
 public interface SegfaultModItems {
 
-    Item ALLOCATOR = register(SegfaultModBlockItemIds.ALLOCATOR, SegfaultModBlocks.ALLOCATOR);
+    Item CONSTRUCTOR = register(SegfaultModBlockItemIds.CONSTRUCTOR, SegfaultModBlocks.CONSTRUCTOR);
     Item DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, SegfaultModBlocks.DEREFERENCER);
     Item DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, SegfaultModBlocks.DESTRUCTOR);
 
@@ -52,6 +53,8 @@ public interface SegfaultModItems {
     }
 
     static void init() {
+        BuiltInRegistries.ITEM.addAlias(Segfault.id("allocator"), BuiltInRegistries.ITEM.getKey(CONSTRUCTOR));
+
         ItemClickBehaviorCallback.EVENT.register(StoredPointer::onItemClickBehavior);
         ItemEvents.USE.register(StoredPointer::use);
     }

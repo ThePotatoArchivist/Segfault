@@ -1,6 +1,6 @@
 package archives.tater.segfault.client.datagen;
 
-import archives.tater.segfault.block.entity.AllocatorBlockEntity;
+import archives.tater.segfault.block.entity.ConstructorBlockEntity;
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
 import archives.tater.segfault.block.entity.DestructorBlockEntity;
 import archives.tater.segfault.registry.SegfaultModBlocks;
@@ -24,7 +24,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
-        translationBuilder.add(SegfaultModBlocks.ALLOCATOR, "Allocator");
+        translationBuilder.add(SegfaultModBlocks.CONSTRUCTOR, "Constructor");
         translationBuilder.add(SegfaultModBlocks.DEREFERENCER, "Dereferencer");
         translationBuilder.add(SegfaultModBlocks.DESTRUCTOR, "Destructor");
 
@@ -38,7 +38,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("item.segfault.pointer.null", "NULL");
         translationBuilder.add("item.segfault.pointer.target", "→ %s");
         translationBuilder.add("item.segfault.struct_template.dimensions", "%sx%sx%s");
-        translationBuilder.add(getKey(AllocatorBlockEntity.DEFAULT_NAME), "Allocator");
+        translationBuilder.add(getKey(ConstructorBlockEntity.DEFAULT_NAME), "Constructor");
         translationBuilder.add(getKey(DereferencerBlockEntity.DEFAULT_NAME), "Dereferencer");
         translationBuilder.add(getKey(DestructorBlockEntity.DEFAULT_NAME), "Destructor");
 

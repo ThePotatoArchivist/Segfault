@@ -1,6 +1,6 @@
 package archives.tater.segfault.menu;
 
-import archives.tater.segfault.block.entity.AllocatorBlockEntity;
+import archives.tater.segfault.block.entity.ConstructorBlockEntity;
 import archives.tater.segfault.registry.SegfaultModComponents;
 import archives.tater.segfault.registry.SegfaultModMenus;
 
@@ -12,33 +12,33 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class AllocatorMenu extends AbstractContainerMenu {
+public class ConstructorMenu extends AbstractContainerMenu {
     private static final int CONTAINER_SIZE = 3;
-    private final Container allocator;
+    private final Container constructor;
 
-    public AllocatorMenu(int containerId, Inventory inventory) {
+    public ConstructorMenu(int containerId, Inventory inventory) {
         this(containerId, inventory, new SimpleContainer(CONTAINER_SIZE));
     }
 
-    public AllocatorMenu(int containerId, Inventory inventory, Container allocator) {
-        super(SegfaultModMenus.ALLOCATOR, containerId);
-        this.allocator = allocator;
-        checkContainerSize(allocator, CONTAINER_SIZE);
-        allocator.startOpen(inventory.player);
+    public ConstructorMenu(int containerId, Inventory inventory, Container constructor) {
+        super(SegfaultModMenus.CONSTRUCTOR, containerId);
+        this.constructor = constructor;
+        checkContainerSize(constructor, CONTAINER_SIZE);
+        constructor.startOpen(inventory.player);
 
-        addSlot(new Slot(allocator, AllocatorBlockEntity.SLOT_INPUT, 53, 20) {
+        addSlot(new Slot(constructor, ConstructorBlockEntity.SLOT_INPUT, 53, 20) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
                 return itemStack.has(SegfaultModComponents.POINTER);
             }
         });
-        addSlot(new Slot(allocator, AllocatorBlockEntity.SLOT_TEMPLATE, 80, 42) {
+        addSlot(new Slot(constructor, ConstructorBlockEntity.SLOT_TEMPLATE, 80, 42) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
                 return itemStack.has(SegfaultModComponents.STRUCT_TEMPLATE);
             }
         });
-        addSlot(new Slot(allocator, AllocatorBlockEntity.SLOT_RESULT, 107, 20) {
+        addSlot(new Slot(constructor, ConstructorBlockEntity.SLOT_RESULT, 107, 20) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
                 return false;
@@ -56,8 +56,8 @@ public class AllocatorMenu extends AbstractContainerMenu {
         var stack = slot.getItem();
         var clicked = stack.copy();
 
-        if (slotIndex < allocator.getContainerSize()) {
-            if (!moveItemStackTo(stack, allocator.getContainerSize(), slots.size(), true))
+        if (slotIndex < constructor.getContainerSize()) {
+            if (!moveItemStackTo(stack, constructor.getContainerSize(), slots.size(), true))
                 return ItemStack.EMPTY;
         } else if (!moveItemStackTo(stack, 0, 2, false))
             return ItemStack.EMPTY;
@@ -77,12 +77,12 @@ public class AllocatorMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return allocator.stillValid(player);
+        return constructor.stillValid(player);
     }
 
     @Override
     public void removed(Player player) {
         super.removed(player);
-        allocator.stopOpen(player);
+        constructor.stopOpen(player);
     }
 }

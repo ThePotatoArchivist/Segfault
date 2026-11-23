@@ -16,7 +16,7 @@ public interface SegfaultModCreativeTabs {
     CreativeModeTab SEGFAULT = register("segfault", FabricCreativeModeTab.builder()
             .icon(SegfaultModItems.POINTER::getDefaultInstance)
             .displayItems((parameters, output) -> {
-                output.accept(SegfaultModItems.ALLOCATOR);
+                output.accept(SegfaultModItems.CONSTRUCTOR);
                 output.accept(SegfaultModItems.DEREFERENCER);
                 output.accept(SegfaultModItems.DESTRUCTOR);
                 output.accept(SegfaultModItems.POINTER);

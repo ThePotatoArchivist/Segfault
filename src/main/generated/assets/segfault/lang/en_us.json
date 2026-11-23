@@ -1,9 +1,9 @@
 {
-  "block.segfault.allocator": "Allocator",
+  "block.segfault.constructor": "Constructor",
   "block.segfault.dereferencer": "Dereferencer",
   "block.segfault.destructor": "Destructor",
   "commands.segfault.reset.success": "Reset all allocations",
-  "container.segfault.allocator": "Allocator",
+  "container.segfault.constructor": "Constructor",
   "container.segfault.dereferencer": "Dereferencer",
   "container.segfault.destructor": "Destructor",
   "item.segfault.pointer": "Pointer",

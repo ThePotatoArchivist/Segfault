@@ -16,7 +16,7 @@ public class ModBlockLootProvider extends FabricBlockLootSubProvider {
 
     @Override
     public void generate() {
-        add(SegfaultModBlocks.ALLOCATOR, this::createNameableBlockEntityTable);
+        add(SegfaultModBlocks.CONSTRUCTOR, this::createNameableBlockEntityTable);
         add(SegfaultModBlocks.DEREFERENCER, this::createNameableBlockEntityTable);
         add(SegfaultModBlocks.DESTRUCTOR, this::createNameableBlockEntityTable);
     }

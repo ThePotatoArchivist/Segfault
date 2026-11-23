@@ -15,7 +15,7 @@
             ],
             "source": "block_entity"
           },
-          "name": "segfault:allocator"
+          "name": "segfault:constructor"
         }
       ],
       "rolls": 1
