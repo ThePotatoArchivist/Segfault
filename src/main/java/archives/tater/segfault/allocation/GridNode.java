@@ -1,8 +1,6 @@
 package archives.tater.segfault.allocation;
 
 import com.mojang.datafixers.Products;
-import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import org.jspecify.annotations.Nullable;
@@ -11,16 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract sealed class GridNode {
-
-    @SuppressWarnings("StaticInitializerReferencesSubClass") // fixed it
-    public static final Codec<GridNode> CODEC = Codec.either(Leaf.CODEC, Split.CODEC).xmap(
-            Either::unwrap,
-            node -> switch (node) {
-                case Leaf leaf -> Either.left(leaf);
-                case Split split -> Either.right(split);
-                default -> throw new IllegalStateException("Unexpected value: " + node);
-            }
-    );
 
     public final GridRegion region;
     public @Nullable Split parent = null;
@@ -42,18 +30,18 @@ public abstract sealed class GridNode {
     }
 
     public static Leaf free(GridRegion region) {
-        return new Leaf(region, false);
+        return leaf(region, false);
     }
 
     public static Leaf used(GridRegion region) {
-        return new Leaf(region, true);
+        return leaf(region, true);
+    }
+
+    public static Leaf leaf(GridRegion region, boolean used) {
+        return new Leaf(region, used);
     }
 
     public static final class Leaf extends GridNode {
-
-        public static final Codec<Leaf> CODEC = RecordCodecBuilder.create(instance -> commonFields(instance).and(
-                Codec.BOOL.fieldOf("used").forGetter(o -> o.used)
-        ).apply(instance, Leaf::new));
 
         public boolean used;
 
@@ -64,11 +52,6 @@ public abstract sealed class GridNode {
     }
 
     public static final class Split extends GridNode {
-
-        public static final Codec<Split> CODEC = RecordCodecBuilder.create(instance -> commonFields(instance).and(instance.group(
-                Codec.BOOL.fieldOf("vertical").forGetter(o -> o.vertical),
-                Codec.lazyInitialized(() -> GridNode.CODEC).listOf().fieldOf("children").forGetter(o -> o.children)
-        )).apply(instance, Split::new));
 
         public final boolean vertical;
         public List<GridNode> children = new LinkedList<>();

@@ -1,7 +1,7 @@
 package archives.tater.segfault.allocation;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.VisibleForDebug;
 
 import org.jspecify.annotations.Nullable;
@@ -16,9 +16,10 @@ import static archives.tater.segfault.util.SegfaultUtil.withAppended;
 /// Based on the [Guillotiere](https://github.com/nical/guillotiere) algorithm
 public final class RectangleAllocator {
 
-    public static final Codec<RectangleAllocator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            GridNode.CODEC.optionalFieldOf("allocations").forGetter(o -> Optional.ofNullable(o.allocations))
-    ).apply(instance, allocations -> new RectangleAllocator(allocations.orElse(null))));
+    public static final Codec<RectangleAllocator> CODEC = ExtraCodecs.optionalEmptyMap(CompressedGridNode.TREE_CODEC).xmap(
+            node -> new RectangleAllocator(node.orElse(null)),
+            o -> Optional.ofNullable(o.allocations)
+    );
 
     private @Nullable GridNode allocations;
 
