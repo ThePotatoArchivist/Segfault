@@ -32,7 +32,6 @@ public final class AllocationManager extends SavedData {
 
     private AllocationManager() {
         this(new RectangleAllocator());
-        allocateNull();
     }
 
     private AllocationManager(RectangleAllocator rectangleAllocator) {
@@ -74,7 +73,6 @@ public final class AllocationManager extends SavedData {
         if (pointer.isNull()) return false;
 
         var pos = posContaining(pointer.pos());
-        if (pos.x() == 0 && pos.y() == 0) return false;
         if (!rectangleAllocator.deallocate(pos)) return false;
 
         setDirty();
@@ -84,12 +82,7 @@ public final class AllocationManager extends SavedData {
 
     public void reset() {
         rectangleAllocator.clear();
-        allocateNull();
         setDirty();
-    }
-
-    private void allocateNull() {
-        rectangleAllocator.allocate(1, 1);
     }
 
     public static AllocationManager get(MinecraftServer server) {
@@ -97,18 +90,18 @@ public final class AllocationManager extends SavedData {
     }
 
     public static GridPos posContaining(BlockPos pos) {
-        return new GridPos(pos.getX() / CHUNK_SIZE, pos.getZ() / CHUNK_SIZE);
+        return new GridPos(pos.getX() / CHUNK_SIZE - 1, pos.getZ() / CHUNK_SIZE - 1);
     }
 
     public static GridPos toGridPos(ChunkPos pos) {
-        return new GridPos(pos.x(), pos.z());
+        return new GridPos(pos.x() - 1, pos.z() - 1);
     }
 
     public static BlockPos minBlockPos(GridPos pos) {
-        return new BlockPos(pos.x() * CHUNK_SIZE, 0, pos.y() * CHUNK_SIZE);
+        return new BlockPos((pos.x() + 1) * CHUNK_SIZE, 0, (pos.y() + 1) * CHUNK_SIZE);
     }
 
     public static Vec3 toVec3(GridPos pos) {
-        return new Vec3(pos.x() * CHUNK_SIZE, 0, pos.y() * CHUNK_SIZE);
+        return new Vec3((pos.x() + 1) * CHUNK_SIZE, 0, (pos.y() + 1) * CHUNK_SIZE);
     }
 }
