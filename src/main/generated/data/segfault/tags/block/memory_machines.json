@@ -2,6 +2,7 @@
   "values": [
     "segfault:constructor",
     "segfault:dereferencer",
-    "segfault:destructor"
+    "segfault:destructor",
+    "segfault:struct_frame"
   ]
 }

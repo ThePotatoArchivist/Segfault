@@ -2,5 +2,5 @@
 9eab8bdbfa98dbb60a6a077ab00ebc69b469b15f data/minecraft/tags/block/blocks_motion_no_leaves.json
 9eab8bdbfa98dbb60a6a077ab00ebc69b469b15f data/minecraft/tags/block/mineable/pickaxe.json
 9eab8bdbfa98dbb60a6a077ab00ebc69b469b15f data/minecraft/tags/block/needs_iron_tool.json
-7d1feef2a01e88a53ec22ce3203d7714f91cf6e2 data/segfault/tags/block/memory_machines.json
+690c9aeab969a6ba4e431c5a7c9686580b93aba9 data/segfault/tags/block/memory_machines.json
 416b870d0be823c04c38949f75a7fdcbf9a42f1d data/segfault/tags/block/persists_exited_state.json

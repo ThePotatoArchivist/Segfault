@@ -21,7 +21,8 @@ public class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
         builder(SegfaultModBlockTags.MEMORY_MACHINES)
                 .add(SegfaultModBlockItemIds.CONSTRUCTOR)
                 .add(SegfaultModBlockItemIds.DEREFERENCER)
-                .add(SegfaultModBlockItemIds.DESTRUCTOR);
+                .add(SegfaultModBlockItemIds.DESTRUCTOR)
+                .add(SegfaultModBlockItemIds.STRUCT_FRAME);
 
         builder(SegfaultModBlockTags.PERSISTS_EXITED_STATE)
                 .add(SegfaultModBlockItemIds.DEREFERENCER);

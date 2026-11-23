@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "segfault:block/struct_frame_top",
+    "side": "segfault:block/struct_frame_side"
+  }
+}

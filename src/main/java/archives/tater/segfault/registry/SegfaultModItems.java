@@ -22,6 +22,7 @@ public interface SegfaultModItems {
     Item CONSTRUCTOR = register(SegfaultModBlockItemIds.CONSTRUCTOR, SegfaultModBlocks.CONSTRUCTOR);
     Item DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, SegfaultModBlocks.DEREFERENCER);
     Item DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, SegfaultModBlocks.DESTRUCTOR);
+    Item STRUCT_FRAME = register(SegfaultModBlockItemIds.STRUCT_FRAME, SegfaultModBlocks.STRUCT_FRAME);
 
     Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties()
             .component(SegfaultModComponents.POINTER, Pointer.NULL)

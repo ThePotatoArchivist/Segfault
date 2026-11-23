@@ -4,6 +4,7 @@ import archives.tater.segfault.Segfault;
 import archives.tater.segfault.block.ConstructorBlock;
 import archives.tater.segfault.block.DereferencerBlock;
 import archives.tater.segfault.block.DestructorBlock;
+import archives.tater.segfault.block.StructFrameBlock;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,6 +23,7 @@ public interface SegfaultModBlocks {
     Block CONSTRUCTOR = register(SegfaultModBlockItemIds.CONSTRUCTOR, ConstructorBlock::new, memoryMachineProperties());
     Block DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, DereferencerBlock::new, memoryMachineProperties());
     Block DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, DestructorBlock::new, memoryMachineProperties());
+    Block STRUCT_FRAME = register(SegfaultModBlockItemIds.STRUCT_FRAME, StructFrameBlock::new, memoryMachineProperties());
 
     private static Block register(BlockItemId id, Function<BlockBehaviour.Properties, Block> block, BlockBehaviour.Properties properties) {
         return register(id.block(), block, properties);

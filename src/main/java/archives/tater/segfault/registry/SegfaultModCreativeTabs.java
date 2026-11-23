@@ -19,6 +19,7 @@ public interface SegfaultModCreativeTabs {
                 output.accept(SegfaultModItems.CONSTRUCTOR);
                 output.accept(SegfaultModItems.DEREFERENCER);
                 output.accept(SegfaultModItems.DESTRUCTOR);
+                output.accept(SegfaultModItems.STRUCT_FRAME);
                 output.accept(SegfaultModItems.POINTER);
                 output.accept(SegfaultModItems.STRUCT_TEMPLATE);
                 output.accept(SegfaultModItems.PORTABLE_DEREFERENCER);

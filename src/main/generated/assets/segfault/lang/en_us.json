@@ -2,6 +2,7 @@
   "block.segfault.constructor": "Constructor",
   "block.segfault.dereferencer": "Dereferencer",
   "block.segfault.destructor": "Destructor",
+  "block.segfault.struct_frame": "Struct Frame",
   "commands.segfault.reset.success": "Reset all allocations",
   "container.segfault.constructor": "Constructor",
   "container.segfault.dereferencer": "Dereferencer",

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "shape=none": {
+      "model": "segfault:block/struct_frame"
+    },
+    "shape=x": {
+      "model": "segfault:block/struct_frame_column",
+      "x": 90,
+      "y": 90
+    },
+    "shape=y": {
+      "model": "segfault:block/struct_frame_column"
+    },
+    "shape=z": {
+      "model": "segfault:block/struct_frame_column",
+      "x": 90
+    }
+  }
+}
