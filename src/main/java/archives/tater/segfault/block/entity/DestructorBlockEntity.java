@@ -1,7 +1,7 @@
 package archives.tater.segfault.block.entity;
 
 import archives.tater.segfault.allocation.AllocationManager;
-import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.component.Pointer;
 import archives.tater.segfault.menu.DestructorMenu;
 import archives.tater.segfault.registry.SegfaultModBlockEntities;
 import archives.tater.segfault.registry.SegfaultModComponents;
@@ -85,7 +85,7 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
         var input = getInput().copyWithCount(1);
         if (input.isEmpty()) return;
 
-        var pointer = input.set(SegfaultModComponents.POINTER, PointerValue.NULL);
+        var pointer = input.set(SegfaultModComponents.POINTER, Pointer.NULL);
         if (pointer == null) return;
 
         var result = getResult();

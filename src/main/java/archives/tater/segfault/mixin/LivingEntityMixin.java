@@ -1,6 +1,6 @@
 package archives.tater.segfault.mixin;
 
-import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.component.Pointer;
 import archives.tater.segfault.registry.SegfaultModDimensions;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
@@ -26,9 +26,9 @@ public abstract class LivingEntityMixin extends Entity {
         if (level().dimension() == SegfaultModDimensions.MEMORY) {
             if (!(level() instanceof ServerLevel serverLevel)) return;
 
-            var destination = PointerValue.getExitDestination(serverLevel, this);
+            var destination = Pointer.getExitDestination(serverLevel, this);
             if (destination != null) {
-                PointerValue.teleportInstant(this, destination);
+                Pointer.teleportInstant(this, destination);
                 return;
             }
         }

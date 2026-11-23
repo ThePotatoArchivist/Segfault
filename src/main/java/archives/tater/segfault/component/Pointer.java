@@ -28,15 +28,15 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public record PointerValue(BlockPos pos) implements TooltipProvider {
-    public static final PointerValue NULL = new PointerValue(BlockPos.ZERO);
+public record Pointer(BlockPos pos) implements TooltipProvider {
+    public static final Pointer NULL = new Pointer(BlockPos.ZERO);
     public static final TeleportTransition.PostTeleportTransition PLAY_TELEPORT_SOUND = entity -> {
         if (entity instanceof ServerPlayer player)
             ServerPlayNetworking.send(player, TeleportSoundPayload.INSTANCE);
     };
 
-    public static final Codec<PointerValue> CODEC = BlockPos.CODEC.xmap(PointerValue::new, PointerValue::pos);
-    public static final StreamCodec<ByteBuf, PointerValue> STREAM_CODEC = BlockPos.STREAM_CODEC.map(PointerValue::new, PointerValue::pos);
+    public static final Codec<Pointer> CODEC = BlockPos.CODEC.xmap(Pointer::new, Pointer::pos);
+    public static final StreamCodec<ByteBuf, Pointer> STREAM_CODEC = BlockPos.STREAM_CODEC.map(Pointer::new, Pointer::pos);
 
     public boolean isNull() {
         return pos.equals(BlockPos.ZERO);
@@ -53,7 +53,7 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
                 : Component.translatable("item.segfault.pointer.value", pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public static @Nullable TeleportTransition getDestination(ServerLevel level, @Nullable PointerValue pointer, Entity entity) {
+    public static @Nullable TeleportTransition getDestination(ServerLevel level, @Nullable Pointer pointer, Entity entity) {
         if (pointer == null) return getExitDestination(level, entity);
 
         var memory = level.getServer().getLevel(SegfaultModDimensions.MEMORY);

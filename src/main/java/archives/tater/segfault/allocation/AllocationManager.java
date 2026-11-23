@@ -1,7 +1,7 @@
 package archives.tater.segfault.allocation;
 
 import archives.tater.segfault.Segfault;
-import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.component.Pointer;
 import archives.tater.segfault.component.StructTemplate;
 import archives.tater.segfault.registry.SegfaultModDimensions;
 
@@ -12,7 +12,7 @@ import net.minecraft.util.VisibleForDebug;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec3;
@@ -51,34 +51,31 @@ public final class AllocationManager extends SavedData {
         return rectangleAllocator.getRegionByOrigin(pos);
     }
 
-    public PointerValue construct(MinecraftServer server, StructTemplate template) {
+    public Pointer construct(MinecraftServer server, StructTemplate template) {
         var level = server.getLevel(SegfaultModDimensions.MEMORY);
-        if (level == null) return PointerValue.NULL;
+        if (level == null) return Pointer.NULL;
 
+        var structureTemplate = server.getStructureTemplateManager().get(template.structureId()).orElse(null);
+        if (structureTemplate == null) return Pointer.NULL;
+
+        var size = structureTemplate.getSize();
         var allocation = rectangleAllocator.allocate(
-                ceilDiv(template.dimensions().getX(), CHUNK_SIZE),
-                ceilDiv(template.dimensions().getZ(), CHUNK_SIZE)
+                ceilDiv(size.getX(), CHUNK_SIZE),
+                ceilDiv(size.getZ(), CHUNK_SIZE)
         );
 
-        var state = Blocks.SMOOTH_STONE.defaultBlockState();
-        var air = Blocks.AIR.defaultBlockState();
         var startPos = minBlockPos(allocation.start());
-        var endPos = startPos.offset(template.dimensions().getX() - 1, template.dimensions().getY() - 1, template.dimensions().getZ() - 1);
-        for (var pos : BlockPos.betweenClosed(startPos, endPos))
-            if (isCoplanar(pos, startPos) || isCoplanar(pos, endPos))
-                level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
-            else
-                level.setBlock(pos, air, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
+        structureTemplate.placeInWorld(level, startPos, BlockPos.ZERO, new StructurePlaceSettings(), level.getRandom(), Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
 
         setDirty();
-        return new PointerValue(startPos.offset(1, 1, 1));
+        return new Pointer(startPos.offset(1, 1, 1));
     }
 
     private static boolean isCoplanar(BlockPos a, BlockPos b) {
         return a.getX() == b.getX() || a.getY() == b.getY() || a.getZ() == b.getZ();
     }
 
-    public boolean destruct(PointerValue pointer) {
+    public boolean destruct(Pointer pointer) {
         if (pointer.isNull()) return false;
 
         var pos = posContaining(pointer.pos());

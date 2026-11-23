@@ -1,7 +1,7 @@
 package archives.tater.segfault.block;
 
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
-import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.component.Pointer;
 import archives.tater.segfault.registry.SegfaultModComponents;
 
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
@@ -34,7 +34,7 @@ public class DereferencerBlock extends PoweredContainerEntityBlock implements Po
     public @Nullable TeleportTransition getPortalDestination(ServerLevel currentLevel, Entity entity, BlockPos portalEntryPos) {
         if (!(currentLevel.getBlockEntity(portalEntryPos) instanceof DereferencerBlockEntity dereferencer)) return null;
 
-        return PointerValue.getDestination(currentLevel, dereferencer.getTheItem().get(SegfaultModComponents.POINTER), entity);
+        return Pointer.getDestination(currentLevel, dereferencer.getTheItem().get(SegfaultModComponents.POINTER), entity);
     }
 
     @Override

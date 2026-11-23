@@ -1,7 +1,7 @@
 package archives.tater.segfault.registry;
 
 import archives.tater.segfault.Segfault;
-import archives.tater.segfault.component.PointerValue;
+import archives.tater.segfault.component.Pointer;
 import archives.tater.segfault.component.StoredPointer;
 
 import net.fabricmc.fabric.api.event.player.ItemEvents;
@@ -24,7 +24,7 @@ public interface SegfaultModItems {
     Item DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, SegfaultModBlocks.DESTRUCTOR);
 
     Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties()
-            .component(SegfaultModComponents.POINTER, PointerValue.NULL)
+            .component(SegfaultModComponents.POINTER, Pointer.NULL)
     );
     Item STRUCT_TEMPLATE = register(SegfaultModItemIds.STRUCT_TEMPLATE, new Item.Properties());
     Item PORTABLE_DEREFERENCER = register(SegfaultModItemIds.PORTABLE_DEREFERENCER, new Item.Properties()
