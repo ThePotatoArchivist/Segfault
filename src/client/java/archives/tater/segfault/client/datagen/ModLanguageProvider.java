@@ -3,6 +3,7 @@ package archives.tater.segfault.client.datagen;
 import archives.tater.segfault.block.entity.ConstructorBlockEntity;
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
 import archives.tater.segfault.block.entity.DestructorBlockEntity;
+import archives.tater.segfault.client.SegfaultClient;
 import archives.tater.segfault.registry.SegfaultModBlocks;
 import archives.tater.segfault.registry.SegfaultModCommands;
 import archives.tater.segfault.registry.SegfaultModCreativeTabs;
@@ -43,6 +44,10 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(getKey(DestructorBlockEntity.DEFAULT_NAME), "Destructor");
 
         translationBuilder.add(getKey(SegfaultModCommands.RESET_SUCCESS), "Reset all allocations");
+
+        translationBuilder.add(SegfaultClient.keyDebugChunkGrid.getName(), "Show Chunk Grid");
+        translationBuilder.add(getKey(SegfaultClient.DEBUG_CHUNK_GRID_ON), "Chunk grid: shown");
+        translationBuilder.add(getKey(SegfaultClient.DEBUG_CHUNK_GRID_OFF), "Chunk grid: hidden");
     }
 
     private static String getKey(Component translatable) {

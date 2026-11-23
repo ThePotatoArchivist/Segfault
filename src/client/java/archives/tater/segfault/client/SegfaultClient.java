@@ -13,14 +13,17 @@ import archives.tater.segfault.registry.SegfaultModNetworking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.debug.v1.ClientDebugSubscriptionRegistry;
 import net.fabricmc.fabric.api.client.debug.v1.renderer.DebugRendererRegistry;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.debug.DebugEntryNoop;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 
@@ -33,6 +36,10 @@ public class SegfaultClient implements ClientModInitializer {
 			"client",
 			SegfaultClientConfig.class
 	);
+
+	public static final KeyMapping keyDebugChunkGrid = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.segfault.debug.chunk_grid", 0, KeyMapping.Category.DEBUG));
+	public static final Component DEBUG_CHUNK_GRID_ON = Component.translatable("debug.segfault.chunk_grid.on");
+	public static final Component DEBUG_CHUNK_GRID_OFF = Component.translatable("debug.segfault.chunk_grid.off");
 
 	@Override
 	public void onInitializeClient() {

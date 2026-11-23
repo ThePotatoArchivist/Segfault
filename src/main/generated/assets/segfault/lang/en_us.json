@@ -6,6 +6,8 @@
   "container.segfault.constructor": "Constructor",
   "container.segfault.dereferencer": "Dereferencer",
   "container.segfault.destructor": "Destructor",
+  "debug.segfault.chunk_grid.off": "Chunk grid: hidden",
+  "debug.segfault.chunk_grid.on": "Chunk grid: shown",
   "item.segfault.pointer": "Pointer",
   "item.segfault.pointer.null": "NULL",
   "item.segfault.pointer.target": "→ %s",
@@ -13,5 +15,6 @@
   "item.segfault.portable_dereferencer": "Portable Dereferencer",
   "item.segfault.struct_template": "Struct Template",
   "item.segfault.struct_template.dimensions": "%sx%sx%s",
-  "itemGroup.segfault.segfault": "Segfault"
+  "itemGroup.segfault.segfault": "Segfault",
+  "key.segfault.debug.chunk_grid": "Show Chunk Grid"
 }
