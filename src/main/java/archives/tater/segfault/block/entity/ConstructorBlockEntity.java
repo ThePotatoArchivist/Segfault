@@ -96,13 +96,17 @@ public class ConstructorBlockEntity extends SimpleContainerBlockEntity implement
         var template = getTemplate().get(SegfaultModComponents.STRUCT_TEMPLATE);
         if (template == null) return;
 
-        var input = getInput().split(1);
+        var input = getInput();
         if (input.isEmpty()) return;
+
+        var pointer = AllocationManager.get(server).construct(server, template);
+        if (pointer.isNull()) return;
 
         getLevel().playSound(null, getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS); // TODO custom sound event
 
-        input.set(SegfaultModComponents.POINTER, AllocationManager.get(server).construct(server, template));
-        setResult(input);
+        var result = input.split(1);
+        result.set(SegfaultModComponents.POINTER, pointer);
+        setResult(result);
     }
 
 }
