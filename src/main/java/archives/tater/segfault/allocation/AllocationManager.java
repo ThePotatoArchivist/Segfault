@@ -32,7 +32,7 @@ public final class AllocationManager extends SavedData {
 
     private AllocationManager() {
         this(new RectangleAllocator());
-        rectangleAllocator.allocate(1, 1);
+        allocateNull();
     }
 
     private AllocationManager(RectangleAllocator rectangleAllocator) {
@@ -80,6 +80,15 @@ public final class AllocationManager extends SavedData {
         setDirty();
 
         return true;
+    }
+
+    public void reset() {
+        rectangleAllocator.clear();
+        allocateNull();
+    }
+
+    private void allocateNull() {
+        rectangleAllocator.allocate(1, 1);
     }
 
     public static AllocationManager get(MinecraftServer server) {

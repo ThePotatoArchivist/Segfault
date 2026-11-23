@@ -23,10 +23,6 @@ public final class RectangleAllocator {
 
     public RectangleAllocator() {
         allocations = null;
-
-        // TODO remove
-        var region = region(new GridPos(0, 0), 8, 8);
-        allocations = split(region, false, free(region));
     }
 
     public RectangleAllocator(@Nullable GridNode allocations) {
@@ -86,37 +82,54 @@ public final class RectangleAllocator {
     }
 
     private GridRegion expandForNew(int sizeX, int sizeY) {
-        // TODO
-        throw new AssertionError("TODO");
-//        if (allocations == null) throw new AssertionError("Expected allocations to be nonnull");
-//        var region = allocations.region;
-//        var fitsX = sizeX <= region.sizeX();
-//        var fitsY = sizeY <= region.sizeY();
-//        var expandVertical = fitsX == fitsY ? sizeX > sizeY : fitsY;
-//        var paraSize = expandVertical ? sizeY : sizeX;
-//        var perpSize = expandVertical ? sizeX : sizeY;
-//        var newRegion = expandVertical
-//                ? region(new GridPos(0, 0), max(region.sizeX(), sizeX), region.sizeY() + sizeY)
-//                : region(new GridPos(0, 0), region.sizeX() + sizeX, max(region.sizeY(), sizeY));
-//
-//        var start = expandVertical ? new GridPos(0, region.endY()) : new GridPos(region.endX(), 0);
-//        var end = expandVertical ? new GridPos(region.sizeX(), region.endY() + sizeY) : new GridPos(region.endX() + sizeX, region.sizeY());
-//        var appendedRegion = region(start, end);
-//
-//        if (!fitsX && !fitsY) {
-//            throw new AssertionError("TODO");
-//        } else if (allocations instanceof Split split && expandVertical == split.vertical) {
-//            allocations = split(newRegion, expandVertical, withAppended(split.children, perpSize == 0
-//                    ? used(allocatedRegion)
-//                    : split(region(start, expandVertical ? sizeX : region.sizeX(), expandVertical ? sizeY : region.sizeY()), !expandVertical,
-//                            used(allocatedRegion),
-//                    free()
-//                    )
-//            ));
-//
-//        } else {
-//
-//        }
+        if (allocations == null) throw new AssertionError("Expected allocations to be nonnull");
+        var region = allocations.region;
+        var fitsX = sizeX <= region.sizeX();
+        var fitsY = sizeY <= region.sizeY();
+        var expandVertical = fitsX == fitsY ? sizeX > sizeY : fitsY;
+        var paraNewSize = expandVertical ? sizeY : sizeX;
+        var perpNewSize = expandVertical ? sizeX : sizeY;
+        var perpCurSize = expandVertical ? region.sizeY() : region.sizeX();
+
+        // case 1: fits perfectly
+        if (perpNewSize == perpCurSize) {
+            var regions = region.expand(paraNewSize, expandVertical);
+            allocations = split(regions.first(), expandVertical,
+                    allocations,
+                    used(regions.second())
+            );
+
+            return regions.second();
+        }
+
+        // case 2: too small
+        if (perpNewSize < perpCurSize) {
+            var outerRegions = region.expand(paraNewSize, expandVertical);
+            var innerRegions = outerRegions.second().split(perpNewSize, !expandVertical);
+
+            allocations = split(outerRegions.first(), expandVertical,
+                    allocations,
+                    split(outerRegions.second(), !expandVertical,
+                            used(innerRegions.first()),
+                            free(innerRegions.second())
+                    )
+            );
+
+            return innerRegions.first();
+        }
+
+        // case 3: too large
+        var innerRegions = region.expand(perpNewSize - perpCurSize, !expandVertical);
+        var outerRegions = innerRegions.first().expand(paraNewSize, expandVertical);
+
+        allocations = split(outerRegions.first(), expandVertical,
+                split(innerRegions.first(), !expandVertical,
+                        allocations,
+                        free(innerRegions.second())
+                ),
+                used(outerRegions.second())
+        );
+        return outerRegions.second();
     }
 
     private GridRegion subdivide(GridNode.Leaf node, GridNode.Split parent, int sizeX, int sizeY) {
@@ -229,5 +242,9 @@ public final class RectangleAllocator {
         var free = free(region(start, end));
         iterator.add(free);
         free.parent = parent;
+    }
+
+    public void clear() {
+        allocations = null;
     }
 }

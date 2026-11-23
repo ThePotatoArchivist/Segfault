@@ -102,12 +102,27 @@ public record GridRegion(int startX, int startY, int endX, int endY) implements 
         return vertical ? splitY(size1) : splitX(size1);
     }
 
-    public GridRegion expandX(int add) {
-        return region(start(), sizeX() + add, sizeY());
+    /// @return (expanded, remainder)
+    public Pair<GridRegion, GridRegion> expandX(int add) {
+        if (add <= 0) throw new IllegalArgumentException("Cannot expand by " + add);
+        return Pair.of(
+                region(startX, startY, endX + add, endY),
+                region(endX, startY, endX + add, endY)
+        );
     }
 
-    public GridRegion expandY(int add) {
-        return region(start(), sizeX(), sizeY() + add);
+    /// @return (expanded, remainder)
+    public Pair<GridRegion, GridRegion> expandY(int add) {
+        if (add <= 0) throw new IllegalArgumentException("Cannot expand by " + add);
+        return Pair.of(
+                region(startX, startY, endX, endY + add),
+                region(startX, endY, endX, endY + add)
+        );
+    }
+
+    /// @return (expanded, remainder)
+    public Pair<GridRegion, GridRegion> expand(int add, boolean vertical) {
+        return vertical ? expandY(add) : expandX(add);
     }
 
     private static boolean isValid(int startX, int startY, int endX, int endY) {

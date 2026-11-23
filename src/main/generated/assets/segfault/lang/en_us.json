@@ -2,6 +2,7 @@
   "block.segfault.allocator": "Allocator",
   "block.segfault.dereferencer": "Dereferencer",
   "block.segfault.destructor": "Destructor",
+  "commands.segfault.reset.success": "Reset all allocations",
   "container.segfault.allocator": "Allocator",
   "container.segfault.dereferencer": "Dereferencer",
   "container.segfault.destructor": "Destructor",

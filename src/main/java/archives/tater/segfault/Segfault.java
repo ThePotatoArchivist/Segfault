@@ -3,6 +3,7 @@ package archives.tater.segfault;
 import archives.tater.segfault.registry.*;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 import net.minecraft.resources.Identifier;
 
@@ -30,6 +31,7 @@ public class Segfault implements ModInitializer {
 		SegfaultModBlockEntities.init();
 		SegfaultModItems.init();
 		SegfaultModCreativeTabs.init();
+		CommandRegistrationCallback.EVENT.register(SegfaultModCommands::register);
 	}
 
 	public static Identifier id(String path) {

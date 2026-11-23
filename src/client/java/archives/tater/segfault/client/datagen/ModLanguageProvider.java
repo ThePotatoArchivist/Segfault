@@ -4,6 +4,7 @@ import archives.tater.segfault.block.entity.AllocatorBlockEntity;
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
 import archives.tater.segfault.block.entity.DestructorBlockEntity;
 import archives.tater.segfault.registry.SegfaultModBlocks;
+import archives.tater.segfault.registry.SegfaultModCommands;
 import archives.tater.segfault.registry.SegfaultModCreativeTabs;
 import archives.tater.segfault.registry.SegfaultModItems;
 
@@ -40,6 +41,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(getKey(AllocatorBlockEntity.DEFAULT_NAME), "Allocator");
         translationBuilder.add(getKey(DereferencerBlockEntity.DEFAULT_NAME), "Dereferencer");
         translationBuilder.add(getKey(DestructorBlockEntity.DEFAULT_NAME), "Destructor");
+
+        translationBuilder.add(getKey(SegfaultModCommands.RESET_SUCCESS), "Reset all allocations");
     }
 
     private static String getKey(Component translatable) {
