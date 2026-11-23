@@ -85,6 +85,7 @@ public final class AllocationManager extends SavedData {
     public void reset() {
         rectangleAllocator.clear();
         allocateNull();
+        setDirty();
     }
 
     private void allocateNull() {

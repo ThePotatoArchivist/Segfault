@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import static archives.tater.segfault.allocation.GridNode.*;
 import static archives.tater.segfault.allocation.GridRegion.region;
+import static archives.tater.segfault.util.SegfaultUtil.withAppended;
 
 /// Based on the [Guillotiere](https://github.com/nical/guillotiere) algorithm
 public final class RectangleAllocator {
@@ -93,43 +94,45 @@ public final class RectangleAllocator {
 
         // case 1: fits perfectly
         if (perpNewSize == perpCurSize) {
+            // A|B
             var regions = region.expand(paraNewSize, expandVertical);
-            allocations = split(regions.first(), expandVertical,
-                    allocations,
-                    used(regions.second())
-            );
+
+            allocations = padOrExpand(allocations, regions.first(), expandVertical, used(regions.second()));
 
             return regions.second();
         }
 
         // case 2: too small
         if (perpNewSize < perpCurSize) {
+            // A|BC
             var outerRegions = region.expand(paraNewSize, expandVertical);
             var innerRegions = outerRegions.second().split(perpNewSize, !expandVertical);
 
-            allocations = split(outerRegions.first(), expandVertical,
-                    allocations,
-                    split(outerRegions.second(), !expandVertical,
-                            used(innerRegions.first()),
-                            free(innerRegions.second())
-                    )
-            );
+            allocations = padOrExpand(allocations, outerRegions.first(), expandVertical, split(
+                    outerRegions.second(), !expandVertical,
+                    used(innerRegions.first()),
+                    free(innerRegions.second())
+            ));
 
             return innerRegions.first();
         }
 
         // case 3: too large
+        // AB|C
         var innerRegions = region.expand(perpNewSize - perpCurSize, !expandVertical);
         var outerRegions = innerRegions.first().expand(paraNewSize, expandVertical);
 
         allocations = split(outerRegions.first(), expandVertical,
-                split(innerRegions.first(), !expandVertical,
-                        allocations,
-                        free(innerRegions.second())
-                ),
+                padOrExpand(allocations, innerRegions.first(), !expandVertical, free(innerRegions.second())),
                 used(outerRegions.second())
         );
         return outerRegions.second();
+    }
+
+    private GridNode padOrExpand(GridNode original, GridRegion region, boolean vertical, GridNode added) {
+        return original instanceof Split split && split.vertical == vertical
+                ? split(region, vertical, withAppended(split.children, added))
+                : split(region, vertical, original, added);
     }
 
     private GridRegion subdivide(GridNode.Leaf node, GridNode.Split parent, int sizeX, int sizeY) {
