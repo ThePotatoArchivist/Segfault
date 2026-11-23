@@ -90,7 +90,7 @@ public final class RectangleAllocator {
         var expandVertical = fitsX == fitsY ? sizeX > sizeY : fitsY;
         var paraNewSize = expandVertical ? sizeY : sizeX;
         var perpNewSize = expandVertical ? sizeX : sizeY;
-        var perpCurSize = expandVertical ? region.sizeY() : region.sizeX();
+        var perpCurSize = expandVertical ? region.sizeX() : region.sizeY();
 
         // case 1: fits perfectly
         if (perpNewSize == perpCurSize) {
