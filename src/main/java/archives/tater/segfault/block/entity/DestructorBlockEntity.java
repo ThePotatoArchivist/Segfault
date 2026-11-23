@@ -87,10 +87,13 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
 
         var pointer = input.set(SegfaultModComponents.POINTER, PointerValue.NULL);
         if (pointer == null) return;
-        if (AllocationManager.get(server).destruct(pointer))
-            getLevel().playSound(null, getBlockPos(), SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS); // TODO custom sound event
 
         var result = getResult();
+        if (result.count() >= result.getMaxStackSize()) return;
+
+        if (AllocationManager.get(server).destruct(pointer)) {
+            getLevel().playSound(null, getBlockPos(), SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS); // TODO custom sound event
+        }
 
         if (result.isEmpty()) {
             setResult(input);
