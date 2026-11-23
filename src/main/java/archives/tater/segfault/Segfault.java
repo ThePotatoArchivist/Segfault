@@ -31,6 +31,7 @@ public class Segfault implements ModInitializer {
 		SegfaultModBlockEntities.init();
 		SegfaultModItems.init();
 		SegfaultModCreativeTabs.init();
+		SegfaultModNetworking.init();
 		CommandRegistrationCallback.EVENT.register(SegfaultModCommands::register);
 	}
 

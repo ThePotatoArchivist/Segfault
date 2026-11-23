@@ -1,7 +1,10 @@
 package archives.tater.segfault.component;
 
+import archives.tater.segfault.network.TeleportSoundPayload;
 import archives.tater.segfault.registry.SegfaultModAttachments;
 import archives.tater.segfault.registry.SegfaultModDimensions;
+
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
@@ -11,6 +14,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.item.Item;
@@ -26,6 +30,10 @@ import java.util.function.Consumer;
 
 public record PointerValue(BlockPos pos) implements TooltipProvider {
     public static final PointerValue NULL = new PointerValue(BlockPos.ZERO);
+    public static final TeleportTransition.PostTeleportTransition PLAY_TELEPORT_SOUND = entity -> {
+        if (entity instanceof ServerPlayer player)
+            ServerPlayNetworking.send(player, TeleportSoundPayload.INSTANCE);
+    };
 
     public static final Codec<PointerValue> CODEC = BlockPos.CODEC.xmap(PointerValue::new, PointerValue::pos);
     public static final StreamCodec<ByteBuf, PointerValue> STREAM_CODEC = BlockPos.STREAM_CODEC.map(PointerValue::new, PointerValue::pos);
@@ -53,8 +61,7 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
 
         if (entity.level().dimension() != SegfaultModDimensions.MEMORY)
             entity.setAttached(SegfaultModAttachments.ENTRY_POS, GlobalPos.of(entity.level().dimension(), entity.blockPosition()));
-        // TODO play teleport sound
-        return new TeleportTransition(memory, Vec3.atBottomCenterOf(pointer.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, TeleportTransition.DO_NOTHING);
+        return new TeleportTransition(memory, Vec3.atBottomCenterOf(pointer.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, PLAY_TELEPORT_SOUND);
     }
 
     public static @Nullable TeleportTransition getExitDestination(ServerLevel level, Entity entity) {
@@ -64,7 +71,7 @@ public record PointerValue(BlockPos pos) implements TooltipProvider {
         var newLevel = level.getServer().getLevel(entryPos.dimension());
         if (newLevel == null) return null;
 
-        return new TeleportTransition(newLevel, Vec3.atBottomCenterOf(entryPos.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, TeleportTransition.DO_NOTHING);
+        return new TeleportTransition(newLevel, Vec3.atBottomCenterOf(entryPos.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, PLAY_TELEPORT_SOUND);
     }
 
     public static void teleportInstant(Entity entity, TeleportTransition destination) {
