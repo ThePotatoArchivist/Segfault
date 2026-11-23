@@ -60,13 +60,22 @@ public final class AllocationManager extends SavedData {
                 ceilDiv(template.dimensions().getZ(), CHUNK_SIZE)
         );
 
-        var state = Blocks.GLASS.defaultBlockState();
-        var startBlock = minBlockPos(allocation.start());
-        for (var pos : BlockPos.betweenClosed(startBlock, startBlock.offset(template.dimensions().getX() - 1, 0, template.dimensions().getZ() - 1)))
-            level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
+        var state = Blocks.SMOOTH_STONE.defaultBlockState();
+        var air = Blocks.AIR.defaultBlockState();
+        var startPos = minBlockPos(allocation.start());
+        var endPos = startPos.offset(template.dimensions().getX() - 1, template.dimensions().getY() - 1, template.dimensions().getZ() - 1);
+        for (var pos : BlockPos.betweenClosed(startPos, endPos))
+            if (isCoplanar(pos, startPos) || isCoplanar(pos, endPos))
+                level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
+            else
+                level.setBlock(pos, air, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
 
         setDirty();
-        return new PointerValue(startBlock.offset(0, 1, 0));
+        return new PointerValue(startPos.offset(1, 1, 1));
+    }
+
+    private static boolean isCoplanar(BlockPos a, BlockPos b) {
+        return a.getX() == b.getX() || a.getY() == b.getY() || a.getZ() == b.getZ();
     }
 
     public boolean destruct(PointerValue pointer) {
