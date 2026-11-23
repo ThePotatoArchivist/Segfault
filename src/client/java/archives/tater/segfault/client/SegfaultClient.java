@@ -27,6 +27,13 @@ import net.minecraft.sounds.SoundEvents;
 public class SegfaultClient implements ClientModInitializer {
 	public static final Identifier DEBUG_CHUNK_GRID = DebugScreenEntries.register(Segfault.id("chunk_grid"), new DebugEntryNoop());
 
+	public static final SegfaultClientConfig CONFIG = SegfaultClientConfig.createToml(
+			FabricLoader.getInstance().getConfigDir(),
+			Segfault.MOD_ID,
+			"client",
+			SegfaultClientConfig.class
+	);
+
 	@Override
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
@@ -42,7 +49,7 @@ public class SegfaultClient implements ClientModInitializer {
 			context.client().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(SoundEvents.PLAYER_TELEPORT, context.player().getRandom().nextFloat() * 0.4F + 0.8F, 1));
 		});
 
-		var renderAllocations = FabricLoader.getInstance().isDevelopmentEnvironment();
+		var renderAllocations = CONFIG.client.allocationDebugRenderer;
 		ClientDebugSubscriptionRegistry.register(SegfaultModDebug.ALLOCATION, renderAllocations);
 		DebugRendererRegistry.register(SegfaultModDebug.ALLOCATION, _ -> new AllocationDebugRenderer(), renderAllocations);
 	}
