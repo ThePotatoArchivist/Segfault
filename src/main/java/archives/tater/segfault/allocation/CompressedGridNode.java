@@ -6,8 +6,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.ExtraCodecs;
 
-import org.jspecify.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,37 +65,30 @@ public sealed interface CompressedGridNode {
         @Override
         public GridNode decompress(GridRegion region) {
             var children = new ArrayList<GridNode>(this.children.size());
-            Entry previous = null;
+            int offset = vertical ? region.startY() : region.startX();
             for (var entry : this.children) {
-                decompressEntry(children, region, previous, entry);
-                previous = entry;
+                children.add(entry.node.decompress(vertical
+                        ? region(region.startX(), offset, region.endX(), offset + entry.size)
+                        : region(offset, region.startY(), offset + entry.size, region.endY())
+                ));
+                offset += entry.size;
             }
-            decompressEntry(children, region, previous, null);
 
             return GridNode.split(region, vertical, children);
         }
 
-        private void decompressEntry(ArrayList<GridNode> entries, GridRegion region, @Nullable Entry previous, @Nullable Entry current) {
-            if (previous != null)
-                entries.add(previous.node.decompress(vertical
-                        ? region(region.startX(), region.startY() + previous.start, region.endX(), current == null ? region.endY() : region.startY() + current.start)
-                        : region(region.startX() + previous.start, region.startY(), current == null ? region.endX() : region.startX() + current.start, region.endY())
-                ));
-        }
-
         public static Split compress(GridNode.Split split) {
             var vertical = split.vertical;
-            var start = vertical ? split.region.startY() : split.region.startX();
 
             return new Split(split.children.stream().map(node -> new Entry(
-                    (vertical ? node.region.startY() : node.region.startX()) - start,
+                    vertical ? node.region.sizeY() : node.region.sizeX(),
                     CompressedGridNode.compress(node)
             )).toList(), vertical);
         }
 
-        record Entry(int start, CompressedGridNode node) {
+        record Entry(int size, CompressedGridNode node) {
             public static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                    ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("start", 0).forGetter(Entry::start),
+                    ExtraCodecs.NON_NEGATIVE_INT.fieldOf("size").forGetter(Entry::size),
                     CompressedGridNode.MAP_CODEC.forGetter(Entry::node)
             ).apply(instance, Entry::new));
         }
