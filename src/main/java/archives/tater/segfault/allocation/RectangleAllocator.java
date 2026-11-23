@@ -179,8 +179,9 @@ public final class RectangleAllocator {
     }
 
     private GridNode.@Nullable Leaf findFree(GridNode node, int sizeX, int sizeY) {
+        if (!node.region.fits(sizeX, sizeY)) return null;
         switch (node) {
-            case GridNode.Leaf leaf -> { return !leaf.used && leaf.region.fits(sizeX, sizeY) ? leaf : null; }
+            case GridNode.Leaf leaf -> { return leaf.used ? null : leaf; }
             case GridNode.Split split -> {
                 for (var child : split.children) {
                     var result = findFree(child, sizeX, sizeY);
@@ -216,30 +217,35 @@ public final class RectangleAllocator {
 
     private static void simplify(GridNode.Split node) {
         GridPos start = null;
+        GridPos end = null;
         int freeCount = 0;
 
         var iterator = node.children.listIterator();
-        GridNode child = null;
         while (iterator.hasNext()) {
-            child = iterator.next();
+            var child = iterator.next();
             if (child instanceof GridNode.Leaf leaf && !leaf.used) {
                 if (freeCount == 0)
                     start = leaf.region.start();
+                end = leaf.region.end();
                 freeCount++;
             } else {
-                trySimplify(node, iterator, freeCount, start, child.region.end());
+                if (freeCount >= 2) {
+                    iterator.previous();
+                    trySimplify(node, iterator, freeCount, start, end);
+                    iterator.next();
+                }
                 start = null;
+                end = null;
                 freeCount = 0;
             }
         }
-        if (child != null)
-            trySimplify(node, iterator, freeCount, start, child.region.end());
+        trySimplify(node, iterator, freeCount, start, end);
     }
 
-    private static void trySimplify(Split parent, ListIterator<GridNode> iterator, int freeCount, @Nullable GridPos start, GridPos end) {
-        if (start == null || freeCount < 2) return;
+    private static void trySimplify(Split parent, ListIterator<GridNode> iterator, int freeCount, @Nullable GridPos start, @Nullable GridPos end) {
+        if (start == null || end == null || freeCount < 2) return;
         for (int i = 0; i < freeCount; i++) {
-            if (i != 0) iterator.previous();
+            iterator.previous();
             iterator.remove();
         }
         var free = free(region(start, end));
