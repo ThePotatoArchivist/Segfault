@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -23,7 +24,7 @@ public interface SegfaultModBlocks {
     Block CONSTRUCTOR = register(SegfaultModBlockItemIds.CONSTRUCTOR, ConstructorBlock::new, memoryMachineProperties());
     Block DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, DereferencerBlock::new, memoryMachineProperties());
     Block DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, DestructorBlock::new, memoryMachineProperties());
-    Block STRUCT_FRAME = register(SegfaultModBlockItemIds.STRUCT_FRAME, StructFrameBlock::new, memoryMachineProperties());
+    Block STRUCT_FRAME = register(SegfaultModBlockItemIds.STRUCT_FRAME, StructFrameBlock::new, memoryComponentProperties());
 
     private static Block register(BlockItemId id, Function<BlockBehaviour.Properties, Block> block, BlockBehaviour.Properties properties) {
         return register(id.block(), block, properties);
@@ -34,6 +35,11 @@ public interface SegfaultModBlocks {
     }
 
     private static BlockBehaviour.Properties memoryMachineProperties() {
+        return memoryComponentProperties()
+            .isRedstoneConductor(Blocks::never);
+    }
+
+    private static BlockBehaviour.Properties memoryComponentProperties() {
         return BlockBehaviour.Properties.of()
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
