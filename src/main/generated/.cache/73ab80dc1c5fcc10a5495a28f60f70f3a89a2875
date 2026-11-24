@@ -3,4 +3,3 @@
 9eab8bdbfa98dbb60a6a077ab00ebc69b469b15f data/minecraft/tags/block/mineable/pickaxe.json
 9eab8bdbfa98dbb60a6a077ab00ebc69b469b15f data/minecraft/tags/block/needs_iron_tool.json
 690c9aeab969a6ba4e431c5a7c9686580b93aba9 data/segfault/tags/block/memory_machines.json
-416b870d0be823c04c38949f75a7fdcbf9a42f1d data/segfault/tags/block/persists_exited_state.json
