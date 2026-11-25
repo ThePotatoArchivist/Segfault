@@ -1,17 +1,20 @@
 package archives.tater.segfault.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 import org.jspecify.annotations.Nullable;
 
@@ -48,6 +51,56 @@ public class StructFrameBlock extends Block {
         return axes.size() == 1
                 ? defaultBlockState().setValue(SHAPE, Shape.of(axes.stream().findAny().orElseThrow()))
                 : defaultBlockState();
+    }
+
+    public static @Nullable BoundingBox findRegion(BlockGetter level, BlockPos pos) {
+        var mutable = pos.mutable();
+        if (!findStart(mutable, level)) return null;
+
+        var start = mutable.immutable();
+
+        for (var axis : Axis.VALUES) {
+            mutable.move(axis.getPositive());
+            var positive = level.getBlockState(mutable);
+            mutable.move(axis.getNegative(), 2);
+            var negative = level.getBlockState(mutable);
+            mutable.move(axis.getPositive());
+
+            var positiveBlock = positive.hasProperty(SHAPE);
+            var negativeBlock = negative.hasProperty(SHAPE);
+
+            if (positiveBlock == negativeBlock) return null;
+
+            var foundAxis = (positiveBlock ? positive : negative).getValue(SHAPE).axis;
+            if (foundAxis != axis) return null;
+
+            if (!findVertex(mutable, level, positiveBlock ? axis.getPositive() : axis.getNegative())) return null;
+        }
+
+        var end = mutable.immutable();
+
+        return BoundingBox.fromCorners(start, end);
+    }
+
+    private static boolean findStart(MutableBlockPos pos, BlockGetter level) {
+        var shape = level.getBlockState(pos).getOptionalValue(SHAPE).orElse(null);
+        if (shape == null || shape.axis == null) return false;
+
+        return findVertex(pos, level, shape.axis.getNegative());
+    }
+
+    private static boolean findVertex(MutableBlockPos pos, BlockGetter level, Direction direction) {
+        while (true) {
+            pos.move(direction);
+
+            var shape = level.getBlockState(pos).getOptionalValue(SHAPE).orElse(null);
+            if (shape == null) return false;
+
+            var axis = shape.axis;
+            if (axis == null) return true;
+
+            if (axis != direction.getAxis()) return false;
+        }
     }
 
     public enum Shape implements StringRepresentable {

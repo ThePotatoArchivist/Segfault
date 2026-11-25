@@ -45,6 +45,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(getKey(DestructorBlockEntity.DEFAULT_NAME), "Destructor");
 
         translationBuilder.add(getKey(SegfaultModCommands.RESET_SUCCESS), "Reset all allocations");
+        translationBuilder.add(getKey((Component) SegfaultModCommands.DETECT_FAIL.create().getRawMessage()), "Could not detect a frame");
+        translationBuilder.add("commands.segfault.detect_frame.success", "Detected frame from (%s, %s %s) to (%s, %s, %s)");
 
         translationBuilder.add(SegfaultClient.keyDebugChunkGrid.getName(), "Show Chunk Grid");
         translationBuilder.add(getKey(SegfaultClient.DEBUG_CHUNK_GRID_ON), "Chunk grid: shown");
