@@ -2,7 +2,7 @@ package archives.tater.segfault.registry;
 
 import archives.tater.segfault.Segfault;
 import archives.tater.segfault.allocation.AllocationManager;
-import archives.tater.segfault.block.StructFrameBlock;
+import archives.tater.segfault.block.StructFrameHelper;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -34,7 +34,7 @@ public class SegfaultModCommands {
                 }))
                 .then(literal("detect_frame")
                         .then(argument("start", blockPos()).executes(context -> {
-                            var box = StructFrameBlock.findRegion(context.getSource().getLevel(), getLoadedBlockPos(context, context.getSource().getLevel(), "start"));
+                            var box = StructFrameHelper.findRegion(context.getSource().getLevel(), getLoadedBlockPos(context, context.getSource().getLevel(), "start"));
                             if (box == null) throw DETECT_FAIL.create();
                             context.getSource().sendSuccess(() -> Component.translatable("commands.segfault.detect_frame.success", box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ()), false);
                             return Command.SINGLE_SUCCESS;
