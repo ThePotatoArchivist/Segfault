@@ -1,5 +1,20 @@
 package archives.tater.segfault.util;
 
+import archives.tater.segfault.mixin.AbstractContainerMenuAccessor;
+
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuConstructor;
+import net.minecraft.world.item.ItemStack;
+
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -21,5 +36,50 @@ public class SegfaultUtil {
         result.addAll(list);
         result.add(value);
         return result;
+    }
+
+    public static <D> ExtendedMenuProvider<D> simpleExtendedMenuProvider(MenuConstructor constructor, Component displayName, D data) {
+        return new ExtendedMenuProvider<>() {
+            @Override
+            public D getScreenOpeningData(ServerPlayer player) {
+                return data;
+            }
+
+            @Override
+            public Component getDisplayName() {
+                return displayName;
+            }
+
+            @Override
+            public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+                return constructor.createMenu(containerId, inventory, player);
+            }
+        };
+    }
+
+    public static ItemStack quickMoveStack(AbstractContainerMenu menu, Container container, int inputSlotCount, Player player, int slotIndex) {
+        var slot = menu.slots.get(slotIndex);
+        if (slot == null || !slot.hasItem()) return ItemStack.EMPTY;
+
+        var stack = slot.getItem();
+        var clicked = stack.copy();
+
+        if (slotIndex < container.getContainerSize()) {
+            if (!((AbstractContainerMenuAccessor) menu).callMoveItemStackTo(stack, container.getContainerSize(), menu.slots.size(), true))
+                return ItemStack.EMPTY;
+        } else if (!((AbstractContainerMenuAccessor) menu).callMoveItemStackTo(stack, 0, inputSlotCount, false))
+            return ItemStack.EMPTY;
+
+        if (stack.isEmpty())
+            slot.setByPlayer(ItemStack.EMPTY);
+        else
+            slot.setChanged();
+
+        if (stack.getCount() == clicked.getCount())
+            return ItemStack.EMPTY;
+
+        slot.onTake(player, stack);
+
+        return clicked;
     }
 }

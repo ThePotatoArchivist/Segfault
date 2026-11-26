@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "segfault:item/empty_struct_template"
+  }
+}

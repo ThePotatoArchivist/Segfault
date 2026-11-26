@@ -3,6 +3,7 @@ package archives.tater.segfault.menu;
 import archives.tater.segfault.block.entity.ConstructorBlockEntity;
 import archives.tater.segfault.registry.SegfaultModComponents;
 import archives.tater.segfault.registry.SegfaultModMenus;
+import archives.tater.segfault.util.SegfaultUtil;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -50,29 +51,7 @@ public class ConstructorMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int slotIndex) {
-        var slot = slots.get(slotIndex);
-        if (slot == null || !slot.hasItem()) return ItemStack.EMPTY;
-
-        var stack = slot.getItem();
-        var clicked = stack.copy();
-
-        if (slotIndex < constructor.getContainerSize()) {
-            if (!moveItemStackTo(stack, constructor.getContainerSize(), slots.size(), true))
-                return ItemStack.EMPTY;
-        } else if (!moveItemStackTo(stack, 0, 2, false))
-            return ItemStack.EMPTY;
-
-        if (stack.isEmpty())
-            slot.setByPlayer(ItemStack.EMPTY);
-        else
-            slot.setChanged();
-
-        if (stack.getCount() == clicked.getCount())
-            return ItemStack.EMPTY;
-
-        slot.onTake(player, stack);
-
-        return clicked;
+        return SegfaultUtil.quickMoveStack(this, constructor, 2, player, slotIndex);
     }
 
     @Override
@@ -84,5 +63,10 @@ public class ConstructorMenu extends AbstractContainerMenu {
     public void removed(Player player) {
         super.removed(player);
         constructor.stopOpen(player);
+    }
+
+    @Override
+    public boolean moveItemStackTo(ItemStack itemStack, int startSlot, int endSlot, boolean backwards) {
+        return super.moveItemStackTo(itemStack, startSlot, endSlot, backwards);
     }
 }

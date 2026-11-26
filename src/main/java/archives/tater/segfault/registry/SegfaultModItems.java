@@ -28,7 +28,8 @@ public interface SegfaultModItems {
     Item POINTER = register(SegfaultModItemIds.POINTER, new Item.Properties()
             .component(SegfaultModComponents.POINTER, Pointer.NULL)
     );
-    Item STRUCT_TEMPLATE = register(SegfaultModItemIds.STRUCT_TEMPLATE, new Item.Properties());
+    Item EMPTY_STRUCT_TEMPLATE = register(SegfaultModItemIds.EMPTY_STRUCT_TEMPLATE, new Item.Properties());
+    Item STRUCT_TEMPLATE = register(SegfaultModItemIds.STRUCT_TEMPLATE, new Item.Properties().stacksTo(1));
     Item PORTABLE_DEREFERENCER = register(SegfaultModItemIds.PORTABLE_DEREFERENCER, new Item.Properties()
             .component(SegfaultModComponents.STORED_POINTER, StoredPointer.EMPTY)
             .useCooldown(2f)

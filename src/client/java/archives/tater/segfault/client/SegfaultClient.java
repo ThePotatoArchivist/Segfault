@@ -5,6 +5,7 @@ import archives.tater.segfault.client.render.debug.AllocationDebugRenderer;
 import archives.tater.segfault.client.screen.ConstructorScreen;
 import archives.tater.segfault.client.screen.DestructorScreen;
 import archives.tater.segfault.client.screen.SingleSlotScreen;
+import archives.tater.segfault.client.screen.StructDesignerScreen;
 import archives.tater.segfault.registry.SegfaultModComponents;
 import archives.tater.segfault.registry.SegfaultModDebug;
 import archives.tater.segfault.registry.SegfaultModMenus;
@@ -26,6 +27,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.entity.StructureBlockEntity;
 
 public class SegfaultClient implements ClientModInitializer {
 	public static final Identifier DEBUG_CHUNK_GRID = DebugScreenEntries.register(Segfault.id("chunk_grid"), new DebugEntryNoop());
@@ -51,6 +53,7 @@ public class SegfaultClient implements ClientModInitializer {
 		MenuScreens.register(SegfaultModMenus.CONSTRUCTOR, ConstructorScreen::new);
 		MenuScreens.register(SegfaultModMenus.DEREFERENCER, SingleSlotScreen::new);
 		MenuScreens.register(SegfaultModMenus.DESTRUCTOR, DestructorScreen::new);
+		MenuScreens.register(SegfaultModMenus.STRUCT_DESIGNER, StructDesignerScreen::new);
 
 		ClientPlayNetworking.registerGlobalReceiver(SegfaultModNetworking.TELEPORT_SOUND, (_, context) -> {
 			context.client().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(SoundEvents.PLAYER_TELEPORT, context.player().getRandom().nextFloat() * 0.4F + 0.8F, 1));

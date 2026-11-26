@@ -49,6 +49,7 @@ public class ModModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerators) {
         itemModelGenerators.generateFlatItem(SegfaultModItems.POINTER, ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(SegfaultModItems.EMPTY_STRUCT_TEMPLATE, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(SegfaultModItems.STRUCT_TEMPLATE, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(SegfaultModItems.PORTABLE_DEREFERENCER, ModelTemplates.FLAT_ITEM);
     }

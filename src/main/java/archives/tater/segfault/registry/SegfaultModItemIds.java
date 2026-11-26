@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 
 public interface SegfaultModItemIds {
     ResourceKey<Item> POINTER = create("pointer");
+    ResourceKey<Item> EMPTY_STRUCT_TEMPLATE = create("empty_struct_template");
     ResourceKey<Item> STRUCT_TEMPLATE = create("struct_template");
     ResourceKey<Item> PORTABLE_DEREFERENCER = create("portable_dereferencer");
 

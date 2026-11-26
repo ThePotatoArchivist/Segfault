@@ -78,7 +78,18 @@ public class StructFrameHelper {
         }
     }
 
-    public static boolean regionValid(BlockGetter level, BoundingBox box, BlockPos.MutableBlockPos mutable) {
+    public static boolean isEdge(BoundingBox box, BlockPos pos) {
+        var matchX = pos.getX() == box.minX() || pos.getX() == box.maxX();
+        var matchY = pos.getY() == box.minY() || pos.getY() == box.maxY();
+        var matchZ = pos.getZ() == box.minZ() || pos.getZ() == box.maxZ();
+        return matchX && matchY || matchY && matchZ || matchX && matchZ;
+    }
+
+    public static boolean regionValid(BlockGetter level, BoundingBox box) {
+        return regionValid(level, box, new BlockPos.MutableBlockPos());
+    }
+
+    private static boolean regionValid(BlockGetter level, BoundingBox box, BlockPos.MutableBlockPos mutable) {
         return verticesValid(level, box, mutable) &&
                 edgeSetValid(level, mutable, box, Direction.Axis.X) &&
                 edgeSetValid(level, mutable, box, Direction.Axis.Y) &&

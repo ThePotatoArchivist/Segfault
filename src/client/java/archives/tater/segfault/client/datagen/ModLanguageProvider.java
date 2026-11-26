@@ -1,9 +1,11 @@
 package archives.tater.segfault.client.datagen;
 
+import archives.tater.segfault.block.StructDesignerBlock;
 import archives.tater.segfault.block.entity.ConstructorBlockEntity;
 import archives.tater.segfault.block.entity.DereferencerBlockEntity;
 import archives.tater.segfault.block.entity.DestructorBlockEntity;
 import archives.tater.segfault.client.SegfaultClient;
+import archives.tater.segfault.client.screen.StructDesignerScreen;
 import archives.tater.segfault.registry.SegfaultModBlocks;
 import archives.tater.segfault.registry.SegfaultModCommands;
 import archives.tater.segfault.registry.SegfaultModCreativeTabs;
@@ -32,6 +34,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(SegfaultModBlocks.STRUCT_FRAME, "Struct Frame");
 
         translationBuilder.add(SegfaultModItems.POINTER, "Pointer");
+        translationBuilder.add(SegfaultModItems.EMPTY_STRUCT_TEMPLATE, "Empty Struct Template");
         translationBuilder.add(SegfaultModItems.STRUCT_TEMPLATE, "Struct Template");
         translationBuilder.add(SegfaultModItems.PORTABLE_DEREFERENCER, "Portable Dereferencer");
 
@@ -44,6 +47,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(getKey(ConstructorBlockEntity.DEFAULT_NAME), "Constructor");
         translationBuilder.add(getKey(DereferencerBlockEntity.DEFAULT_NAME), "Dereferencer");
         translationBuilder.add(getKey(DestructorBlockEntity.DEFAULT_NAME), "Destructor");
+        translationBuilder.add(getKey(StructDesignerBlock.CONTAINER_TITLE), "Struct Designer");
+        translationBuilder.add(getKey(StructDesignerScreen.PLACEHOLDER_TEXT), "Struct Name");
 
         translationBuilder.add(getKey(SegfaultModCommands.RESET_SUCCESS), "Reset all allocations");
         translationBuilder.add(getKey((Component) SegfaultModCommands.DETECT_FAIL.create().getRawMessage()), "Could not detect a frame");

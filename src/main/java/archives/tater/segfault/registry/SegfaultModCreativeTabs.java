@@ -22,7 +22,7 @@ public interface SegfaultModCreativeTabs {
                 output.accept(SegfaultModItems.STRUCT_DESIGNER);
                 output.accept(SegfaultModItems.STRUCT_FRAME);
                 output.accept(SegfaultModItems.POINTER);
-                output.accept(SegfaultModItems.STRUCT_TEMPLATE);
+                output.accept(SegfaultModItems.EMPTY_STRUCT_TEMPLATE);
                 output.accept(SegfaultModItems.PORTABLE_DEREFERENCER);
             })
     );
