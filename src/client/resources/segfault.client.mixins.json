@@ -12,6 +12,7 @@
   },
   "mixins": [
     "DebugRendererMixin",
+    "EntityRenderDispatcherAccessor",
     "KeyboardHandlerMixin"
-    ]
+  ]
 }

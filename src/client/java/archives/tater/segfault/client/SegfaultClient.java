@@ -2,6 +2,7 @@ package archives.tater.segfault.client;
 
 import archives.tater.segfault.Segfault;
 import archives.tater.segfault.client.render.debug.AllocationDebugRenderer;
+import archives.tater.segfault.client.render.pip.GuiStructureRenderer;
 import archives.tater.segfault.client.screen.ConstructorScreen;
 import archives.tater.segfault.client.screen.DestructorScreen;
 import archives.tater.segfault.client.screen.SingleSlotScreen;
@@ -16,6 +17,7 @@ import net.fabricmc.fabric.api.client.debug.v1.ClientDebugSubscriptionRegistry;
 import net.fabricmc.fabric.api.client.debug.v1.renderer.DebugRendererRegistry;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -54,6 +56,7 @@ public class SegfaultClient implements ClientModInitializer {
 		MenuScreens.register(SegfaultModMenus.DEREFERENCER, SingleSlotScreen::new);
 		MenuScreens.register(SegfaultModMenus.DESTRUCTOR, DestructorScreen::new);
 		MenuScreens.register(SegfaultModMenus.STRUCT_DESIGNER, StructDesignerScreen::new);
+		PictureInPictureRendererRegistry.register(GuiStructureRenderer::new);
 
 		ClientPlayNetworking.registerGlobalReceiver(SegfaultModNetworking.TELEPORT_SOUND, (_, context) -> {
 			context.client().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(SoundEvents.PLAYER_TELEPORT, context.player().getRandom().nextFloat() * 0.4F + 0.8F, 1));

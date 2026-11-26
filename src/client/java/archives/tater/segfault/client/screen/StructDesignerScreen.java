@@ -1,6 +1,8 @@
 package archives.tater.segfault.client.screen;
 
 import archives.tater.segfault.Segfault;
+import archives.tater.segfault.client.mixin.EntityRenderDispatcherAccessor;
+import archives.tater.segfault.client.render.pip.GuiStructureRenderer;
 import archives.tater.segfault.menu.StructDesignerMenu;
 import archives.tater.segfault.network.SetStructNamePayload;
 
@@ -15,6 +17,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -23,6 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
+
+import org.jspecify.annotations.Nullable;
 
 public class StructDesignerScreen extends AbstractContainerScreen<StructDesignerMenu> implements ContainerListener {
     private static final Identifier CONTAINER_LOCATION = Segfault.id("textures/gui/container/struct_designer.png");
@@ -36,10 +41,15 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
     private final Player player;
     @SuppressWarnings("NotNullFieldNotInitialized")
     private EditBox name;
+    private final BlockModelRenderState @Nullable[][][] structure;
 
     public StructDesignerScreen(StructDesignerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         player = inventory.player;
+        if (menu.box != null)
+            structure = GuiStructureRenderer.extract(((EntityRenderDispatcherAccessor) minecraft.getEntityRenderDispatcher()).getBlockModelResolver(), minecraft.level, menu.box);
+        else
+            structure = null;
     }
 
     @Override
@@ -127,6 +137,13 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
         graphics.blit(RenderPipelines.GUI_TEXTURED, CONTAINER_LOCATION, leftPos, topPos, 0f, 0f, imageWidth, imageHeight, 256, 256);
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
+        if (structure != null)
+            graphics.guiRenderState.addPicturesInPictureState(new GuiStructureRenderer.State(structure, 45, 35, 0, 0, 64, 64, 16f, graphics.scissorStack.peek()));
     }
 
     @Override
