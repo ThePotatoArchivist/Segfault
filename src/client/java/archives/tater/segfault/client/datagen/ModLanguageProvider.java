@@ -49,6 +49,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(getKey(DestructorBlockEntity.DEFAULT_NAME), "Destructor");
         translationBuilder.add(getKey(StructDesignerBlock.CONTAINER_TITLE), "Struct Designer");
         translationBuilder.add(getKey(StructDesignerScreen.PLACEHOLDER_TEXT), "Struct Name");
+        translationBuilder.add("screen.segfault.struct_designer.dimensions", "%sx%sx%s");
+        translationBuilder.add(getKey(StructDesignerScreen.NOT_FOUND_TEXT), "Not Found");
 
         translationBuilder.add(getKey(SegfaultModCommands.RESET_SUCCESS), "Reset all allocations");
         translationBuilder.add(getKey((Component) SegfaultModCommands.DETECT_FAIL.create().getRawMessage()), "Could not detect a frame");

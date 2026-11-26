@@ -31,9 +31,11 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
             Segfault.id("container/struct_designer/button_disabled"),
             Segfault.id("container/struct_designer/button_focused")
     );
+    public static final Component PLACEHOLDER_TEXT = Component.translatable("screen.segfault.struct_designer.name");
+    public static final Component NOT_FOUND_TEXT = Component.translatable("screen.segfault.struct_designer.none");
     private final Player player;
+    @SuppressWarnings("NotNullFieldNotInitialized")
     private EditBox name;
-    public static final Component PLACEHOLDER_TEXT = Component.translatable("container.segfault.struct_designer.name");
 
     public StructDesignerScreen(StructDesignerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -112,6 +114,13 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
         super.extractLabels(graphics, xm, ym);
+        var xo = (width - imageWidth) / 2;
+        var yo = (height - imageHeight) / 2;
+        var box = menu.box;
+        if (box != null)
+            graphics.text(font, Component.translatable("screen.segfault.struct_designer.dimensions", box.getXSpan(), box.getYSpan(), box.getZSpan()), xo, yo + 24, 0xFFFFFFFF);
+        else
+            graphics.text(font, NOT_FOUND_TEXT, xo, yo + 24, 0xffff6060);
     }
 
     @Override

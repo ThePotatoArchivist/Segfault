@@ -82,7 +82,13 @@ public class StructFrameHelper {
         var matchX = pos.getX() == box.minX() || pos.getX() == box.maxX();
         var matchY = pos.getY() == box.minY() || pos.getY() == box.maxY();
         var matchZ = pos.getZ() == box.minZ() || pos.getZ() == box.maxZ();
-        return matchX && matchY || matchY && matchZ || matchX && matchZ;
+        return  matchX && matchY && isBetween(pos.getZ(), box.minZ(), box.maxZ()) ||
+                matchX && matchZ && isBetween(pos.getY(), box.minY(), box.maxY()) ||
+                matchY && matchZ && isBetween(pos.getX(), box.minX(), box.maxX());
+    }
+
+    private static boolean isBetween(int value, int min, int max) {
+        return min <= value && value <= max;
     }
 
     public static boolean regionValid(BlockGetter level, BoundingBox box) {

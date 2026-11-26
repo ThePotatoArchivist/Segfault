@@ -11,7 +11,6 @@
   "container.segfault.dereferencer": "Dereferencer",
   "container.segfault.destructor": "Destructor",
   "container.segfault.struct_designer": "Struct Designer",
-  "container.segfault.struct_designer.name": "Struct Name",
   "debug.segfault.chunk_grid.off": "Chunk grid: hidden",
   "debug.segfault.chunk_grid.on": "Chunk grid: shown",
   "item.segfault.empty_struct_template": "Empty Struct Template",
@@ -23,5 +22,8 @@
   "item.segfault.struct_template": "Struct Template",
   "item.segfault.struct_template.dimensions": "%sx%sx%s",
   "itemGroup.segfault.segfault": "Segfault",
-  "key.segfault.debug.chunk_grid": "Show Chunk Grid"
+  "key.segfault.debug.chunk_grid": "Show Chunk Grid",
+  "screen.segfault.struct_designer.dimensions": "%sx%sx%s",
+  "screen.segfault.struct_designer.name": "Struct Name",
+  "screen.segfault.struct_designer.none": "Not Found"
 }

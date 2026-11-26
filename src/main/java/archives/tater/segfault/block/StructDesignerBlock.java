@@ -54,13 +54,15 @@ public class StructDesignerBlock extends Block {
         BoundingBox box = null;
         for (var direction : Direction.values()) {
             var offsetPos = pos.relative(direction);
-            if (level.getBlockState(offsetPos).hasProperty(StructFrameBlock.SHAPE)) {
-                if (box == null)
-                    box = StructFrameHelper.findRegion(level, offsetPos);
-                else if (!StructFrameHelper.isEdge(box, offsetPos))
-                    return null;
-            }
+            if (!level.getBlockState(offsetPos).hasProperty(StructFrameBlock.SHAPE)) continue;
+
+            if (box == null) {
+                box = StructFrameHelper.findRegion(level, offsetPos);
+                if (box == null) return null;
+            } else if (!StructFrameHelper.isEdge(box, offsetPos))
+                return null;
         }
-        return box;
+        if (box == null) return null;
+        return box.inflatedBy(-1);
     }
 }

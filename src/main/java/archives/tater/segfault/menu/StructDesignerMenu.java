@@ -100,12 +100,12 @@ public class StructDesignerMenu extends AbstractContainerMenu {
         if (buttonId != BUTTON_CREATE) return false;
         if (getInput().isEmpty() || !getOutput().isEmpty() || box == null || structName.isBlank()) return false;
         access.execute((level, blockPos) -> {
-            if (!StructFrameHelper.regionValid(level, box)) {
+            if (!StructFrameHelper.regionValid(level, box.inflatedBy(1))) {
                 level.playSound(null, blockPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS);
                 return;
             }
 
-            var structTemplate = saveStruct((ServerLevel) level, player, box.inflatedBy(-1), structName);
+            var structTemplate = saveStruct((ServerLevel) level, player, box, structName);
             if (structTemplate == null) return;
 
             var input = getInput();
