@@ -4,6 +4,7 @@ import archives.tater.segfault.Segfault;
 
 import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -39,6 +40,8 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
 
     @Override
     protected void renderToTexture(State renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector) {
+        Minecraft.getInstance().gameRenderer.lighting().setupFor(Lighting.Entry.ENTITY_IN_UI);
+
         poseStack.translate(0, (renderState.y0 - renderState.y1) / renderState.scale / 2f, 0);
         poseStack.scale(-1, -1, 1);
         poseStack.rotate(Axis.XP.rotationDegrees(-renderState.xRot));

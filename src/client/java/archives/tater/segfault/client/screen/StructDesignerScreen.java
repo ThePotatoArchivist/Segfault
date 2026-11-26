@@ -3,6 +3,7 @@ package archives.tater.segfault.client.screen;
 import archives.tater.segfault.Segfault;
 import archives.tater.segfault.client.mixin.EntityRenderDispatcherAccessor;
 import archives.tater.segfault.client.render.pip.GuiStructureRenderer;
+import archives.tater.segfault.client.render.widget.StructureWidget;
 import archives.tater.segfault.menu.StructDesignerMenu;
 import archives.tater.segfault.network.SetStructNamePayload;
 
@@ -59,6 +60,8 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
         var yo = (height - imageHeight) / 2;
         name = addRenderableWidget(createNameEdit(xo + 62, yo + 24));
         addRenderableWidget(createButton(xo + 165, yo + 24));
+        if (structure != null)
+            addRenderableWidget(new StructureWidget(structure, 0, 0, 64, 64));
         menu.addSlotListener(this);
     }
 
@@ -142,8 +145,6 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractRenderState(graphics, mouseX, mouseY, a);
-        if (structure != null)
-            graphics.guiRenderState.addPicturesInPictureState(new GuiStructureRenderer.State(structure, 45, 35, 0, 0, 64, 64, 16f, graphics.scissorStack.peek()));
     }
 
     @Override
