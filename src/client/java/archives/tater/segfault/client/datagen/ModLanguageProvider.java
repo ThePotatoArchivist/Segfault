@@ -28,6 +28,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(SegfaultModBlocks.CONSTRUCTOR, "Constructor");
         translationBuilder.add(SegfaultModBlocks.DEREFERENCER, "Dereferencer");
         translationBuilder.add(SegfaultModBlocks.DESTRUCTOR, "Destructor");
+        translationBuilder.add(SegfaultModBlocks.STRUCT_DESIGNER, "Struct Designer");
         translationBuilder.add(SegfaultModBlocks.STRUCT_FRAME, "Struct Frame");
 
         translationBuilder.add(SegfaultModItems.POINTER, "Pointer");

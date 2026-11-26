@@ -19,6 +19,7 @@ public class ModBlockLootProvider extends FabricBlockLootSubProvider {
         add(SegfaultModBlocks.CONSTRUCTOR, this::createNameableBlockEntityTable);
         add(SegfaultModBlocks.DEREFERENCER, this::createNameableBlockEntityTable);
         add(SegfaultModBlocks.DESTRUCTOR, this::createNameableBlockEntityTable);
+        dropSelf(SegfaultModBlocks.STRUCT_DESIGNER);
         dropSelf(SegfaultModBlocks.STRUCT_FRAME);
     }
 }

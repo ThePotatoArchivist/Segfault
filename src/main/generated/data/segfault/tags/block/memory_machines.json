@@ -3,6 +3,7 @@
     "segfault:constructor",
     "segfault:dereferencer",
     "segfault:destructor",
+    "segfault:struct_designer",
     "segfault:struct_frame"
   ]
 }

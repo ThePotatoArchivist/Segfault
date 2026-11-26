@@ -2,6 +2,7 @@
   "block.segfault.constructor": "Constructor",
   "block.segfault.dereferencer": "Dereferencer",
   "block.segfault.destructor": "Destructor",
+  "block.segfault.struct_designer": "Struct Designer",
   "block.segfault.struct_frame": "Struct Frame",
   "commands.segfault.detect_frame.fail": "Could not detect a frame",
   "commands.segfault.detect_frame.success": "Detected frame from (%s, %s %s) to (%s, %s, %s)",

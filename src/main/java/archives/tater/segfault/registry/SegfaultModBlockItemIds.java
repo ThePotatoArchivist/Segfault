@@ -9,6 +9,7 @@ public interface SegfaultModBlockItemIds {
     BlockItemId CONSTRUCTOR = create("constructor");
     BlockItemId DEREFERENCER = create("dereferencer");
     BlockItemId DESTRUCTOR = create("destructor");
+    BlockItemId STRUCT_DESIGNER = create("struct_designer");
     BlockItemId STRUCT_FRAME = create("struct_frame");
 
     private static BlockItemId create(String path) {

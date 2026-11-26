@@ -29,6 +29,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockModelGenerators.createTrivialCube(SegfaultModBlocks.CONSTRUCTOR);
         blockModelGenerators.createTrivialCube(SegfaultModBlocks.DEREFERENCER);
         blockModelGenerators.createTrivialCube(SegfaultModBlocks.DESTRUCTOR);
+        blockModelGenerators.createTrivialCube(SegfaultModBlocks.STRUCT_DESIGNER);
 
         createFrame(blockModelGenerators, SegfaultModBlocks.STRUCT_FRAME);
     }

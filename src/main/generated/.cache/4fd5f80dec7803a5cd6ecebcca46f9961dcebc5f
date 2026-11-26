@@ -2,4 +2,5 @@
 f4da2345b16b4893343115e7ee1a7d5d00dc220d data/segfault/loot_table/blocks/constructor.json
 f524c8197b6b5e35f369e36d458273bde9da22d5 data/segfault/loot_table/blocks/dereferencer.json
 042e758db9a60e4d9dd338ee7fe012751a3bc4ea data/segfault/loot_table/blocks/destructor.json
+d860ba357fb1e2a32dba8376060c33a2cfd14995 data/segfault/loot_table/blocks/struct_designer.json
 b95c20a7728a1170f9d22fac1b8495841283736d data/segfault/loot_table/blocks/struct_frame.json

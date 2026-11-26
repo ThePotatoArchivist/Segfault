@@ -1,10 +1,7 @@
 package archives.tater.segfault.registry;
 
 import archives.tater.segfault.Segfault;
-import archives.tater.segfault.block.ConstructorBlock;
-import archives.tater.segfault.block.DereferencerBlock;
-import archives.tater.segfault.block.DestructorBlock;
-import archives.tater.segfault.block.StructFrameBlock;
+import archives.tater.segfault.block.*;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,6 +13,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.function.Function;
 
@@ -24,6 +22,9 @@ public interface SegfaultModBlocks {
     Block CONSTRUCTOR = register(SegfaultModBlockItemIds.CONSTRUCTOR, ConstructorBlock::new, memoryMachineProperties());
     Block DEREFERENCER = register(SegfaultModBlockItemIds.DEREFERENCER, DereferencerBlock::new, memoryMachineProperties());
     Block DESTRUCTOR = register(SegfaultModBlockItemIds.DESTRUCTOR, DestructorBlock::new, memoryMachineProperties());
+    Block STRUCT_DESIGNER = register(SegfaultModBlockItemIds.STRUCT_DESIGNER, StructDesignerBlock::new, memoryComponentProperties()
+            .pushReaction(PushReaction.IMMOVEABLE)
+    );
     Block STRUCT_FRAME = register(SegfaultModBlockItemIds.STRUCT_FRAME, StructFrameBlock::new, memoryComponentProperties());
 
     private static Block register(BlockItemId id, Function<BlockBehaviour.Properties, Block> block, BlockBehaviour.Properties properties) {

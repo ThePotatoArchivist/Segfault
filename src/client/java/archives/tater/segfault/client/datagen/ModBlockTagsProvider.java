@@ -22,6 +22,7 @@ public class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
                 .add(SegfaultModBlockItemIds.CONSTRUCTOR)
                 .add(SegfaultModBlockItemIds.DEREFERENCER)
                 .add(SegfaultModBlockItemIds.DESTRUCTOR)
+                .add(SegfaultModBlockItemIds.STRUCT_DESIGNER)
                 .add(SegfaultModBlockItemIds.STRUCT_FRAME);
 
         builder(BlockTags.MINEABLE_WITH_PICKAXE).addTag(SegfaultModBlockTags.MEMORY_MACHINES);
