@@ -56,7 +56,11 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
         inventoryLabelY = 86;
 
         if (menu.box != null)
-            structure = GuiStructureRenderer.extract(((EntityRenderDispatcherAccessor) minecraft.getEntityRenderDispatcher()).getBlockModelResolver(), minecraft.level, menu.box);
+            structure = GuiStructureRenderer.extract(
+                    ((EntityRenderDispatcherAccessor) minecraft.getEntityRenderDispatcher()).getBlockModelResolver(),
+                    minecraft.level,
+                    menu.box
+            );
         else
             structure = null;
     }

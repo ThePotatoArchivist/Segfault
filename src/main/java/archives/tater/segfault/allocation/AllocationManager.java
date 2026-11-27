@@ -76,18 +76,9 @@ public final class AllocationManager extends SavedData {
     }
 
     private static void clearContents(ServerLevel level, BlockPos start, Vec3i size) {
-        var mutable = new BlockPos.MutableBlockPos();
-        for (var x = 0; x < size.getX(); x++) {
-            mutable.setX(start.getX() + x);
-            for (var y = 0; y < size.getY(); y++) {
-                mutable.setY(start.getY() + y);
-                for (var z = 0; z < size.getZ(); z++) {
-                    mutable.setZ(start.getZ() + z);
-                    if (level.getBlockEntity(mutable) instanceof Clearable clearable)
-                        clearable.clearContent();
-                }
-            }
-        }
+        for (var pos : BlockPos.betweenClosed(start, start.offset(size)))
+            if (level.getBlockEntity(pos) instanceof Clearable clearable)
+                clearable.clearContent();
     }
 
     public boolean destruct(Pointer pointer) {

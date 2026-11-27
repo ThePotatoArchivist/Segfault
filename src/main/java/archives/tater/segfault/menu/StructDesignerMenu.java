@@ -23,6 +23,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
@@ -30,6 +33,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+
+import static archives.tater.segfault.util.SegfaultUtil.betweenClosed;
 
 public class StructDesignerMenu extends AbstractContainerMenu {
 
@@ -109,6 +114,8 @@ public class StructDesignerMenu extends AbstractContainerMenu {
             var structTemplate = saveStruct((ServerLevel) level, player, box, structName);
             if (structTemplate == null) return;
 
+            destroy(level, box);
+
             var input = getInput();
             var result = input.transmuteCopy(SegfaultModItems.STRUCT_TEMPLATE);
             result.set(SegfaultModComponents.STRUCT_TEMPLATE, structTemplate);
@@ -117,6 +124,12 @@ public class StructDesignerMenu extends AbstractContainerMenu {
         });
         setStructName("");
         return true;
+    }
+
+    private void destroy(Level level, BoundingBox box) {
+        var state = Blocks.AIR.defaultBlockState();
+        for (var pos : betweenClosed(box))
+            level.setBlock(pos, state, Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_SKIP_ON_PLACE | Block.UPDATE_CLIENTS);
     }
 
     public static @Nullable StructTemplate saveStruct(ServerLevel level, Player player, BoundingBox box, String name) {

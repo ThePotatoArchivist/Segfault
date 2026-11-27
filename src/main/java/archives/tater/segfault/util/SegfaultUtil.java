@@ -4,6 +4,7 @@ import archives.tater.segfault.mixin.AbstractContainerMenuAccessor;
 
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 import org.jspecify.annotations.Nullable;
 
@@ -81,5 +83,9 @@ public class SegfaultUtil {
         slot.onTake(player, stack);
 
         return clicked;
+    }
+
+    public static Iterable<BlockPos> betweenClosed(BoundingBox box) {
+        return BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ());
     }
 }
