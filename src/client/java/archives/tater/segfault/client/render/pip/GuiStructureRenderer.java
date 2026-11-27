@@ -81,7 +81,7 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
         var xSpan = box.getXSpan();
         var ySpan = box.getYSpan();
         var zSpan = box.getZSpan();
-        var states = new BlockModelRenderState[zSpan][ySpan][xSpan];
+        var states = new BlockModelRenderState[xSpan][ySpan][zSpan];
         var pos = new BlockPos.MutableBlockPos();
         for (var x = 0; x < xSpan; x++) {
             pos.setX(box.minX() + x);
