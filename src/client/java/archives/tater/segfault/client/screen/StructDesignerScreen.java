@@ -46,7 +46,7 @@ public class StructDesignerScreen extends AbstractContainerScreen<StructDesigner
     private final Player player;
     @SuppressWarnings("NotNullFieldNotInitialized")
     private EditBox name;
-    private final BlockModelRenderState @Nullable[][][] structure;
+    private final @Nullable BlockModelRenderState @Nullable[][][] structure;
     private @Nullable StructureWidget structureWidget;
     private @Nullable AbstractButton button;
 

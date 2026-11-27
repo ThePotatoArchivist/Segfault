@@ -1,7 +1,5 @@
 package archives.tater.segfault.client;
 
-import net.fabricmc.loader.api.FabricLoader;
-
 import folk.sisby.kaleido.api.WrappedConfig;
 import folk.sisby.kaleido.lib.quiltconfig.api.annotations.ChangeWarning;
 import folk.sisby.kaleido.lib.quiltconfig.api.annotations.Comment;
@@ -14,6 +12,6 @@ public class SegfaultClientConfig extends WrappedConfig {
         @Comment("Enable the allocation region debug renderer")
         @Comment("Requires restart")
         @ChangeWarning(Type.RequiresRestart)
-        public boolean allocationDebugRenderer = FabricLoader.getInstance().isDevelopmentEnvironment();
+        public boolean allocationDebugRenderer = false;
     }
 }

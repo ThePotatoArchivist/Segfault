@@ -40,7 +40,7 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
 
     @Override
     protected void renderToTexture(State renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector) {
-        Minecraft.getInstance().gameRenderer.lighting().setupFor(Lighting.Entry.ENTITY_IN_UI);
+        minecraft.gameRenderer.lighting().setupFor(Lighting.Entry.ENTITY_IN_UI);
 
         poseStack.translate(0, (renderState.y0 - renderState.y1) / renderState.scale / 2f, 0);
         poseStack.scale(-1, -1, 1);
@@ -58,7 +58,8 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
             for (var line : slice) {
                 poseStack.pushPose();
                 for (var state : line) {
-                    state.submit(poseStack, submitNodeCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+                    if (state != null)
+                        state.submit(poseStack, submitNodeCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
 
                     poseStack.translate(0, 0, 1);
                 }
@@ -76,7 +77,7 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
         return Segfault.MOD_ID + ":structure";
     }
 
-    public static BlockModelRenderState[][][] extract(BlockModelResolver blockModelResolver, BlockGetter level, BoundingBox box) {
+    public static @Nullable BlockModelRenderState[][][] extract(BlockModelResolver blockModelResolver, BlockGetter level, BoundingBox box) {
         var xSpan = box.getXSpan();
         var ySpan = box.getYSpan();
         var zSpan = box.getZSpan();
@@ -89,9 +90,11 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
                 for (var z = 0; z < zSpan; z++) {
                     pos.setZ(box.minZ() + z);
 
-                    var state = new BlockModelRenderState();
-                    blockModelResolver.update(state, level.getBlockState(pos), DISPLAY_CONTEXT);
-                    states[x][y][z] = state;
+                    var state = level.getBlockState(pos);
+                    if (state.isAir()) continue;
+                    var renderState = new BlockModelRenderState();
+                    blockModelResolver.update(renderState, state, DISPLAY_CONTEXT);
+                    states[x][y][z] = renderState;
                 }
             }
         }
@@ -100,7 +103,7 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
     }
 
     public record State(
-            BlockModelRenderState[][][] blockStates,
+            @Nullable BlockModelRenderState[][][] blockStates,
             float yRot,
             float xRot,
             int x0,
@@ -112,7 +115,7 @@ public class GuiStructureRenderer extends PictureInPictureRenderer<GuiStructureR
             @Nullable ScreenRectangle bounds
     ) implements PictureInPictureRenderState {
         public State(
-                BlockModelRenderState[][][] blockStates,
+                @Nullable BlockModelRenderState[][][] blockStates,
                 float yRot,
                 float xRot,
                 int x0,

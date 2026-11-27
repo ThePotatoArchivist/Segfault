@@ -19,7 +19,7 @@ import static net.minecraft.util.Mth.square;
 
 public class StructureWidget extends AbstractWidget {
 
-    private final BlockModelRenderState[][][] structure;
+    private final @Nullable BlockModelRenderState[][][] structure;
     private final float xRotSpeed;
     private final float yRotSpeed;
     private final float scale;
@@ -27,7 +27,7 @@ public class StructureWidget extends AbstractWidget {
     private float xRot;
     private boolean grabbed = false;
 
-    public StructureWidget(BlockModelRenderState[][][] structure, int x, int y, int width, int height, float xRotSpeed, float yRotSpeed, @Nullable StructureWidget old) {
+    public StructureWidget(@Nullable BlockModelRenderState[][][] structure, int x, int y, int width, int height, float xRotSpeed, float yRotSpeed, @Nullable StructureWidget old) {
         super(x, y, width, height, CommonComponents.EMPTY);
         this.structure = structure;
         this.xRotSpeed = xRotSpeed;
