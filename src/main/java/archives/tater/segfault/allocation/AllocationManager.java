@@ -7,9 +7,12 @@ import archives.tater.segfault.registry.SegfaultModDimensions;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -66,13 +69,25 @@ public final class AllocationManager extends SavedData {
 
         var startPos = minBlockPos(allocation.start());
         structureTemplate.placeInWorld(level, startPos, BlockPos.ZERO, new StructurePlaceSettings(), level.getRandom(), Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
+        clearContents(level, startPos, size);
 
         setDirty();
         return new Pointer(startPos.offset(1, 1, 1));
     }
 
-    private static boolean isCoplanar(BlockPos a, BlockPos b) {
-        return a.getX() == b.getX() || a.getY() == b.getY() || a.getZ() == b.getZ();
+    private static void clearContents(ServerLevel level, BlockPos start, Vec3i size) {
+        var mutable = new BlockPos.MutableBlockPos();
+        for (var x = 0; x < size.getX(); x++) {
+            mutable.setX(start.getX() + x);
+            for (var y = 0; y < size.getY(); y++) {
+                mutable.setY(start.getY() + y);
+                for (var z = 0; z < size.getZ(); z++) {
+                    mutable.setZ(start.getZ() + z);
+                    if (level.getBlockEntity(mutable) instanceof Clearable clearable)
+                        clearable.clearContent();
+                }
+            }
+        }
     }
 
     public boolean destruct(Pointer pointer) {
