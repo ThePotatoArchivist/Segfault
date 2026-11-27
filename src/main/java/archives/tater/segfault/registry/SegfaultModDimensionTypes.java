@@ -20,7 +20,7 @@ import static net.minecraft.util.ARGB.vector3fFromRGB24;
 
 public interface SegfaultModDimensionTypes {
 
-    ResourceKey<DimensionType> MEMORY = create("memory");
+    ResourceKey<DimensionType> HEAP = create("heap");
 
     private static ResourceKey<DimensionType> create(String path) {
         return ResourceKey.create(Registries.DIMENSION_TYPE, Segfault.id(path));
@@ -30,7 +30,7 @@ public interface SegfaultModDimensionTypes {
         var blocks = context.lookup(Registries.BLOCK);
         var timelines = context.lookup(Registries.TIMELINE);
 
-        context.register(MEMORY, new DimensionType(
+        context.register(HEAP, new DimensionType(
                 true,
                 true,
                 false,

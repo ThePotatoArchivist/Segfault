@@ -16,18 +16,18 @@ import java.util.function.BiConsumer;
 
 public interface SegfaultModDimensions {
 
-    ResourceKey<Level> MEMORY = create("memory");
+    ResourceKey<Level> HEAP = create("heap");
 
     private static ResourceKey<Level> create(String path) {
         return ResourceKey.create(Registries.DIMENSION, Segfault.id(path));
     }
 
     static void bootstrap(BiConsumer<ResourceKey<Level>, LevelStem> provider, HolderLookup.Provider registries) {
-        provider.accept(MEMORY, new LevelStem(
-                registries.getOrThrow(SegfaultModDimensionTypes.MEMORY),
+        provider.accept(HEAP, new LevelStem(
+                registries.getOrThrow(SegfaultModDimensionTypes.HEAP),
                 new FlatLevelSource(new FlatLevelGeneratorSettings(
                         Optional.empty(),
-                        registries.getOrThrow(SegfaultModBiomes.MEMORY),
+                        registries.getOrThrow(SegfaultModBiomes.HEAP),
                         List.of()
                 ))
         ));

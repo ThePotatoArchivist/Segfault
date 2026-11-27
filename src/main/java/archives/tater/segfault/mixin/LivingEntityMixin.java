@@ -23,7 +23,7 @@ public abstract class LivingEntityMixin extends Entity {
             method = "onBelowWorld"
     )
     private void exit(Operation<Void> original) {
-        if (level().dimension() == SegfaultModDimensions.MEMORY) {
+        if (level().dimension() == SegfaultModDimensions.HEAP) {
             if (!(level() instanceof ServerLevel serverLevel)) return;
 
             var destination = Pointer.getExitDestination(serverLevel, this);

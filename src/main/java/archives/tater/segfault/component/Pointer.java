@@ -56,17 +56,17 @@ public record Pointer(BlockPos pos) implements TooltipProvider {
     public static @Nullable TeleportTransition getDestination(ServerLevel level, @Nullable Pointer pointer, Entity entity) {
         if (pointer == null) return getExitDestination(level, entity);
 
-        var memory = level.getServer().getLevel(SegfaultModDimensions.MEMORY);
+        var memory = level.getServer().getLevel(SegfaultModDimensions.HEAP);
         if (memory == null) return null;
 
-        if (entity.level().dimension() != SegfaultModDimensions.MEMORY)
+        if (entity.level().dimension() != SegfaultModDimensions.HEAP)
             entity.setAttached(SegfaultModAttachments.ENTRY_POS, GlobalPos.of(entity.level().dimension(), entity.blockPosition()));
         return new TeleportTransition(memory, Vec3.atBottomCenterOf(pointer.pos()), Vec3.ZERO, 0, 0, Relative.ROTATION, PLAY_TELEPORT_SOUND);
     }
 
     public static @Nullable TeleportTransition getExitDestination(ServerLevel level, Entity entity) {
         var entryPos = entity.removeAttached(SegfaultModAttachments.ENTRY_POS);
-        if (entryPos == null || level.dimension() != SegfaultModDimensions.MEMORY) return null;
+        if (entryPos == null || level.dimension() != SegfaultModDimensions.HEAP) return null;
 
         var newLevel = level.getServer().getLevel(entryPos.dimension());
         if (newLevel == null) return null;

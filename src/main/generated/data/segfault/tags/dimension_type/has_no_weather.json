@@ -1,5 +1,5 @@
 {
   "values": [
-    "segfault:memory"
+    "segfault:heap"
   ]
 }

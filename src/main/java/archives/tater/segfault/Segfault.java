@@ -4,7 +4,9 @@ import archives.tater.segfault.registry.*;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 
 import org.slf4j.Logger;
@@ -33,6 +35,11 @@ public class Segfault implements ModInitializer {
 		SegfaultModCreativeTabs.init();
 		SegfaultModNetworking.init();
 		CommandRegistrationCallback.EVENT.register(SegfaultModCommands::register);
+
+		DynamicRegistrySetupCallback.EVENT.register(registryView -> {
+			registryView.getOptional(Registries.DIMENSION).ifPresent(registry -> registry.addAlias(id("memory"), id("heap")));
+			registryView.getOptional(Registries.BIOME).ifPresent(registry -> registry.addAlias(id("memory"), id("heap")));
+		});
 	}
 
 	public static Identifier id(String path) {

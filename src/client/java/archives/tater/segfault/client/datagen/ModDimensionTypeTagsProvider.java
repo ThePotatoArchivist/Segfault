@@ -20,6 +20,6 @@ public class ModDimensionTypeTagsProvider extends FabricTagsProvider<DimensionTy
     @Override
     protected void addTags(HolderLookup.Provider registries) {
         builder(SegfaultModDimensionTypeTags.HAS_NO_WEATHER)
-                .add(SegfaultModDimensionTypes.MEMORY);
+                .add(SegfaultModDimensionTypes.HEAP);
     }
 }

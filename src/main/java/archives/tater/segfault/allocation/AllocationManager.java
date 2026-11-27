@@ -55,7 +55,7 @@ public final class AllocationManager extends SavedData {
     }
 
     public Pointer construct(MinecraftServer server, StructTemplate template) {
-        var level = server.getLevel(SegfaultModDimensions.MEMORY);
+        var level = server.getLevel(SegfaultModDimensions.HEAP);
         if (level == null) return Pointer.NULL;
 
         var structureTemplate = server.getStructureTemplateManager().get(template.structureId()).orElse(null);

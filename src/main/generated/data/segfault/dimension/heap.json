@@ -1,9 +1,9 @@
 {
-  "type": "segfault:memory",
+  "type": "segfault:heap",
   "generator": {
     "type": "minecraft:flat",
     "settings": {
-      "biome": "segfault:memory",
+      "biome": "segfault:heap",
       "features": false,
       "lakes": false,
       "layers": []

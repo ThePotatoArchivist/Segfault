@@ -15,14 +15,14 @@ import static net.minecraft.util.ARGB.vector3fFromRGB24;
 
 public interface SegfaultModBiomes {
 
-    ResourceKey<Biome> MEMORY = create("memory");
+    ResourceKey<Biome> HEAP = create("heap");
 
     private static ResourceKey<Biome> create(String path) {
         return ResourceKey.create(Registries.BIOME, Segfault.id(path));
     }
 
     static void bootstrap(BootstrapContext<Biome> context) {
-        context.register(MEMORY, OverworldBiomes.baseBiome(0.5f, 0.5f)
+        context.register(HEAP, OverworldBiomes.baseBiome(0.5f, 0.5f)
                 .setAttribute(EnvironmentAttributes.SKY_COLOR, vector3fFromRGB24(0xff0a0a0a))
                 .hasPrecipitation(false)
                 .generationSettings(BiomeGenerationSettings.EMPTY)
