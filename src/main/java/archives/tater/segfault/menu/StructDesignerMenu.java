@@ -11,6 +11,7 @@ import archives.tater.segfault.util.SegfaultUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -60,19 +61,19 @@ public class StructDesignerMenu extends AbstractContainerMenu {
         this.access = access;
         this.box = box;
 
-        addSlot(new Slot(container, SLOT_INPUT, 53, 42) {
+        addSlot(new Slot(container, SLOT_INPUT, 89, 39) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
                 return itemStack.is(SegfaultModItems.EMPTY_STRUCT_TEMPLATE);
             }
         });
-        addSlot(new Slot(container, SLOT_OUTPUT, 107, 42) {
+        addSlot(new Slot(container, SLOT_OUTPUT, 143, 39) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
                 return false;
             }
         });
-        addStandardInventorySlots(inventory, 8, 73);
+        addStandardInventorySlots(inventory, 8, 97);
     }
 
     public ItemStack getInput() {
@@ -87,20 +88,20 @@ public class StructDesignerMenu extends AbstractContainerMenu {
         container.setItem(SLOT_OUTPUT, stack);
     }
 
-    public String getStructName() {
-        return structName;
-    }
-
     public void setStructName(String structName) {
         this.structName = structName;
+    }
+
+    public boolean canSaveStruct() {
+        return !getInput().isEmpty() && getOutput().isEmpty() && box != null && !structName.isBlank() && Identifier.isValidPath(structName);
     }
 
     @Override
     public boolean clickMenuButton(Player player, int buttonId) {
         if (buttonId != BUTTON_CREATE) return false;
-        if (getInput().isEmpty() || !getOutput().isEmpty() || box == null || structName.isBlank()) return false;
+        if (!canSaveStruct()) return false;
         access.execute((level, blockPos) -> {
-            if (!StructFrameHelper.regionValid(level, box.inflatedBy(1))) {
+            if (box == null || !StructFrameHelper.regionValid(level, box.inflatedBy(1))) {
                 level.playSound(null, blockPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS);
                 return;
             }
@@ -114,6 +115,7 @@ public class StructDesignerMenu extends AbstractContainerMenu {
             setOutput(result);
             input.shrink(1);
         });
+        setStructName("");
         return true;
     }
 
