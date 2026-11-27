@@ -15,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -111,6 +112,7 @@ public class StructDesignerMenu extends AbstractContainerMenu {
                 return;
             }
 
+            clear(level, box);
             var structTemplate = saveStruct((ServerLevel) level, player, box, structName);
             if (structTemplate == null) return;
 
@@ -126,10 +128,20 @@ public class StructDesignerMenu extends AbstractContainerMenu {
         return true;
     }
 
+    private void clear(Level level, BoundingBox box) {
+        for (var pos : betweenClosed(box)) {
+            var blockEntity = level.getBlockEntity(pos);
+            if (blockEntity == null) continue;
+            blockEntity.preRemoveSideEffects(pos, blockEntity.getBlockState());
+            if (blockEntity instanceof Clearable clearable)
+                clearable.clearContent();
+        }
+    }
+
     private void destroy(Level level, BoundingBox box) {
         var state = Blocks.AIR.defaultBlockState();
         for (var pos : betweenClosed(box))
-            level.setBlock(pos, state, Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_SKIP_ON_PLACE | Block.UPDATE_CLIENTS);
+            level.setBlock(pos, state, Block.UPDATE_SKIP_ALL_SIDEEFFECTS | Block.UPDATE_CLIENTS);
     }
 
     public static @Nullable StructTemplate saveStruct(ServerLevel level, Player player, BoundingBox box, String name) {
