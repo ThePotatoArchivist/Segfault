@@ -4,6 +4,8 @@ import archives.tater.segfault.mixin.AbstractContainerMenuAccessor;
 
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,9 +21,12 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+
+import static net.minecraft.util.Util.toMap;
 
 public class SegfaultUtil {
     private SegfaultUtil() {}
@@ -87,5 +92,19 @@ public class SegfaultUtil {
 
     public static Iterable<BlockPos> betweenClosed(BoundingBox box) {
         return BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ());
+    }
+
+    public static <K, V> Codec<Map<K, V>> entryListMapCodec(Codec<K> keyCodec, Codec<V> valueCodec) {
+        return entryCodec(keyCodec, valueCodec).listOf().xmap(
+                entries -> entries.stream().collect(toMap()),
+                map -> map.entrySet().stream().toList()
+        );
+    }
+
+    public static <K, V> Codec<Map.Entry<K, V>> entryCodec(Codec<K> keyCodec, Codec<V> valueCodec) {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                keyCodec.fieldOf("key").forGetter(Map.Entry::getKey),
+                valueCodec.fieldOf("value").forGetter(Map.Entry::getValue)
+        ).apply(instance, Map::entry));
     }
 }

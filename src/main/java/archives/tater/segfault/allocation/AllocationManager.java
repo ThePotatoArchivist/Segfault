@@ -3,7 +3,9 @@ package archives.tater.segfault.allocation;
 import archives.tater.segfault.Segfault;
 import archives.tater.segfault.component.Pointer;
 import archives.tater.segfault.component.StructTemplate;
+import archives.tater.segfault.registry.SegfaultModAttachments;
 import archives.tater.segfault.registry.SegfaultModDimensions;
+import archives.tater.segfault.util.PatchedMap;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -21,6 +23,8 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec3;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.stream.Stream;
 
 import static java.lang.Math.ceilDiv;
 
@@ -71,6 +75,10 @@ public final class AllocationManager extends SavedData {
         structureTemplate.placeInWorld(level, startPos, BlockPos.ZERO, new StructurePlaceSettings(), level.getRandom(), Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ALL_SIDEEFFECTS);
         clearContents(level, startPos, size);
 
+        streamChunks(allocation).forEach(chunkPos ->
+                level.getChunk(chunkPos.x(), chunkPos.z()).setAttached(SegfaultModAttachments.PLAYER_PLACED_BLOCKS, PatchedMap.empty())
+        );
+
         setDirty();
         return new Pointer(startPos.offset(1, 1, 1));
     }
@@ -81,10 +89,20 @@ public final class AllocationManager extends SavedData {
                 clearable.clearContent();
     }
 
-    public boolean destruct(Pointer pointer) {
+    public boolean destruct(MinecraftServer server, Pointer pointer) {
         if (pointer.isNull()) return false;
 
+        var level = server.getLevel(SegfaultModDimensions.HEAP);
+        if (level == null) return false;
+
         var pos = posContaining(pointer.pos());
+
+        var allocation = rectangleAllocator.getAllocation(pos);
+        if (allocation != null)
+            streamChunks(allocation).forEach(chunkPos ->
+                    level.getChunk(chunkPos.x(), chunkPos.z()).removeAttached(SegfaultModAttachments.PLAYER_PLACED_BLOCKS)
+            );
+
         if (!rectangleAllocator.deallocate(pos)) return false;
 
         setDirty();
@@ -113,7 +131,15 @@ public final class AllocationManager extends SavedData {
         return new BlockPos((pos.x() + 1) * CHUNK_SIZE, 0, (pos.y() + 1) * CHUNK_SIZE);
     }
 
+    public static ChunkPos toChunkPos(GridPos pos) {
+        return new ChunkPos(pos.x() + 1, pos.y() + 1);
+    }
+
     public static Vec3 toVec3(GridPos pos) {
         return new Vec3((pos.x() + 1) * CHUNK_SIZE, 0, (pos.y() + 1) * CHUNK_SIZE);
+    }
+
+    private static Stream<ChunkPos> streamChunks(GridRegion allocation) {
+        return ChunkPos.rangeClosed(toChunkPos(allocation.start()), toChunkPos(allocation.end()));
     }
 }

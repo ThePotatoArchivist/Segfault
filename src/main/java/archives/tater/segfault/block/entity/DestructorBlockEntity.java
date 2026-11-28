@@ -91,7 +91,7 @@ public class DestructorBlockEntity extends SimpleContainerBlockEntity implements
         var result = getResult();
         if (result.count() >= result.getMaxStackSize()) return;
 
-        if (AllocationManager.get(server).destruct(pointer)) {
+        if (AllocationManager.get(server).destruct(server, pointer)) {
             getLevel().playSound(null, getBlockPos(), SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS); // TODO custom sound event
         }
 

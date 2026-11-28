@@ -33,7 +33,7 @@ public final class RectangleAllocator {
 
     public @Nullable GridRegion getAllocation(GridPos pos) {
         var node = getNode(pos);
-        return node == null || node.used ? null : node.region;
+        return node == null || !node.used ? null : node.region;
     }
 
     private GridNode.@Nullable Leaf getNode(GridPos pos) {

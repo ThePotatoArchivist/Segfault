@@ -14,6 +14,7 @@ import archives.tater.segfault.registry.SegfaultModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -53,12 +54,18 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(getKey(StructDesignerScreen.NOT_FOUND_TEXT), "Not Found");
 
         translationBuilder.add(getKey(SegfaultModCommands.RESET_SUCCESS), "Reset all allocations");
-        translationBuilder.add(getKey((Component) SegfaultModCommands.DETECT_FAIL.create().getRawMessage()), "Could not detect a frame");
+        translationBuilder.add(getKey(getMessage(SegfaultModCommands.DETECT_FAIL)), "Could not detect a frame");
         translationBuilder.add("commands.segfault.detect_frame.success", "Detected frame from (%s, %s %s) to (%s, %s, %s)");
+        translationBuilder.add("commands.segfault.show_player_placed.success", "Player placed blocks in chunk (%s, %s): %s");
+        translationBuilder.add(getKey(getMessage(SegfaultModCommands.PLAYER_PLACED_FAIL)), "Player placed blocks not tracked for this chunk");
 
         translationBuilder.add(SegfaultClient.keyDebugChunkGrid.getName(), "Show Chunk Grid");
         translationBuilder.add(getKey(SegfaultClient.DEBUG_CHUNK_GRID_ON), "Chunk grid: shown");
         translationBuilder.add(getKey(SegfaultClient.DEBUG_CHUNK_GRID_OFF), "Chunk grid: hidden");
+    }
+
+    private static Component getMessage(SimpleCommandExceptionType exception) {
+        return (Component) exception.create().getRawMessage();
     }
 
     private static String getKey(Component translatable) {
