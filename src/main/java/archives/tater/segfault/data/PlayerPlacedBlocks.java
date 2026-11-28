@@ -36,7 +36,7 @@ public class PlayerPlacedBlocks {
     }
 
     public static boolean shouldDrop(Level level, BlockPos pos, BlockState state) {
-        if (level.dimension() != SegfaultModDimensions.HEAP) return true;
+        if (level.dimension() != SegfaultModDimensions.HEAP || !state.getBlock().asItem().canFitInsideContainerItems()) return true;
         var chunk = level.getChunk(pos);
         var block = PatchedMap.remove(chunk, SegfaultModAttachments.PLAYER_PLACED_BLOCKS, pos);
         return block != null && state.is(block);
