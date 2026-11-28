@@ -1,6 +1,10 @@
-package archives.tater.segfault.allocation;
+package archives.tater.segfault.data;
 
 import archives.tater.segfault.Segfault;
+import archives.tater.segfault.allocation.DisplayRegion;
+import archives.tater.segfault.allocation.GridPos;
+import archives.tater.segfault.allocation.GridRegion;
+import archives.tater.segfault.allocation.RectangleAllocator;
 import archives.tater.segfault.component.Pointer;
 import archives.tater.segfault.component.StructTemplate;
 import archives.tater.segfault.registry.SegfaultModAttachments;

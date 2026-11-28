@@ -10,7 +10,7 @@ import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.debug.DebugValueAccess;
 
-import static archives.tater.segfault.allocation.AllocationManager.toVec3;
+import static archives.tater.segfault.data.AllocationManager.toVec3;
 
 public class AllocationDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
     @Override

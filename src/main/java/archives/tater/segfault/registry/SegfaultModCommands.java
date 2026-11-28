@@ -1,7 +1,7 @@
 package archives.tater.segfault.registry;
 
 import archives.tater.segfault.Segfault;
-import archives.tater.segfault.allocation.AllocationManager;
+import archives.tater.segfault.data.AllocationManager;
 import archives.tater.segfault.block.StructFrameHelper;
 import archives.tater.segfault.data.PlayerPlacedBlocks;
 
