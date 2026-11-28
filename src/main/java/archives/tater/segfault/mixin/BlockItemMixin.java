@@ -22,6 +22,7 @@ public class BlockItemMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;setPlacedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;)V")
     )
     private void setPlayerPlaced(Block instance, Level level, BlockPos pos, BlockState state, LivingEntity by, ItemStack itemStack, Operation<Void> original) {
+        original.call(instance, level, pos, state, by, itemStack);
         if (level.isClientSide()) return;
         PlayerPlacedBlocks.onPlace(level, pos, state);
     }
